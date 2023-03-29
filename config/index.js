@@ -14,7 +14,7 @@ const NutUIResolver = () => {
 }
 
 const config = {
-  projectName: 'face-to-gut',
+  projectName: 'face-to-guy',
   date: '2023-3-12',
   designWidth (input) {
     if (input?.file?.replace(/\\+/g, '/').indexOf('@nutui') > -1) {
