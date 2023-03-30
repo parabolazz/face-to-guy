@@ -1,0 +1,26 @@
+{
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.tabSize": 2,
+  "editor.formatOnPaste": false, // required
+  "editor.formatOnType": false, // required
+  "editor.formatOnSave": true, // optional
+  "editor.formatOnSaveMode": "file", // required to format on save
+  // "files.autoSave": "onFocusChange",
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "[vue]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+
+  "files.associations": {
+    "*.vue": "vue",
+    "*.wpy": "vue",
+    "*.md": "markdown"
+  },
+  "cSpell.words": ["hoyo", "popconfirm", "termbase", "unconfirm", "vtsheet"]
+}
