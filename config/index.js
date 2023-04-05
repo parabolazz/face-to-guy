@@ -16,7 +16,7 @@ const NutUIResolver = () => {
 const config = {
   projectName: 'face-to-guy',
   date: '2023-3-12',
-  designWidth: 750,
+  designWidth: 375,
   deviceRatio: {
     640: 2.34 / 2,
     750: 1,

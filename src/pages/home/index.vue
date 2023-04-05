@@ -1,15 +1,8 @@
 <template>
   <view class="index">
-    <nut-grid :column-num="3">
-      <nut-grid-item text="文字"><Dongdong /></nut-grid-item>
-      <nut-grid-item text="文字"><Dongdong /></nut-grid-item>
-      <nut-grid-item text="文字"><Dongdong /></nut-grid-item>
-    </nut-grid>
     {{ msg }} <Dongdong />
     <view class="btn">
-      <nut-button type="primary" @click="handleClick('text', msg2, true)"
-        >点你</nut-button
-      >
+      <nut-button type="primary" @click="onClick">点你</nut-button>
     </view>
     <nut-toast :msg="msg2" v-model:visible="show" :type="type" :cover="cover" />
   </view>
@@ -18,6 +11,7 @@
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
 import { Dongdong } from '@nutui/icons-vue-taro';
+import Taro from '@tarojs/taro';
 export default {
   name: 'TestIndex',
   components: {
@@ -38,10 +32,16 @@ export default {
       state.type = type;
       state.cover = cover;
     };
+    const onClick = () => {
+      Taro.navigateTo({
+        url: '/pages/profile/index',
+      });
+    };
 
     return {
       ...toRefs(state),
       handleClick,
+      onClick,
     };
   },
 };
