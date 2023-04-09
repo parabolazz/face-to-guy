@@ -7,13 +7,17 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    NutActionSheet: typeof import('@nutui/nutui-taro')['ActionSheet']
     NutButton: typeof import('@nutui/nutui-taro')['Button']
-    NutCascader: typeof import('@nutui/nutui-taro')['Cascader']
     NutConfigProvider: typeof import('@nutui/nutui-taro')['ConfigProvider']
     NutForm: typeof import('@nutui/nutui-taro')['Form']
     NutFormItem: typeof import('@nutui/nutui-taro')['FormItem']
-    NutPicker: typeof import('@nutui/nutui-taro')['Picker']
+    NutGrid: typeof import('@nutui/nutui-taro')['Grid']
+    NutGridItem: typeof import('@nutui/nutui-taro')['GridItem']
+    NutInput: typeof import('@nutui/nutui-taro')['Input']
+    NutProgress: typeof import('@nutui/nutui-taro')['Progress']
     NutTextarea: typeof import('@nutui/nutui-taro')['Textarea']
     NutToast: typeof import('@nutui/nutui-taro')['Toast']
+    Uploader: typeof import('./src/components/uploader/index.vue')['default']
   }
 }
