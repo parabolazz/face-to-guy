@@ -165,7 +165,6 @@
           </nut-form-item>
         </view>
       </nut-form>
-      <view> hello world </view>
 
       <nut-action-sheet
         v-model:visible="drawerController.typeVisible"
@@ -179,6 +178,9 @@
         @choose="chooseType"
       >
       </nut-action-sheet>
+      <view class="profile-submit">
+        <view class="profile-submit-btn">立即进入</view>
+      </view>
     </view>
   </nut-config-provider>
 </template>
@@ -257,11 +259,12 @@ export default {
 
 <style lang="scss">
 .profile {
+  padding-bottom: 122px;
   .nut-cell-group__wrap {
     padding: 0px;
     margin: 0px;
   }
-  background-color: #1d1d1d;
+  background-color: #000000;
   .nut-grid-item__content {
     padding: 4px 7px;
   }
@@ -283,6 +286,33 @@ export default {
 
     .nut-cell {
       padding: 13px 0px;
+    }
+  }
+  .profile-submit {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 122px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 14px;
+    z-index: 1;
+    background: #1d1d1d;
+    box-sizing: border-box;
+
+    .profile-submit-btn {
+      background-color: #dbf378;
+      height: 62px;
+      flex: 1;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #000;
     }
   }
 }
