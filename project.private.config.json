@@ -3,5 +3,6 @@
   "projectname": "face-to-guy",
   "setting": {
     "compileHotReLoad": true
-  }
+  },
+  "libVersion": "2.15.0"
 }

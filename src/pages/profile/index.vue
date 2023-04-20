@@ -137,7 +137,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.hobbies"
+              v-model="state.job"
               placeholder="请选择职业"
               readonly
               @click="() => (drawerController.jobVisible = true)"
@@ -147,7 +147,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.job"
+              v-model="state.hobbies"
               placeholder="请选择兴趣爱好"
               readonly
               @click="() => (drawerController.hobbyVisible = true)"
@@ -168,20 +168,34 @@
 
       <nut-action-sheet
         v-model:visible="drawerController.typeVisible"
-        :menu-items="optionsController.type"
+        :menu-items="optionsController.type as any"
         @choose="chooseType"
       >
       </nut-action-sheet>
       <nut-action-sheet
         v-model:visible="drawerController.bodyVisible"
-        :menu-items="optionsController.type"
+        :menu-items="optionsController.type as any"
         @choose="chooseType"
       >
       </nut-action-sheet>
-      <view class="profile-submit">
-        <view class="profile-submit-btn">立即进入</view>
-      </view>
+      <view class="profile-submit-btn">立即进入</view>
     </view>
+
+    <nut-popup
+      position="bottom"
+      v-model:visible="drawerController.jobVisible"
+      style="width: 100%"
+      :safe-area-inset-bottom="true"
+    >
+      <nut-picker
+        :columns="optionsController.job"
+        title="请选择职业"
+        style="width: 100%"
+        @confirm="confirm"
+        @cancel="drawerController.jobVisible = false"
+      >
+      </nut-picker>
+    </nut-popup>
   </nut-config-provider>
 </template>
 
@@ -223,11 +237,33 @@ export default {
         { value: 'vers', name: 'Vers' },
         { value: 'others', name: 'Others' },
       ],
+      job: [
+        { value: '工业/制造业', text: '工业/制造业' },
+        { value: '自由职业', text: '自由职业' },
+        { value: '贸易/零售', text: '贸易/零售' },
+        { value: '教育/科研', text: '教育/科研' },
+        { value: '专业服务', text: '专业服务' },
+        { value: '房地产/建筑', text: '房地产/建筑' },
+        { value: '服务业', text: '服务业' },
+        { value: 'IT/ 互联网/ 通信', text: 'IT/ 互联网/ 通信' },
+        { value: '文化/艺术', text: '文化/艺术' },
+        { value: '学生', text: '学生' },
+        { value: '广告/ 营销', text: '广告/ 营销' },
+        { value: '影视/ 娱乐', text: '影视/ 娱乐' },
+        { value: '金融', text: '金融' },
+        { value: '医药/ 健康/ 健身', text: '医药/ 健康/ 健身' },
+      ],
     });
+
     const valueForPicker = reactive({
       type: [state.type],
       height: [state.height],
     });
+
+    const confirm = ({ selectedValue }) => {
+      state.job = selectedValue;
+      drawerController.jobVisible = false;
+    };
 
     // const handleClick = (type, msg, cover = false) => {
     //   state.show = true;
@@ -249,6 +285,7 @@ export default {
       optionsController,
       valueForPicker,
       themeVars,
+      confirm,
       // heightFormatter,
       // weightFormatter,
       chooseType,
@@ -259,7 +296,7 @@ export default {
 
 <style lang="scss">
 .profile {
-  padding-bottom: 122px;
+  padding-bottom: 100px;
   .nut-cell-group__wrap {
     padding: 0px;
     margin: 0px;
@@ -288,32 +325,21 @@ export default {
       padding: 13px 0px;
     }
   }
-  .profile-submit {
+  .profile-submit-btn {
     position: fixed;
     bottom: 0px;
     left: 0px;
     width: 100%;
-    height: 122px;
+    height: 72px;
+    z-index: 1;
+    background-color: #dbf378;
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px 14px;
-    z-index: 1;
-    background: #1d1d1d;
-    box-sizing: border-box;
-
-    .profile-submit-btn {
-      background-color: #dbf378;
-      height: 62px;
-      flex: 1;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-      font-weight: bold;
-      color: #000;
-    }
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
   }
 }
 .flex {

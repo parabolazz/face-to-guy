@@ -1,13 +1,15 @@
 <template>
   <view class="index">
     <view>
-      <img src="" alt="">
+      <img src="" alt="" />
     </view>
     {{ msg }} <Dongdong />
     <view class="btn">
-      <nut-button type="primary" @click="handleClick('text', msg2, true)">点你</nut-button>
+      <nut-button type="primary" @click="handleClick('text', msg2, true)"
+        >点你</nut-button
+      >
     </view>
-    <nut-toast :msg="msg2" v-model:visible="show" :type="type" :cover="cover"/>
+    <nut-toast :msg="msg2" v-model:visible="show" :type="type" :cover="cover" />
   </view>
 </template>
 
@@ -17,7 +19,7 @@ import { Dongdong } from '@nutui/icons-vue-taro';
 export default {
   name: 'Index',
   components: {
-    Dongdong
+    Dongdong,
   },
   setup() {
     const state = reactive({
@@ -25,7 +27,7 @@ export default {
       msg2: '你成功了！！～',
       type: 'text',
       show: false,
-      cover: false
+      cover: false,
     });
 
     const handleClick = (type, msg, cover = false) => {
@@ -37,15 +39,15 @@ export default {
 
     return {
       ...toRefs(state),
-      handleClick
-    }
-  }
-}
+      handleClick,
+    };
+  },
+};
 </script>
 
 <style lang="scss">
 .index {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

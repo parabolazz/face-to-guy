@@ -12,6 +12,7 @@ export default defineAppConfig({
     backgroundColor: '#000000',
     backgroundTextStyle: 'light',
   },
+  initialRenderingCache: "dynamic",
   tabBar: {
     color: '#FFFFFF',
     selectedColor: '#C5DA6E',
