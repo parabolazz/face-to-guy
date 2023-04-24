@@ -5,6 +5,7 @@ export default defineAppConfig({
     'pages/login/index',
     'pages/me/index',
     'pages/profile/index',
+    'pages/share/index',
   ],
   window: {
     navigationBarBackgroundColor: '#000000',

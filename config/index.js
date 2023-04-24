@@ -25,7 +25,16 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
-  plugins: ['@tarojs/plugin-html'],
+  plugins: [
+    '@tarojs/plugin-html',
+    // ...其余插件
+    [
+      '@dcasia/mini-program-tailwind-webpack-plugin/dist/taro',
+      {
+        // ...options
+      },
+    ],
+  ],
   defineConstants: {},
   copy: {
     patterns: [],

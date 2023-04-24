@@ -1,46 +1,41 @@
 <template>
-  <view class="index">
-    {{ msg }} <Dongdong />
-    <view class="btn">
-      <nut-button type="primary" @click="onClick">点你</nut-button>
+  <view class="home">
+    <view class="home-operation">
+      <view class="flex">
+        <text class="home-operation__countdown-tip">距离 Party 结束还剩 </text>
+        <Countdown :end="end" />
+      </view>
+      <view class="home-operation__match-btn" @click="goShare">开始匹配</view>
     </view>
-    <nut-toast :msg="msg2" v-model:visible="show" :type="type" :cover="cover" />
   </view>
 </template>
 
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
-import { Dongdong } from '@nutui/icons-vue-taro';
 import Taro from '@tarojs/taro';
+import Countdown from '../../components/countdown/index.vue';
+
 export default {
   name: 'TestIndex',
-  components: {
-    Dongdong,
-  },
+  components: { Countdown },
   setup() {
     const state = reactive({
-      msg: '欢迎使用 NutUI4.0 开发小程序123456789',
-      msg2: '你成功了！！～',
-      type: 'text',
-      show: false,
-      cover: false,
+      end: Date.now() + 60 * 1000,
     });
-
-    const handleClick = (type, msg, cover = false) => {
-      state.show = true;
-      state.msg2 = msg;
-      state.type = type;
-      state.cover = cover;
-    };
     const onClick = () => {
       Taro.navigateTo({
         url: '/pages/profile/index',
       });
     };
+    const goShare = () => {
+      Taro.navigateTo({
+        url: '/pages/share/index',
+      });
+    };
 
     return {
       ...toRefs(state),
-      handleClick,
+      goShare,
       onClick,
     };
   },
@@ -48,10 +43,39 @@ export default {
 </script>
 
 <style lang="scss">
-.index {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+.flex {
+  display: flex;
+  flex-direction: row;
+}
+.home {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  // margin-bottom: 80px;
+  .home-operation {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    width: 100%;
+    padding: 0 14px;
+    color: rgb(136, 136, 136);
+  }
+
+  .home-operation__countdown-tip {
+    font-size: 16px;
+    margin-right: 13px;
+  }
+  .home-operation__match-btn {
+    margin: 14px 0 24px;
+    padding: 19px 10px;
+    background-color: #dbf378;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 500;
+    color: #000;
+    border-radius: 10px;
+  }
 }
 </style>

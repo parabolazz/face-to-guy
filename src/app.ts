@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import 'windi.css';
+
 import './app.scss';
 
 const App = createApp({
