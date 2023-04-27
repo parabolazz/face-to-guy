@@ -10,6 +10,8 @@ declare module '@vue/runtime-core' {
     Countdown: typeof import('./src/components/countdown/index.vue')['default']
     NutActionSheet: typeof import('@nutui/nutui-taro')['ActionSheet']
     NutButton: typeof import('@nutui/nutui-taro')['Button']
+    NutCheckbox: typeof import('@nutui/nutui-taro')['Checkbox']
+    NutCheckboxGroup: typeof import('@nutui/nutui-taro')['CheckboxGroup']
     NutConfigProvider: typeof import('@nutui/nutui-taro')['ConfigProvider']
     NutCountdown: typeof import('@nutui/nutui-taro')['Countdown']
     NutForm: typeof import('@nutui/nutui-taro')['Form']

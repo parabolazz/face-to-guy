@@ -1,10 +1,10 @@
 export default defineAppConfig({
   pages: [
+    'pages/profile/index',
     'pages/home/index',
     'pages/chats/index',
     'pages/login/index',
     'pages/me/index',
-    'pages/profile/index',
     'pages/share/index',
   ],
   window: {

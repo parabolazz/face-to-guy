@@ -92,9 +92,9 @@ function setSelected(index) {
     flex-direction: column;
   }
   .tab-bar-icon {
-    width: 31px;
-    height: 31px;
-    margin-bottom: 8px;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 4px;
   }
   .tab-bar-text {
     font-size: 12px;

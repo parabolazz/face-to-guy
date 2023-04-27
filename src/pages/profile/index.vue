@@ -8,7 +8,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
+                  v-model:file-list="image[0]"
                   :is-preview="false"
                 >
                   <template #tip>
@@ -19,7 +19,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
+                  v-model:file-list="image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -27,7 +27,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
+                  v-model:file-list="image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -37,7 +37,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
+                  v-model:file-list="image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -45,7 +45,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
+                  v-model:file-list="image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -53,7 +53,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
+                  v-model:file-list="image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -66,7 +66,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.nickname"
+              v-model="nickname"
               placeholder="请输入姓名"
               type="text"
             />
@@ -74,7 +74,7 @@
           <nut-form-item prop="introduction" label="个性签名">
             <nut-textarea
               style="padding: '10px'"
-              v-model="state.introduction"
+              v-model="introduction"
               placeholder="人生即一场相遇,即使错过也不深究"
               :autosize="{ minHeight: 50, maxHeight: 200 }"
             />
@@ -85,7 +85,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.type"
+              v-model="type"
               @click="() => (drawerController.typeVisible = true)"
               readonly
               placeholder="请选择属性"
@@ -98,7 +98,7 @@
               <nut-input
                 input-align="right"
                 :border="false"
-                v-model="state.height"
+                v-model="height"
                 format-trigger="onChange"
                 placeholder="请输入身高"
                 type="digit"
@@ -112,7 +112,7 @@
               <nut-input
                 input-align="right"
                 :border="false"
-                v-model="state.weight"
+                v-model="weight"
                 format-trigger="onChange"
                 placeholder="请输入体重"
                 type="digit"
@@ -125,7 +125,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.bodyType"
+              v-model="bodyType"
               placeholder="请选择体型"
               readonly
               @click="() => (drawerController.bodyVisible = true)"
@@ -137,7 +137,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.job"
+              v-model="job"
               placeholder="请选择职业"
               readonly
               @click="() => (drawerController.jobVisible = true)"
@@ -147,7 +147,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.hobbies"
+              v-model="hobbies"
               placeholder="请选择兴趣爱好"
               readonly
               @click="() => (drawerController.hobbyVisible = true)"
@@ -157,7 +157,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="state.likeType"
+              v-model="likeType"
               placeholder="请选择喜欢的类型"
               readonly
               @click="() => (drawerController.likeTypeVisible = true)"
@@ -174,8 +174,8 @@
       </nut-action-sheet>
       <nut-action-sheet
         v-model:visible="drawerController.bodyVisible"
-        :menu-items="optionsController.type as any"
-        @choose="chooseType"
+        :menu-items="optionsController.bodyType as any"
+        @choose="chooseBodyType"
       >
       </nut-action-sheet>
       <view class="profile-submit-btn">立即进入</view>
@@ -196,11 +196,26 @@
       >
       </nut-picker>
     </nut-popup>
+    <nut-popup
+      position="bottom"
+      v-model:visible="drawerController.hobbyVisible"
+      style="width: 100%"
+      :safe-area-inset-bottom="true"
+    >
+      <nut-checkbox-group v-model="hobbies" :max="2">
+        <nut-checkbox
+          v-for="item in optionsController.hobbies"
+          :key="item.value"
+          :label="item.value"
+          >{{ item.text }}</nut-checkbox
+        >
+      </nut-checkbox-group>
+    </nut-popup>
   </nut-config-provider>
 </template>
 
 <script lang="ts">
-import { reactive } from 'vue';
+import { reactive, ref, toRefs } from 'vue';
 import Uploader from '../../components/uploader/index.vue';
 
 export default {
@@ -237,6 +252,23 @@ export default {
         { value: 'vers', name: 'Vers' },
         { value: 'others', name: 'Others' },
       ],
+      bodyType: [
+        { value: '猴', name: '猴' },
+        { value: '狒狒', name: '狒狒' },
+        { value: '熊', name: '熊' },
+        { value: '肌肉', name: '肌肉' },
+        { value: '匀称', name: '匀称' },
+      ],
+      hobbies: [
+        { value: '创意艺术 ', text: '创意艺术 ' },
+        { value: '音乐', text: '音乐' },
+        { value: '旅游', text: '旅游' },
+        { value: '阅读', text: '阅读' },
+        { value: '写作 ', text: '写作 ' },
+        { value: '游戏', text: '游戏' },
+        { value: '烹饪 ', text: '烹饪 ' },
+        { value: '健身 ', text: '健身 ' },
+      ],
       job: [
         { value: '工业/制造业', text: '工业/制造业' },
         { value: '自由职业', text: '自由职业' },
@@ -252,6 +284,16 @@ export default {
         { value: '影视/ 娱乐', text: '影视/ 娱乐' },
         { value: '金融', text: '金融' },
         { value: '医药/ 健康/ 健身', text: '医药/ 健康/ 健身' },
+      ],
+      likeType: [
+        { value: '年上', text: '年上' },
+        { value: '小鲜肉', text: '小鲜肉' },
+        { value: '肌肉', text: '肌肉' },
+        { value: '精瘦', text: '精瘦' },
+        { value: '熊熊', text: '熊熊' },
+        { value: '斯文', text: '斯文' },
+        { value: '运动系', text: '运动系' },
+        { value: '居家男', text: '居家男' },
       ],
     });
 
@@ -276,11 +318,30 @@ export default {
       state.type = item.name;
       drawerController.typeVisible = false;
     };
+
+    const chooseBodyType = (item) => {
+      console.log('item', item);
+      state.bodyType = item.name;
+      drawerController.bodyVisible = false;
+    };
+
+    const chooseHobbies = (item) => {
+      console.log('item', item);
+      state.hobbies = item.name;
+      drawerController.hobbyVisible = false;
+    };
+
+    const chooseLikeType = (item) => {
+      console.log('item', item);
+      state.likeType = item.name;
+      drawerController.likeTypeVisible = false;
+    };
     // const heightFormatter = (value: string) => value + 'cm';
     // const weightFormatter = (value: string) => value + 'kg';
 
     return {
       state,
+      ...toRefs(state),
       drawerController,
       optionsController,
       valueForPicker,
@@ -289,6 +350,9 @@ export default {
       // heightFormatter,
       // weightFormatter,
       chooseType,
+      chooseBodyType,
+      chooseHobbies,
+      chooseLikeType,
     };
   },
 };

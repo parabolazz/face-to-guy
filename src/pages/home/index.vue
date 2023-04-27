@@ -1,6 +1,7 @@
 <template>
   <view class="home">
     <view class="home-operation">
+      <nut-button @click="onClick">去信息填写页</nut-button>
       <view class="flex">
         <text class="home-operation__countdown-tip">距离 Party 结束还剩 </text>
         <Countdown :end="end" />
