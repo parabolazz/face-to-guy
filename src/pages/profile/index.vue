@@ -8,7 +8,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="image[0]"
+                  v-model:file-list="state.image[0]"
                   :is-preview="false"
                 >
                   <template #tip>
@@ -19,7 +19,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="image[0]"
+                  v-model:file-list="state.image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -27,7 +27,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="image[0]"
+                  v-model:file-list="state.image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -37,7 +37,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="image[0]"
+                  v-model:file-list="state.image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -45,7 +45,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="image[0]"
+                  v-model:file-list="state.image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -53,7 +53,7 @@
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
-                  v-model:file-list="image[0]"
+                  v-model:file-list="state.image[0]"
                   :is-preview="false"
                 >
                 </Uploader>
@@ -66,7 +66,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="nickname"
+              v-model="state.nickname"
               placeholder="请输入姓名"
               type="text"
             />
@@ -74,7 +74,7 @@
           <nut-form-item prop="introduction" label="个性签名">
             <nut-textarea
               style="padding: '10px'"
-              v-model="introduction"
+              v-model="state.introduction"
               placeholder="人生即一场相遇,即使错过也不深究"
               :autosize="{ minHeight: 50, maxHeight: 200 }"
             />
@@ -85,7 +85,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="type"
+              v-model="state.type"
               @click="() => (drawerController.typeVisible = true)"
               readonly
               placeholder="请选择属性"
@@ -98,7 +98,7 @@
               <nut-input
                 input-align="right"
                 :border="false"
-                v-model="height"
+                v-model="state.height"
                 format-trigger="onChange"
                 placeholder="请输入身高"
                 type="digit"
@@ -112,7 +112,7 @@
               <nut-input
                 input-align="right"
                 :border="false"
-                v-model="weight"
+                v-model="state.weight"
                 format-trigger="onChange"
                 placeholder="请输入体重"
                 type="digit"
@@ -125,7 +125,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="bodyType"
+              v-model="state.bodyType"
               placeholder="请选择体型"
               readonly
               @click="() => (drawerController.bodyVisible = true)"
@@ -137,7 +137,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="job"
+              v-model="state.job"
               placeholder="请选择职业"
               readonly
               @click="() => (drawerController.jobVisible = true)"
@@ -147,7 +147,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="hobbies"
+              :value="state.hobbies"
               placeholder="请选择兴趣爱好"
               readonly
               @click="() => (drawerController.hobbyVisible = true)"
@@ -157,7 +157,7 @@
             <nut-input
               input-align="right"
               :border="false"
-              v-model="likeType"
+              :value="state.likeType"
               placeholder="请选择喜欢的类型"
               readonly
               @click="() => (drawerController.likeTypeVisible = true)"
@@ -202,13 +202,23 @@
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
-      <nut-checkbox-group v-model="hobbies" :max="2">
-        <nut-checkbox
-          v-for="item in optionsController.hobbies"
-          :key="item.value"
-          :label="item.value"
-          >{{ item.text }}</nut-checkbox
-        >
+      <nut-checkbox-group v-model="state.hobbies" :max="3">
+        <nut-cell v-for="item in optionsController.hobbies" :key="item.value">
+          <nut-checkbox :label="item.value">{{ item.text }}</nut-checkbox>
+        </nut-cell>
+      </nut-checkbox-group>
+    </nut-popup>
+
+    <nut-popup
+      position="bottom"
+      v-model:visible="drawerController.likeTypeVisible"
+      style="width: 100%"
+      :safe-area-inset-bottom="true"
+    >
+      <nut-checkbox-group v-model="state.likeType" :max="3">
+        <nut-cell v-for="item in optionsController.likeType" :key="item.value">
+          <nut-checkbox :label="item.value">{{ item.text }}</nut-checkbox>
+        </nut-cell>
       </nut-checkbox-group>
     </nut-popup>
   </nut-config-provider>
@@ -306,7 +316,6 @@ export default {
       state.job = selectedValue;
       drawerController.jobVisible = false;
     };
-
     // const handleClick = (type, msg, cover = false) => {
     //   state.show = true;
     //   state.msg2 = msg;
@@ -341,7 +350,6 @@ export default {
 
     return {
       state,
-      ...toRefs(state),
       drawerController,
       optionsController,
       valueForPicker,
