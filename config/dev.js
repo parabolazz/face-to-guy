@@ -5,5 +5,5 @@ module.exports = {
   defineConstants: {},
   mini: {},
   h5: {},
-  plugins: ['@tarojs/plugin-vue-devtools'],
+  // plugins: ['@tarojs/plugin-vue-devtools'],
 };

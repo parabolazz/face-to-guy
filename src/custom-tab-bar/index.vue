@@ -1,5 +1,5 @@
 <template>
-  <cover-view class="tab-bar">
+  <cover-view class="tab-bar" v-show="global.showTabbar">
     <cover-view class="tab-bar-border"></cover-view>
     <cover-view
       v-for="(item, index) in list"
@@ -23,12 +23,13 @@
 <script setup>
 import Taro from '@tarojs/taro';
 import { computed } from 'vue';
-// import { useStore } from 'vuex';
-// const store = useStore();
-// const selected = computed(() => store.getters.getSelected);
+import { useGlobalStore } from '../store';
+
 const selected = 0;
 const color = '#5F5F5F';
 const selectedColor = '#DBF378';
+const global = useGlobalStore();
+
 const list = [
   {
     /** 页面路径，必须在 pages 中先定义 */

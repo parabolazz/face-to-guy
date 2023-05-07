@@ -25,6 +25,8 @@ declare module '@vue/runtime-core' {
     NutProgress: typeof import('@nutui/nutui-taro')['Progress']
     NutStep: typeof import('@nutui/nutui-taro')['Step']
     NutSteps: typeof import('@nutui/nutui-taro')['Steps']
+    NutSwiper: typeof import('@nutui/nutui-taro')['Swiper']
+    NutSwiperItem: typeof import('@nutui/nutui-taro')['SwiperItem']
     NutTextarea: typeof import('@nutui/nutui-taro')['Textarea']
     NutToast: typeof import('@nutui/nutui-taro')['Toast']
     Uploader: typeof import('./src/components/uploader/index.vue')['default']

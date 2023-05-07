@@ -33,6 +33,7 @@
       <view class="home-operation mt-4">
         <nut-button @click="onClick">去信息填写页</nut-button>
         <nut-button @click="goShare">去分享页面</nut-button>
+        <nut-button @click="goMatchUserInfo">去匹配对象详情页面</nut-button>
         <view class="flex">
           <!-- <text class="home-operation__countdown-tip">距离 Party 结束还剩 </text> -->
           <!-- <Countdown :end="end" /> -->
@@ -63,6 +64,11 @@ export default {
         url: '/pages/share/index',
       });
     };
+    const goMatchUserInfo = () => {
+      Taro.navigateTo({
+        url: '/pages/user/index',
+      });
+    };
     const topics = [
       {
         title: '夜宵局 摇一摇',
@@ -86,6 +92,7 @@ export default {
       ...toRefs(state),
       goShare,
       onClick,
+      goMatchUserInfo,
       topics,
     };
   },

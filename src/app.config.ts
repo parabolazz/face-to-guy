@@ -6,6 +6,7 @@ export default defineAppConfig({
     'pages/login/index',
     'pages/me/index',
     'pages/share/index',
+    'pages/user/index',
   ],
   window: {
     navigationBarBackgroundColor: '#000000',
@@ -13,7 +14,7 @@ export default defineAppConfig({
     backgroundColor: '#000000',
     backgroundTextStyle: 'light',
   },
-  initialRenderingCache: "dynamic",
+  // initialRenderingCache: "dynamic",
   tabBar: {
     color: '#FFFFFF',
     selectedColor: '#C5DA6E',
