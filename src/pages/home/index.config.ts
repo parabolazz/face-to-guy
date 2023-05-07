@@ -1,4 +1,4 @@
 export default definePageConfig({
-  navigationBarTitleText: '派对',
+  navigationBarTitleText: '摇人',
   usingComponents: {},
 });

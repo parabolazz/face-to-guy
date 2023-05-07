@@ -1,27 +1,57 @@
 <template>
-  <view class="home">
-    <view class="home-operation">
-      <nut-button @click="onClick">去信息填写页</nut-button>
-      <view class="flex">
-        <text class="home-operation__countdown-tip">距离 Party 结束还剩 </text>
-        <Countdown :end="end" />
+  <nut-config-provider theme="dark">
+    <view class="home p-3.5">
+      <h3 class="home-title mb-3.5">附近</h3>
+      <nut-grid :gutter="12" class="home-topic" :column-num="3">
+        <nut-grid-item class="home-topic__item home-topic__first-item">
+          <div class="home-topic__item__city">{{ city }}</div>
+          <div>还不知道，先摇人</div>
+        </nut-grid-item>
+        <nut-grid-item
+          :class="['home-topic__item', `home-topic__item-${topics[0].color}`]"
+          v-if="topics[0]"
+        >
+          <div class="home-topic__item__city">{{ city }}</div>
+
+          <div v-for="t in topics[0].title?.split(' ')" :key="t">
+            {{ t }}
+          </div></nut-grid-item
+        >
+      </nut-grid>
+      <nut-grid :gutter="12" class="home-topic mt-3" :column-num="3">
+        <nut-grid-item
+          :class="['home-topic__item', `home-topic__item-${topic.color}`]"
+          v-for="topic in topics.slice(1, topics.length)"
+          :key="topic.title"
+        >
+          <div class="home-topic__item__city">{{ city }}</div>
+          <div v-for="t in topics[0].title?.split(' ')" :key="t">
+            {{ t }}
+          </div></nut-grid-item
+        >
+      </nut-grid>
+      <view class="home-operation mt-4">
+        <nut-button @click="onClick">去信息填写页</nut-button>
+        <nut-button @click="goShare">去分享页面</nut-button>
+        <view class="flex">
+          <!-- <text class="home-operation__countdown-tip">距离 Party 结束还剩 </text> -->
+          <!-- <Countdown :end="end" /> -->
+        </view>
+        <!-- <view class="home-operation__match-btn" @click="goShare">开始匹配</view> -->
       </view>
-      <view class="home-operation__match-btn" @click="goShare">开始匹配</view>
     </view>
-  </view>
+  </nut-config-provider>
 </template>
 
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
-import Countdown from '../../components/countdown/index.vue';
 
 export default {
   name: 'TestIndex',
-  components: { Countdown },
   setup() {
     const state = reactive({
-      end: Date.now() + 60 * 1000,
+      city: '深圳',
     });
     const onClick = () => {
       Taro.navigateTo({
@@ -33,11 +63,30 @@ export default {
         url: '/pages/share/index',
       });
     };
+    const topics = [
+      {
+        title: '夜宵局 摇一摇',
+        color: 'DBF378',
+      },
+      {
+        title: '撸铁局 摇一摇',
+        color: 'CF83ED',
+      },
+      {
+        title: '奶茶咖啡 摇一摇',
+        color: '74D172',
+      },
+      {
+        title: '压马路 摇一摇',
+        color: '65BAE8',
+      },
+    ];
 
     return {
       ...toRefs(state),
       goShare,
       onClick,
+      topics,
     };
   },
 };
@@ -53,15 +102,77 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 100%;
-  // margin-bottom: 80px;
+  margin-bottom: 80px;
+  .home-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
   .home-operation {
-    position: absolute;
-    bottom: 80px;
-    left: 0;
     width: 100%;
     padding: 0 14px;
     color: rgb(136, 136, 136);
+  }
+  .home-topic {
+    margin-left: -12px;
+    margin-right: -12px;
+    .home-topic__item {
+      height: 162px;
+
+      &.home-topic__item-DBF378 {
+        .nut-grid-item__content {
+          background-color: #dbf378;
+        }
+      }
+      &.home-topic__item-CF83ED {
+        .nut-grid-item__content {
+          background-color: #cf83ed;
+        }
+      }
+      &.home-topic__item-74D172 {
+        .nut-grid-item__content {
+          background-color: #74d172;
+        }
+      }
+      &.home-topic__item-65BAE8 {
+        .nut-grid-item__content {
+          background-color: #65bae8;
+        }
+      }
+
+      .nut-grid-item__content {
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #000;
+        border: none;
+        position: relative;
+        .home-topic__item__city {
+          position: absolute;
+          top: 14px;
+          left: 14px;
+          padding: 4px 8px;
+          background-color: #000;
+          border-radius: 20px;
+          font-size: 10px;
+          line-height: 10px;
+          color: #fff;
+        }
+      }
+    }
+
+    .home-topic__first-item {
+      flex-basis: 66.66% !important;
+      .nut-grid-item__content {
+        background-image: url(../../assets/images/pair_btn_bg.webp);
+        color: #fff;
+      }
+    }
+    .home-topic__item:not(.home-topic__first-item) {
+      .nut-grid-item__content {
+        padding-left: 14px;
+        align-items: flex-start;
+      }
+    }
   }
 
   .home-operation__countdown-tip {

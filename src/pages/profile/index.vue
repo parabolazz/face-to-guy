@@ -73,7 +73,7 @@
           </nut-form-item>
           <nut-form-item prop="introduction" label="个性签名">
             <nut-textarea
-              style="padding: '10px'"
+              class="profile-intro-textarea"
               v-model="state.introduction"
               placeholder="人生即一场相遇,即使错过也不深究"
               :autosize="{ minHeight: 50, maxHeight: 200 }"
@@ -412,6 +412,10 @@ export default {
     font-size: 20px;
     font-weight: bold;
     color: #000;
+  }
+  .profile-intro-textarea {
+    padding: 2px;
+    text-align: right !important;
   }
 }
 .flex {
