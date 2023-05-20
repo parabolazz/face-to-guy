@@ -34,9 +34,9 @@
         <nut-button @click="onClick">去信息填写页</nut-button>
         <nut-button @click="goShare">去分享页面</nut-button>
         <nut-button @click="goMatchUserInfo">去匹配对象详情页面</nut-button>
+        <nut-button @click="goLoginPage">去登录页面</nut-button>
         <view class="flex">
-          <!-- <text class="home-operation__countdown-tip">距离 Party 结束还剩 </text> -->
-          <!-- <Countdown :end="end" /> -->
+          <LottieView />
         </view>
         <!-- <view class="home-operation__match-btn" @click="goShare">开始匹配</view> -->
       </view>
@@ -47,6 +47,7 @@
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
+import LottieView from '../../components/lottieView/index.vue';
 
 export default {
   name: 'TestIndex',
@@ -67,6 +68,11 @@ export default {
     const goMatchUserInfo = () => {
       Taro.navigateTo({
         url: '/pages/user/index',
+      });
+    };
+    const goLoginPage = () => {
+      Taro.navigateTo({
+        url: '/pages/login/index',
       });
     };
     const topics = [
@@ -93,6 +99,7 @@ export default {
       goShare,
       onClick,
       goMatchUserInfo,
+      goLoginPage,
       topics,
     };
   },

@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Countdown: typeof import('./src/components/countdown/index.vue')['default']
+    LottieView: typeof import('./src/components/lottieView/index.vue')['default']
     NutActionSheet: typeof import('@nutui/nutui-taro')['ActionSheet']
     NutButton: typeof import('@nutui/nutui-taro')['Button']
     NutCell: typeof import('@nutui/nutui-taro')['Cell']
