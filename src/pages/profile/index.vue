@@ -16,7 +16,7 @@
                   </template>
                 </Uploader>
               </nut-grid-item>
-              <nut-grid-item>
+              <!-- <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
                   v-model:file-list="state.image[0]"
@@ -31,9 +31,9 @@
                   :is-preview="false"
                 >
                 </Uploader>
-              </nut-grid-item>
+              </nut-grid-item> -->
             </nut-grid>
-            <nut-grid :column-num="3" square :border="false" :center="false">
+            <!-- <nut-grid :column-num="3" square :border="false" :center="false">
               <nut-grid-item>
                 <Uploader
                   :url="'https://www.baidu.com'"
@@ -58,7 +58,7 @@
                 >
                 </Uploader>
               </nut-grid-item>
-            </nut-grid>
+            </nut-grid> -->
           </nut-form-item>
         </view>
         <view class="profile-block">

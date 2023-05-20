@@ -1,5 +1,5 @@
 <template>
-  <view :class="classes">
+  <view :class="classes" class="custom-uploader">
     <view class="nut-uploader__slot" v-if="$slots.default">
       <slot></slot>
       <template v-if="Number(maximum) - fileList.length">
@@ -25,9 +25,9 @@
             <Failure color="#fff" v-if="item.status == 'error'" />
             <Loading name="loading" color="#fff" v-else />
           </template>
-          <view class="nut-uploader__preview__progress__msg">{{
+          <!-- <view class="nut-uploader__preview__progress__msg">{{
             item.message
-          }}</view>
+          }}</view> -->
         </view>
 
         <view class="close" v-if="isDeletable" @click="onDelete(item, index)">
@@ -603,6 +603,9 @@ export default {
         top: 0;
         color: rgba(0, 0, 0, 0.6);
         transform: translate(50%, -50%);
+        z-index: 1;
+        background: #000;
+        border-radius: 50%;
       }
       .tips {
         position: absolute;
@@ -652,6 +655,11 @@ export default {
         }
       }
     }
+  }
+}
+.custom-uploader {
+  .nut-uploader__preview {
+    position: absolute;
   }
 }
 </style>
