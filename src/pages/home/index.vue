@@ -35,6 +35,7 @@
         <nut-button @click="goShare">去分享页面</nut-button>
         <nut-button @click="goMatchUserInfo">去匹配对象详情页面</nut-button>
         <nut-button @click="goLoginPage">去登录页面</nut-button>
+        <nut-button @click="goChatsPage">去聊天页面</nut-button>
         <view class="flex">
           <LottieView />
         </view>
@@ -48,10 +49,13 @@
 import { reactive, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
 import LottieView from '../../components/lottieView/index.vue';
+import { useGlobalStore } from '../../store';
 
 export default {
   name: 'TestIndex',
   setup() {
+    const global = useGlobalStore();
+
     const state = reactive({
       city: '深圳',
     });
@@ -73,6 +77,12 @@ export default {
     const goLoginPage = () => {
       Taro.navigateTo({
         url: '/pages/login/index',
+      });
+    };
+    const goChatsPage = () => {
+      global.setActiveTabIndex(1);
+      Taro.switchTab({
+        url: '/pages/chats/index',
       });
     };
     const topics = [
@@ -100,6 +110,7 @@ export default {
       onClick,
       goMatchUserInfo,
       goLoginPage,
+      goChatsPage,
       topics,
     };
   },

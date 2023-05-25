@@ -9,11 +9,17 @@
     >
       <image
         class="tab-bar-icon"
-        :src="selected === index ? item.selectedIconPath : item.iconPath"
+        :src="
+          global.activeTabIndex === index
+            ? item.selectedIconPath
+            : item.iconPath
+        "
       />
       <view
         class="tab-bar-text"
-        :style="{ color: selected === index ? selectedColor : color }"
+        :style="{
+          color: global.activeTabIndex === index ? selectedColor : color,
+        }"
         >{{ item.text }}</view
       >
     </cover-view>
@@ -24,8 +30,13 @@
 import Taro from '@tarojs/taro';
 import { computed } from 'vue';
 import { useGlobalStore } from '../store';
+import PartyIcon from './images/party.png';
+import PartySelectedIcon from './images/party_selected.png';
+import MessageIcon from './images/message.png';
+import MessageSelectedIcon from './images/message_selected.png';
+import MeIcon from './images/me.png';
+import MeSelectedICon from './images/me_selected.png';
 
-const selected = 0;
 const color = '#5F5F5F';
 const selectedColor = '#DBF378';
 const global = useGlobalStore();
@@ -37,21 +48,21 @@ const list = [
     /** tab 上按钮文字 */
     text: '派对',
     /** 图片路径，icon 大小限制为 40kb，建议尺寸为 81px * 81px，当 position 为 top 时，此参数无效，不支持网络图片 */
-    iconPath: '/assets/images/party.png',
+    iconPath: PartyIcon,
     /** 选中时的图片路径，icon 大小限制为 40kb，建议尺寸为 81px * 81px ，当 position 为 top 时，此参数无效 */
-    selectedIconPath: '/assets/images/party_selected.png',
+    selectedIconPath: PartySelectedIcon,
   },
   {
     pagePath: '/pages/chats/index',
     text: '消息',
-    iconPath: '/assets/images/message.png',
-    selectedIconPath: '/assets/images/message_selected.png',
+    iconPath: MessageIcon,
+    selectedIconPath: MessageSelectedIcon,
   },
   {
     pagePath: '/pages/me/index',
     text: '我的',
-    iconPath: '/assets/images/me.png',
-    selectedIconPath: '/assets/images/me_selected.png',
+    iconPath: MeIcon,
+    selectedIconPath: MeSelectedICon,
   },
 ];
 function switchTab(index, url) {
@@ -59,7 +70,7 @@ function switchTab(index, url) {
   Taro.switchTab({ url });
 }
 function setSelected(index) {
-  // store.dispatch('setSelected', index);
+  global.setActiveTabIndex(index);
 }
 </script>
 
