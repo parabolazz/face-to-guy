@@ -4,6 +4,7 @@ import registerVirtualList from '@tarojs/components-advanced/dist/components/vir
 
 import './app.scss';
 import 'windi.css';
+import './theme.css'
 
 const App = createApp({});
 

@@ -1,12 +1,18 @@
 <template>
   <view class="login">
+    <!-- <nut-config-provider :theme-vars="themeVars"> -->
     <div class="login-header"></div>
     <div class="login-main">
-      <nut-button v-if="!hasAgreed" class="login-btn" @click="triggerToast"
+      <nut-button
+        type="primary"
+        v-if="!hasAgreed"
+        class="login-btn"
+        @click="triggerToast"
         >微信快捷登录</nut-button
       >
       <nut-button
         v-else
+        type="primary"
         class="login-btn"
         open-type="getPhoneNumber"
         @getphonenumber="getPhoneNumber"
@@ -19,12 +25,14 @@
         <nut-radio label="1">同意《用户服务协议》和《隐私保护协议》</nut-radio>
       </nut-radio-group>
     </div>
+    <!-- </nut-config-provider> -->
   </view>
 </template>
 
 <script setup lang="ts">
 import Taro from '@tarojs/taro';
 import { ref } from 'vue';
+import { login } from '../api/user';
 const hasAgreed = ref(false);
 
 const triggerToast = () => {
@@ -33,6 +41,9 @@ const triggerToast = () => {
     icon: 'none',
   });
 };
+const themeVars = {
+  primaryColor: '#dbf378',
+};
 
 const getPhoneNumber = async (e: any) => {
   if (e.detail.code) {
@@ -40,6 +51,16 @@ const getPhoneNumber = async (e: any) => {
       title: '获取手机号成功',
       icon: 'none',
     });
+    console.log(e.detail.code);
+
+    try {
+      const res = await login({
+        code: e.detail.code,
+      });
+      console.log('res', res);
+    } catch (error) {
+      console.log('error', error);
+    }
     // try {
     //   const res = await Taro.login();
     //   console.log('login res', res);
@@ -72,7 +93,7 @@ const getPhoneNumber = async (e: any) => {
     height: 62px;
     width: calc(100% - 92px);
     border-radius: 10px;
-    background: #dbf378;
+    // background: #dbf378;
     color: #000;
     font-size: 20px;
     font-weight: 500;
