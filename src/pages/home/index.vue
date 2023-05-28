@@ -1,6 +1,15 @@
 <template>
   <nut-config-provider theme="dark">
     <view class="home p-3.5">
+      <!-- <virtual-list
+        wclass="List"
+        :height="500"
+        :item-data="list"
+        :item-count="list.length"
+        :item-size="100"
+        :item="MessageItem"
+        width="100%"
+      /> -->
       <h3 class="home-title mb-3.5">附近</h3>
       <nut-grid :gutter="12" class="home-topic" :column-num="3">
         <nut-grid-item class="home-topic__item home-topic__first-item">
@@ -46,14 +55,23 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs } from 'vue';
+import { reactive, ref, toRefs } from 'vue';
+import MessageItem from '../chats/MessageItem.vue';
+
 import Taro from '@tarojs/taro';
 import LottieView from '../../components/lottieView/index.vue';
 import { useGlobalStore } from '../../store';
 
+function buildData(offset = 0) {
+  return Array(100)
+    .fill(0)
+    .map((_, i) => i + offset);
+}
+
 export default {
   name: 'TestIndex',
   setup() {
+    const list = ref(buildData());
     const global = useGlobalStore();
 
     const state = reactive({
@@ -111,6 +129,8 @@ export default {
       goMatchUserInfo,
       goLoginPage,
       goChatsPage,
+      list,
+      MessageItem,
       topics,
     };
   },

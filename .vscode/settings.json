@@ -22,5 +22,6 @@
     "*.wpy": "vue",
     "*.md": "markdown"
   },
-  "cSpell.words": ["hoyo", "popconfirm", "termbase", "unconfirm", "vtsheet"]
+  "cSpell.words": ["hoyo", "popconfirm", "termbase", "unconfirm", "vtsheet"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
