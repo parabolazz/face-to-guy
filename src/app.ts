@@ -6,7 +6,10 @@ import './app.scss';
 import 'windi.css';
 import './theme.css'
 
-const App = createApp({});
+const App = createApp({
+  // 对应 onShow
+  onShow (options) {},
+});
 
 // 注册插件
 App.use(createPinia())

@@ -44,7 +44,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   justify-content: space-between;
   height: 100%;
   padding-bottom: $footer-height;
-  // padding-bottom: $footer-height-lagecy;
+  padding-bottom: $footer-height-lagecy;
   .chats-list {
   }
   .chats-placeholder {

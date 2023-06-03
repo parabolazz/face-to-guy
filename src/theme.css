@@ -1,5 +1,5 @@
-page,
-:root {
+:root,
+page {
   --nut-button-primary-color: #dbf378;
   --nut-button-primary-background-color: #dbf378;
   --nut-primary-color: #dbf378;

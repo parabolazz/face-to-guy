@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     NutActionSheet: typeof import('@nutui/nutui-taro')['ActionSheet']
     NutButton: typeof import('@nutui/nutui-taro')['Button']
     NutCell: typeof import('@nutui/nutui-taro')['Cell']
+    NutCellGroup: typeof import('@nutui/nutui-taro')['CellGroup']
     NutCheckbox: typeof import('@nutui/nutui-taro')['Checkbox']
     NutCheckboxGroup: typeof import('@nutui/nutui-taro')['CheckboxGroup']
     NutConfigProvider: typeof import('@nutui/nutui-taro')['ConfigProvider']
@@ -31,7 +32,6 @@ declare module '@vue/runtime-core' {
     NutSwiper: typeof import('@nutui/nutui-taro')['Swiper']
     NutSwiperItem: typeof import('@nutui/nutui-taro')['SwiperItem']
     NutTextarea: typeof import('@nutui/nutui-taro')['Textarea']
-    NutToast: typeof import('@nutui/nutui-taro')['Toast']
     Uploader: typeof import('./src/components/uploader/index.vue')['default']
   }
 }
