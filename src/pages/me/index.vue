@@ -22,7 +22,11 @@
             ></nut-grid-item
           >
           <nut-grid-item class="me-card__operation">
-            <nut-button class="me-card__operations_btn" plain type="primary"
+            <nut-button
+              class="me-card__operations_btn"
+              plain
+              type="primary"
+              @click="goToProfile"
               >编辑资料</nut-button
             ></nut-grid-item
           >
@@ -54,6 +58,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 import { RectRight } from '@nutui/icons-vue-taro';
+import Taro from '@tarojs/taro';
 const profile = ref({
   name: 'Forever 1',
   type: 'Tp',
@@ -69,6 +74,12 @@ const desc = computed(() => {
   const descArr = [type, height, weight, bodyType].filter((item) => item);
   return descArr.join('/');
 });
+
+const goToProfile = () => {
+  Taro.navigateTo({
+    url: '/pages/profile/index?from=me',
+  });
+};
 </script>
 
 <style lang="scss">

@@ -1,6 +1,5 @@
 <template>
   <view class="login">
-    <!-- <nut-config-provider :theme-vars="themeVars"> -->
     <div class="login-header"></div>
     <div class="login-main">
       <nut-button
@@ -25,7 +24,6 @@
         <nut-radio label="1">同意《用户服务协议》和《隐私保护协议》</nut-radio>
       </nut-radio-group>
     </div>
-    <!-- </nut-config-provider> -->
   </view>
 </template>
 
@@ -41,9 +39,9 @@ const triggerToast = () => {
     icon: 'none',
   });
 };
-const themeVars = {
-  primaryColor: '#dbf378',
-};
+// const themeVars = {
+//   primaryColor: '#dbf378',
+// };
 
 const getPhoneNumber = async (e: any) => {
   if (e.detail.code) {

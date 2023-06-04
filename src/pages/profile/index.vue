@@ -165,22 +165,22 @@
           </nut-form-item>
         </view>
       </nut-form>
-
-      <nut-action-sheet
-        v-model:visible="drawerController.typeVisible"
-        :menu-items="optionsController.type as any"
-        @choose="chooseType"
-      >
-      </nut-action-sheet>
-      <nut-action-sheet
-        v-model:visible="drawerController.bodyVisible"
-        :menu-items="optionsController.bodyType as any"
-        @choose="chooseBodyType"
-      >
-      </nut-action-sheet>
-      <view class="profile-submit-btn">立即进入</view>
+      <view v-if="isEditMode" class="profile-submit-btn">修改</view>
+      <view v-else class="profile-submit-btn">立即进入</view>
     </view>
 
+    <nut-action-sheet
+      v-model:visible="drawerController.typeVisible"
+      :menu-items="optionsController.type as any"
+      @choose="chooseType"
+    >
+    </nut-action-sheet>
+    <nut-action-sheet
+      v-model:visible="drawerController.bodyVisible"
+      :menu-items="optionsController.bodyType as any"
+      @choose="chooseBodyType"
+    >
+    </nut-action-sheet>
     <nut-popup
       position="bottom"
       v-model:visible="drawerController.jobVisible"
@@ -225,13 +225,15 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, toRefs } from 'vue';
+import { computed, reactive, ref, toRefs } from 'vue';
 import Uploader from '../../components/uploader/index.vue';
+import Taro from '@tarojs/taro';
 
 export default {
   name: 'ProfilePage',
   components: { Uploader },
   setup() {
+    const instance = Taro.getCurrentInstance();
     const themeVars = reactive({
       darkBackground: '#000000',
       darkBackground2: '#000000',
@@ -306,6 +308,7 @@ export default {
         { value: '居家男', text: '居家男' },
       ],
     });
+    const isEditMode = computed(() => instance?.router?.params.from);
 
     const valueForPicker = reactive({
       type: [state.type],
@@ -355,6 +358,7 @@ export default {
       valueForPicker,
       themeVars,
       confirm,
+      isEditMode,
       // heightFormatter,
       // weightFormatter,
       chooseType,

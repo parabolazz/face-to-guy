@@ -1,16 +1,7 @@
 <template>
   <nut-config-provider theme="dark">
-    <view class="home p-3.5">
-      <!-- <virtual-list
-        wclass="List"
-        :height="500"
-        :item-data="list"
-        :item-count="list.length"
-        :item-size="100"
-        :item="MessageItem"
-        width="100%"
-      /> -->
-      <h3 class="home-title mb-3.5">附近</h3>
+    <view class="home">
+      <h3 class="home-title">附近</h3>
       <nut-grid :gutter="12" class="home-topic" :column-num="3">
         <nut-grid-item class="home-topic__item home-topic__first-item">
           <div class="home-topic__item__city">{{ city }}</div>
@@ -27,7 +18,7 @@
           </div></nut-grid-item
         >
       </nut-grid>
-      <nut-grid :gutter="12" class="home-topic mt-3" :column-num="3">
+      <nut-grid :gutter="12" class="home-topic" :column-num="3">
         <nut-grid-item
           :class="['home-topic__item', `home-topic__item-${topic.color}`]"
           v-for="topic in topics.slice(1, topics.length)"
@@ -46,32 +37,24 @@
         <nut-button @click="goLoginPage">去登录页面</nut-button>
         <nut-button @click="goChatsPage">去聊天页面</nut-button>
         <view class="flex">
-          <LottieView />
+          <!-- <LottieView /> -->
         </view>
-        <!-- <view class="home-operation__match-btn" @click="goShare">开始匹配</view> -->
       </view>
     </view>
   </nut-config-provider>
 </template>
 
 <script lang="ts">
-import { reactive, ref, toRefs } from 'vue';
+import { reactive, toRefs } from 'vue';
 import MessageItem from '../chats/MessageItem.vue';
 
 import Taro from '@tarojs/taro';
-import LottieView from '../../components/lottieView/index.vue';
+// import LottieView from '../../components/lottieView/index.vue';
 import { useGlobalStore } from '../../store';
-
-function buildData(offset = 0) {
-  return Array(100)
-    .fill(0)
-    .map((_, i) => i + offset);
-}
 
 export default {
   name: 'TestIndex',
   setup() {
-    const list = ref(buildData());
     const global = useGlobalStore();
 
     const state = reactive({
@@ -129,7 +112,6 @@ export default {
       goMatchUserInfo,
       goLoginPage,
       goChatsPage,
-      list,
       MessageItem,
       topics,
     };
@@ -148,8 +130,10 @@ export default {
   flex-direction: column;
   justify-content: flex-end;
   margin-bottom: 80px;
+  padding: 14px;
   .home-title {
-    font-size: 24px;
+    margin-bottom: 14px;
+    font-size: 22px;
     font-weight: bold;
   }
   .home-operation {
@@ -160,8 +144,9 @@ export default {
   .home-topic {
     margin-left: -12px;
     margin-right: -12px;
+    margin-bottom: 12px;
     .home-topic__item {
-      height: 162px;
+      height: 146px;
 
       &.home-topic__item-DBF378 {
         .nut-grid-item__content {
