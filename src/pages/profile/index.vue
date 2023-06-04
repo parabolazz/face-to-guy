@@ -7,12 +7,19 @@
             <nut-grid :column-num="3" square :border="false" :center="false">
               <nut-grid-item>
                 <Uploader
-                  :url="'https://www.baidu.com'"
+                  :sizeType="['compressed']"
+                  :mediaType="['image']"
+                  url="https://110.41.140.132/pairs/uploadImg"
+                  :headers="{
+                    Authorization: authToken,
+                  }"
                   v-model:file-list="state.image[0]"
                   :is-preview="false"
                 >
                   <template #tip>
-                    <view class="tip">头像</view>
+                    <view class="tip" v-if="state.image.length === 0"
+                      >头像</view
+                    >
                   </template>
                 </Uploader>
               </nut-grid-item>
@@ -225,7 +232,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, ref, toRefs } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Uploader from '../../components/uploader/index.vue';
 import Taro from '@tarojs/taro';
 
@@ -234,6 +241,8 @@ export default {
   components: { Uploader },
   setup() {
     const instance = Taro.getCurrentInstance();
+    const authToken = ref(Taro.getStorageSync('TOKEN'));
+    console.log('authToken', authToken);
     const themeVars = reactive({
       darkBackground: '#000000',
       darkBackground2: '#000000',
@@ -319,12 +328,6 @@ export default {
       state.job = selectedValue;
       drawerController.jobVisible = false;
     };
-    // const handleClick = (type, msg, cover = false) => {
-    //   state.show = true;
-    //   state.msg2 = msg;
-    //   state.type = type;
-    //   state.cover = cover;
-    // };
     const chooseType = (item) => {
       console.log('item', item);
       state.type = item.name;
@@ -359,6 +362,7 @@ export default {
       themeVars,
       confirm,
       isEditMode,
+      authToken,
       // heightFormatter,
       // weightFormatter,
       chooseType,

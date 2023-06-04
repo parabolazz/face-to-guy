@@ -36,7 +36,14 @@ const request = async <T>(method, url, params) => {
           break;
       }
     },
-    error(e) {
+    fail(e) {
+      if(e.errno !== 0 || e.errMsg) {
+        Taro.showToast({
+          title: '出错了！',
+          icon: 'error',
+          duration: 2000
+        })
+      }
       console.log('api', '请求接口出现问题', e);
     }
   }

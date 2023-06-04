@@ -39,32 +39,20 @@ const triggerToast = () => {
     icon: 'none',
   });
 };
-// const themeVars = {
-//   primaryColor: '#dbf378',
-// };
 
 const getPhoneNumber = async (e: any) => {
   if (e.detail.code) {
-    Taro.showToast({
-      title: '获取手机号成功',
-      icon: 'none',
-    });
-    console.log(e.detail.code);
-
+    console.log('phone number code', e.detail.code);
     try {
-      const res = await login({
+      const { data } = await login({
         code: e.detail.code,
       });
-      console.log('res', res);
-    } catch (error) {
-      console.log('error', error);
-    }
-    // try {
-    //   const res = await Taro.login();
-    //   console.log('login res', res);
-    // } catch (error) {
-    //   console.log('login error', error);
-    // }
+      Taro.showToast({
+        title: '获取手机号成功',
+        icon: 'none',
+      });
+      Taro.setStorageSync('TOKEN', data);
+    } catch (error) {}
   } else {
     Taro.showToast({
       title: '获取手机号失败',
