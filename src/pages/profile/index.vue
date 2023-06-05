@@ -1,80 +1,37 @@
 <template>
   <nut-config-provider theme="dark" :theme-vars="themeVars">
     <view class="profile">
-      <nut-form :model-value="state" ref="formRef">
+      <nut-form :model-value="state" ref="formRef" :rules="rules">
         <view class="profile-imageset">
-          <nut-form-item>
-            <nut-grid :column-num="3" square :border="false" :center="false">
-              <nut-grid-item>
-                <Uploader
-                  :sizeType="['compressed']"
-                  :mediaType="['image']"
-                  url="https://110.41.140.132/pairs/uploadImg"
-                  :headers="{
-                    Authorization: authToken,
-                  }"
-                  v-model:file-list="state.image[0]"
-                  :is-preview="false"
-                >
-                  <template #tip>
-                    <view class="tip" v-if="state.image.length === 0"
-                      >头像</view
-                    >
-                  </template>
-                </Uploader>
-              </nut-grid-item>
-              <!-- <nut-grid-item>
-                <Uploader
-                  :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
-                  :is-preview="false"
-                >
-                </Uploader>
-              </nut-grid-item>
-              <nut-grid-item>
-                <Uploader
-                  :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
-                  :is-preview="false"
-                >
-                </Uploader>
-              </nut-grid-item> -->
-            </nut-grid>
-            <!-- <nut-grid :column-num="3" square :border="false" :center="false">
-              <nut-grid-item>
-                <Uploader
-                  :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
-                  :is-preview="false"
-                >
-                </Uploader>
-              </nut-grid-item>
-              <nut-grid-item>
-                <Uploader
-                  :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
-                  :is-preview="false"
-                >
-                </Uploader>
-              </nut-grid-item>
-              <nut-grid-item>
-                <Uploader
-                  :url="'https://www.baidu.com'"
-                  v-model:file-list="state.image[0]"
-                  :is-preview="false"
-                >
-                </Uploader>
-              </nut-grid-item>
-            </nut-grid> -->
+          <nut-form-item
+            prop="image"
+            label="照片墙"
+            required
+            class="profile-form-item__image"
+          >
+            <nut-uploader
+              :sizeType="['compressed']"
+              :mediaType="['image']"
+              url="https://110.41.140.132/pairs/uploadImg"
+              :headers="{
+                Authorization: authToken,
+              }"
+              v-model:file-list="state.images"
+              :is-preview="false"
+            >
+              <template #tip>
+                <view class="tip"  v-if="state.images.length === 0">头像</view>
+              </template>
+            </nut-uploader>
           </nut-form-item>
         </view>
         <view class="profile-block">
-          <nut-form-item required prop="nickname" label="姓名">
+          <nut-form-item prop="nickname" label="昵称" required>
             <nut-input
               input-align="right"
               :border="false"
               v-model="state.nickname"
-              placeholder="请输入姓名"
+              placeholder="请输入昵称"
               type="text"
             />
           </nut-form-item>
@@ -82,13 +39,13 @@
             <nut-textarea
               class="profile-intro-textarea"
               v-model="state.introduction"
-              placeholder="人生即一场相遇,即使错过也不深究"
+              placeholder="人生即一场相遇，即使错过也不深究"
               :autosize="{ minHeight: 50, maxHeight: 200 }"
             />
           </nut-form-item>
         </view>
         <view class="profile-block">
-          <nut-form-item label="属性" prop="type">
+          <nut-form-item label="属性" prop="type" required>
             <nut-input
               input-align="right"
               :border="false"
@@ -151,29 +108,31 @@
             />
           </nut-form-item>
           <nut-form-item label="兴趣爱好" prop="hobbies">
-            <nut-input
-              input-align="right"
-              :border="false"
-              :value="state.hobbies"
-              placeholder="请选择兴趣爱好"
-              readonly
+            <div
+              :class="[
+                'profile-form-item__value',
+                hobbyText && 'profile-form-item__value-text',
+              ]"
               @click="() => (drawerController.hobbyVisible = true)"
-            />
+            >
+              {{ hobbyText || '请选择兴趣爱好' }}
+            </div>
           </nut-form-item>
           <nut-form-item label="喜欢的类型" prop="likeType">
-            <nut-input
-              input-align="right"
-              :border="false"
-              :value="state.likeType"
-              placeholder="请选择喜欢的类型"
-              readonly
+            <div
+              :class="[
+                'profile-form-item__value',
+                likeTypeText && 'profile-form-item__value-text',
+              ]"
               @click="() => (drawerController.likeTypeVisible = true)"
-            />
+            >
+              {{ likeTypeText || '请选择喜欢的类型' }}
+            </div>
           </nut-form-item>
         </view>
       </nut-form>
       <view v-if="isEditMode" class="profile-submit-btn">修改</view>
-      <view v-else class="profile-submit-btn">立即进入</view>
+      <view v-else class="profile-submit-btn" @click="onSubmit">立即进入</view>
     </view>
 
     <nut-action-sheet
@@ -209,7 +168,8 @@
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
-      <nut-checkbox-group v-model="state.hobbies" :max="3">
+      <!-- 傻逼nut-ui一定要用ref -->
+      <nut-checkbox-group v-model="hobbies" :max="3">
         <nut-cell v-for="item in optionsController.hobbies" :key="item.value">
           <nut-checkbox :label="item.value">{{ item.text }}</nut-checkbox>
         </nut-cell>
@@ -222,7 +182,9 @@
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
-      <nut-checkbox-group v-model="state.likeType" :max="3">
+      <!-- 傻逼nut-ui一定要用ref -->
+
+      <nut-checkbox-group v-model="likeType" :max="3">
         <nut-cell v-for="item in optionsController.likeType" :key="item.value">
           <nut-checkbox :label="item.value">{{ item.text }}</nut-checkbox>
         </nut-cell>
@@ -232,13 +194,12 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, ref } from 'vue';
-import Uploader from '../../components/uploader/index.vue';
+import { computed, reactive, ref, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
+
 
 export default {
   name: 'ProfilePage',
-  components: { Uploader },
   setup() {
     const instance = Taro.getCurrentInstance();
     const authToken = ref(Taro.getStorageSync('TOKEN'));
@@ -257,7 +218,22 @@ export default {
       job: '',
       hobbies: [],
       likeType: [],
-      image: [],
+      images: [
+        {
+          name: '文件1.png',
+          url: 'https://m.360buyimg.com/babel/jfs/t1/164410/22/25162/93384/616eac6cE6c711350/0cac53c1b82e1b05.gif',
+          status: 'success',
+          message: '上传成功',
+          type: 'image',
+        },
+        {
+          name: '文件2.png',
+          url: 'https://m.360buyimg.com/babel/jfs/t1/164410/22/25162/93384/616eac6cE6c711350/0cac53c1b82e1b05.gif',
+          status: 'uploading',
+          message: '上传中...',
+          type: 'image',
+        },
+      ],
     });
     const drawerController = reactive({
       typeVisible: false,
@@ -323,7 +299,26 @@ export default {
       type: [state.type],
       height: [state.height],
     });
+    const formRef = ref();
 
+    const rules = computed(() => ({
+      nickname: [
+        { required: true, message: '请输入昵称', trigger: 'blur' },
+        {
+          regex: /^\w{2,20}$/,
+          message: '昵称长度在 2 到 15 个字符',
+          trigger: 'blur',
+        },
+      ],
+      type: [{ required: true, message: '请选择属性', trigger: 'change' }],
+      images: [{ required: true, message: '请上传图片', trigger: 'change' }],
+    }));
+    const hobbyText = computed(() => {
+      return state.hobbies.join('，');
+    });
+    const likeTypeText = computed(() => {
+      return state.likeType.join('，');
+    });
     const confirm = ({ selectedValue }) => {
       state.job = selectedValue;
       drawerController.jobVisible = false;
@@ -351,16 +346,26 @@ export default {
       state.likeType = item.name;
       drawerController.likeTypeVisible = false;
     };
+    const onSubmit = async () => {
+      const res = await formRef.value.validate();
+      console.log('res', res);
+    };
     // const heightFormatter = (value: string) => value + 'cm';
     // const weightFormatter = (value: string) => value + 'kg';
 
     return {
       state,
+      ...toRefs(state),
       drawerController,
       optionsController,
       valueForPicker,
       themeVars,
       confirm,
+      rules,
+      formRef,
+      onchange,
+      hobbyText,
+      likeTypeText,
       isEditMode,
       authToken,
       // heightFormatter,
@@ -369,6 +374,7 @@ export default {
       chooseBodyType,
       chooseHobbies,
       chooseLikeType,
+      onSubmit,
     };
   },
 };
@@ -384,6 +390,39 @@ export default {
   background-color: #000000;
   .nut-grid-item__content {
     padding: 4px 7px;
+  }
+  .profile-form-item__image {
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-form-item__value {
+    flex: 1;
+    text-align: right;
+    color: #808080;
+  }
+  .profile-form-item__value-text {
+    color: #fff;
+  }
+  .nut-form-item__body__tips {
+    text-align: right;
+  }
+
+  .nut-uploader {
+    padding: 13px 0 5px;
+    &__upload {
+      position: relative;
+      background: transparent;
+      // width: 100%;
+      // height: 100%;
+      border: 1px dashed #d9d9d9;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.list {
+      }
+    }
   }
   .profile-imageset {
     padding: 4px;
@@ -402,7 +441,7 @@ export default {
     }
 
     .nut-cell {
-      padding: 13px 0px;
+      padding: 13px 16px;
     }
   }
   .profile-submit-btn {

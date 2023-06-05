@@ -16,7 +16,8 @@ Taro.addInterceptor(interceptor)
 
 const request = async <T>(method, url, params) => {
   //由于post请求时习惯性query参数使用params，body参数使用data，而taro只有data参数，使用contentType作为区分，因此此处需要做一个判断
-  let contentType = params?.data ? 'application/json' : 'application/x-www-form-urlencoded';
+  // let contentType = params?.data ? 'application/json' : 'application/json application/x-www-form-urlencoded';
+  let contentType = 'application/json';
   if (params) contentType = params?.headers?.contentType || contentType;
   const option = {
     method,
@@ -52,19 +53,19 @@ const request = async <T>(method, url, params) => {
 }
 
 export default {
-  get: <T>(url, config) => {
+  get: <T>(url, config = {}) => {
     return request<T>('GET', url, config);
   },
-  post: <T>(url, config) => {
+  post: <T>(url, config = {}) => {
     return request<T>('POST', url, config);
   },
-  put: <T>(url, config) => {
+  put: <T>(url, config = {}) => {
     return request<T>('PUT', url, config);
   },
-  delete: <T>(url, config) => {
+  delete: <T>(url, config = {}) => {
     return request<T>('DELETE', url, config);
   },
-  patch: <T>(url, config) => {
+  patch: <T>(url, config = {}) => {
     return request<T>('PATCH', url, config);
   },
 }

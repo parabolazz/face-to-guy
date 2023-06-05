@@ -24,7 +24,6 @@ declare module '@vue/runtime-core' {
     NutInput: typeof import('@nutui/nutui-taro')['Input']
     NutPicker: typeof import('@nutui/nutui-taro')['Picker']
     NutPopup: typeof import('@nutui/nutui-taro')['Popup']
-    NutProgress: typeof import('@nutui/nutui-taro')['Progress']
     NutRadio: typeof import('@nutui/nutui-taro')['Radio']
     NutRadioGroup: typeof import('@nutui/nutui-taro')['RadioGroup']
     NutStep: typeof import('@nutui/nutui-taro')['Step']
@@ -32,6 +31,7 @@ declare module '@vue/runtime-core' {
     NutSwiper: typeof import('@nutui/nutui-taro')['Swiper']
     NutSwiperItem: typeof import('@nutui/nutui-taro')['SwiperItem']
     NutTextarea: typeof import('@nutui/nutui-taro')['Textarea']
+    NutUploader: typeof import('@nutui/nutui-taro')['Uploader']
     Uploader: typeof import('./src/components/uploader/index.vue')['default']
   }
 }

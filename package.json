@@ -1,5 +1,5 @@
 {
-	"name": "myApp",
+	"name": "face-to-guy",
 	"version": "1.0.0",
 	"private": true,
 	"description": "",
@@ -66,7 +66,7 @@
 	"dependencies": {
 		"@babel/runtime": "^7.7.7",
 		"@nutui/icons-vue-taro": "^0.0.9",
-		"@nutui/nutui-taro": "^4.0.4",
+		"@nutui/nutui-taro": "^4.0.7",
 		"@tarojs/components": "3.6.6",
 		"@tarojs/helper": "3.6.6",
 		"@tarojs/plugin-framework-vue3": "3.6.6",
@@ -83,7 +83,7 @@
 		"@tarojs/taro": "3.6.6",
 		"lottie-miniprogram": "^1.0.12",
 		"pinia": "^2.0.35",
-		"vue": "^3.2.40"
+		"vue": "^3.3.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.8.0",
