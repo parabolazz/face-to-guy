@@ -20,7 +20,7 @@
               :is-preview="false"
             >
               <template #tip>
-                <view class="tip"  v-if="state.images.length === 0">头像</view>
+                <view class="tip" v-if="state.images.length === 0">头像</view>
               </template>
             </nut-uploader>
           </nut-form-item>
@@ -197,7 +197,6 @@
 import { computed, reactive, ref, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
 
-
 export default {
   name: 'ProfilePage',
   setup() {
@@ -224,13 +223,6 @@ export default {
           url: 'https://m.360buyimg.com/babel/jfs/t1/164410/22/25162/93384/616eac6cE6c711350/0cac53c1b82e1b05.gif',
           status: 'success',
           message: '上传成功',
-          type: 'image',
-        },
-        {
-          name: '文件2.png',
-          url: 'https://m.360buyimg.com/babel/jfs/t1/164410/22/25162/93384/616eac6cE6c711350/0cac53c1b82e1b05.gif',
-          status: 'uploading',
-          message: '上传中...',
           type: 'image',
         },
       ],
@@ -363,7 +355,6 @@ export default {
       confirm,
       rules,
       formRef,
-      onchange,
       hobbyText,
       likeTypeText,
       isEditMode,

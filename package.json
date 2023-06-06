@@ -68,6 +68,7 @@
 		"@nutui/icons-vue-taro": "^0.0.9",
 		"@nutui/nutui-taro": "^4.0.7",
 		"@tarojs/components": "3.6.6",
+		"@tarojs/components-advanced": "^3.6.7",
 		"@tarojs/helper": "3.6.6",
 		"@tarojs/plugin-framework-vue3": "3.6.6",
 		"@tarojs/plugin-html": "3.6.6",
