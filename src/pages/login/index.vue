@@ -1,7 +1,9 @@
 <template>
   <view class="login">
-    <div class="login-header"></div>
     <div class="login-main">
+      <div class="login-main__vision">
+        <img class="login-main__logo" :src="LogoImage" alt="" />
+      </div>
       <nut-button
         type="primary"
         v-if="!hasAgreed"
@@ -30,7 +32,8 @@
 <script setup lang="ts">
 import Taro from '@tarojs/taro';
 import { ref } from 'vue';
-import { login } from '../api/user';
+import { login } from '../../api/user';
+import LogoImage from '../../assets/images/logo.webp';
 const hasAgreed = ref(false);
 
 const triggerToast = () => {
@@ -48,10 +51,14 @@ const getPhoneNumber = async (e: any) => {
         code: e.detail.code,
       });
       Taro.showToast({
-        title: '获取手机号成功',
+        title: '登录成功',
         icon: 'none',
       });
       Taro.setStorageSync('TOKEN', data);
+      //跳转到信息填写页
+      Taro.navigateTo({
+        url: '/pages/profile/index',
+      });
     } catch (error) {}
   } else {
     Taro.showToast({
@@ -89,6 +96,16 @@ const getPhoneNumber = async (e: any) => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-top: 120px;
+    .login-main__vision {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 150px;
+      .login-main__logo {
+        width: 190px;
+        height: 62px;
+      }
+    }
     .login-btn {
       margin-bottom: 10px;
     }

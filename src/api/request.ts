@@ -45,7 +45,6 @@ const request = async <T>(method, url, params) => {
           duration: 2000
         })
       }
-      console.log('api', '请求接口出现问题', e);
     }
   }
   const resp = await Taro.request<T>(option);

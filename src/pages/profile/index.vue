@@ -132,8 +132,9 @@
           </nut-form-item>
         </view>
       </nut-form>
-      <view v-if="isEditMode" class="profile-submit-btn">修改</view>
-      <view v-else class="profile-submit-btn" @click="onSubmit">立即进入</view>
+      <view class="profile-submit-btn" @click="onSubmit">{{
+        isEditMode ? '修改资料' : '立即进入'
+      }}</view>
     </view>
 
     <nut-action-sheet
@@ -196,7 +197,7 @@
 <script lang="ts">
 import { computed, reactive, ref, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
-import { editProfile } from '../api/user';
+import { editProfile } from '../../api/user';
 
 export default {
   name: 'ProfilePage',
@@ -469,8 +470,6 @@ export default {
     &__upload {
       position: relative;
       background: transparent;
-      // width: 100%;
-      // height: 100%;
       border: 1px dashed #d9d9d9;
       border-radius: 10px;
       display: flex;
@@ -482,7 +481,6 @@ export default {
     }
   }
   .profile-imageset {
-    padding: 4px;
     background-color: #1d1d1d;
     .tip {
       position: absolute;

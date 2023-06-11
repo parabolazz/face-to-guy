@@ -8,7 +8,7 @@ export const login = (data: {
   }>('/pairs/login', {data});
 }
 
-interface ProfileRequestData {
+interface ProfileData {
   avatar_ids: string[]
   nickname: string
   signature?: string
@@ -21,6 +21,12 @@ interface ProfileRequestData {
   favorite?: string
 }
 
-export const editProfile = (data: ProfileRequestData) => {
+export const editProfile = (data: ProfileData) => {
   return api.post('/pairs/profile', { data });
+}
+
+export const getMyProfile = () => {
+  return api.get<{
+    data: ProfileData
+  }>('/pairs/profileList');
 }

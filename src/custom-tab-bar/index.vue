@@ -28,6 +28,7 @@
 
 <script setup>
 import Taro from '@tarojs/taro';
+import { getMyProfile } from '../api/user';
 import { computed } from 'vue';
 import { useGlobalStore } from '../store';
 import PartyIcon from './images/party.png';
@@ -72,6 +73,18 @@ function switchTab(index, url) {
 function setSelected(index) {
   global.setActiveTabIndex(index);
 }
+async function initUserInfo() {
+  const token = Taro.getStorageSync('TOKEN');
+  const currentPages = Taro.getCurrentPages();
+  const lastPage = currentPages[currentPages.length - 1]?.route;
+  if (token) {
+    const profile = await getMyProfile();
+    global.setUserProfile(profile);
+  } else if (lastPage !== 'pages/login/index') {
+    Taro.navigateTo({ url: '/pages/login/index' });
+  }
+}
+initUserInfo();
 </script>
 
 <style lang="scss">

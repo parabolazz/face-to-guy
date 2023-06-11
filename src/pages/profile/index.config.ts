@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '个人信息',
+  navigationBarTitleText: '我的资料',
   backgroundColor: '#000000',
   usingComponents: {},
 });

@@ -49,6 +49,8 @@
               <RectRight color="#fff" />
             </template>
           </nut-cell>
+          <nut-cell round-radius="0" title="退出登录" @click="onLogout">
+          </nut-cell>
         </nut-cell-group>
       </div>
     </nut-config-provider>
@@ -78,6 +80,21 @@ const desc = computed(() => {
 const goToProfile = () => {
   Taro.navigateTo({
     url: '/pages/profile/index?from=me',
+  });
+};
+
+const onLogout = () => {
+  Taro.showModal({
+    title: '提示',
+    content: '确定退出登录吗？',
+    success: function (res) {
+      if (res.confirm) {
+        Taro.removeStorageSync('TOKEN');
+        Taro.reLaunch({
+          url: '/pages/login/index',
+        });
+      }
+    },
   });
 };
 </script>
