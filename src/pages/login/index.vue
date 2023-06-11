@@ -33,7 +33,7 @@
 import Taro from '@tarojs/taro';
 import { ref } from 'vue';
 import { login } from '../../api/user';
-import LogoImage from '../../assets/images/logo.webp';
+import LogoImage from '../../assets/images/logo.png';
 const hasAgreed = ref(false);
 
 const triggerToast = () => {
