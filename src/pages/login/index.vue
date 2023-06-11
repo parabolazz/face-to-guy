@@ -54,11 +54,15 @@ const getPhoneNumber = async (e: any) => {
         title: '登录成功',
         icon: 'none',
       });
-      Taro.setStorageSync('TOKEN', data);
+      Taro.setStorageSync('TOKEN', data.token);
       //跳转到信息填写页
-      Taro.navigateTo({
-        url: '/pages/profile/index',
-      });
+      data.isNew
+        ? Taro.navigateTo({
+            url: '/pages/profile/index',
+          })
+        : Taro.switchTab({
+            url: '/pages/home/index',
+          });
     } catch (error) {}
   } else {
     Taro.showToast({

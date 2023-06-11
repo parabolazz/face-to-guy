@@ -4,7 +4,10 @@ export const login = (data: {
   code: string;
 }) => {
   return api.post<{
-    data: string
+    data: {
+      isNew: boolean;
+      token: string;
+    }
   }>('/pairs/login', {data});
 }
 

@@ -28,8 +28,16 @@ const request = async <T>(method, url, params) => {
       'content-type': contentType,
     },
     success(res) {
+      console.log('success', res?.statusCode)
     //根据不同返回状态值3进行操作
       switch (res?.statusCode) {
+        case 401: {
+          const currPages = Taro.getCurrentPages();
+          const currPage = currPages[currPages.length - 1].route;
+          currPage !== 'pages/login/index' && Taro.navigateTo({
+            url: '/pages/login/index'
+          })
+        }
         case 503: {
           break;
         }
@@ -38,6 +46,7 @@ const request = async <T>(method, url, params) => {
       }
     },
     fail(e) {
+      console.log('fail', e)
       if(e.errno !== 0 || e.errMsg) {
         Taro.showToast({
           title: '出错了！',

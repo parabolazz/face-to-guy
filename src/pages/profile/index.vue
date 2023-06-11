@@ -351,8 +351,8 @@ export default {
         nickname: state.nickname,
         signature: state.signature,
         attribute: state.attribute,
-        height: state.height,
-        weight: state.weight,
+        height: Number(state.height),
+        weight: Number(state.weight),
         shape: state.shape,
         carrier: state.carrier,
         hobby: state.hobbies.join(','),
@@ -365,6 +365,9 @@ export default {
       });
       await editProfile(data);
       Taro.hideToast();
+      Taro.switchTab({
+        url: '/pages/home/index',
+      });
     };
 
     const onUploadSuccess = () => {
