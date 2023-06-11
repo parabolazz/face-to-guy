@@ -5,13 +5,13 @@ export const login = (data: {
 }) => {
   return api.post<{
     data: {
-      isNew: boolean;
+      is_new: boolean;
       token: string;
     }
   }>('/pairs/login', {data});
 }
 
-interface ProfileData {
+export interface ProfileData {
   avatar_ids: string[]
   nickname: string
   signature?: string
@@ -19,17 +19,17 @@ interface ProfileData {
   height?: number
   weight?: number
   hobby?: string
-  carrier?: string
+  carrier?: number
   shape?: number
   favorite?: string
 }
 
 export const editProfile = (data: ProfileData) => {
-  return api.post('/pairs/profile', { data });
+  return api.post('/pairs/profileEdit', { data });
 }
 
 export const getMyProfile = () => {
-  return api.get<{
+  return api.post<{
     data: ProfileData
   }>('/pairs/profileList');
 }

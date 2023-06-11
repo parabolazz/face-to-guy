@@ -37,12 +37,16 @@ const request = async <T>(method, url, params) => {
           currPage !== 'pages/login/index' && Taro.navigateTo({
             url: '/pages/login/index'
           })
+          return
         }
-        case 503: {
-          break;
-        }
-        default:
-          break;
+      }
+      if(res?.statusCode !== 200) {
+        Taro.showToast({
+          title: '出错了！',
+          icon: 'error',
+          duration: 2000
+        })
+        return Promise.reject(res)
       }
     },
     fail(e) {

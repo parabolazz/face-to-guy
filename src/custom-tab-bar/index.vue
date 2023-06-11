@@ -79,8 +79,10 @@ async function initUserInfo() {
   const currentPages = Taro.getCurrentPages();
   const lastPage = currentPages[currentPages.length - 1]?.route;
   if (token) {
-    const profile = await getMyProfile();
-    global.setUserProfile(profile);
+    if (!global.userProfile) {
+      const profile = await getMyProfile();
+      global.setUserProfile(profile.data);
+    }
   } else if (lastPage !== 'pages/login/index') {
     Taro.navigateTo({ url: '/pages/login/index' });
   }

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useGlobalStore = defineStore('global', {
   state: () => {
-    return { showTabbar: true, activeTabIndex: 0, userProfile: null }
+    return { showTabbar: true, activeTabIndex: 0, userProfile: undefined }
   },
   actions: {
     toggleTabbar(flag) {

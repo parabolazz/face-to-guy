@@ -56,7 +56,7 @@ const getPhoneNumber = async (e: any) => {
       });
       Taro.setStorageSync('TOKEN', data.token);
       //跳转到信息填写页
-      data.isNew
+      data.is_new
         ? Taro.navigateTo({
             url: '/pages/profile/index',
           })

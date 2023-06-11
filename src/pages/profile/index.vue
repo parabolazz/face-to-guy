@@ -197,32 +197,70 @@
 <script lang="ts">
 import { computed, reactive, ref, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
-import { editProfile } from '../../api/user';
+import { editProfile, ProfileData } from '../../api/user';
+import { useGlobalStore } from '../../store';
+
+interface FormData {
+  nickname: string;
+  signature: string;
+  attribute: number;
+  height?: number;
+  weight?: number;
+  shape?: number;
+  carrier?: number;
+  hobbies: number[];
+  favorite: number[];
+  images: {
+    url: string;
+  }[];
+}
+
+function formatApiDataToFormData(data?: ProfileData): FormData {
+  return data
+    ? {
+        nickname: data.nickname,
+        signature: data.signature || '',
+        attribute: data.attribute,
+        height: data.height,
+        weight: data.weight,
+        shape: data.shape,
+        carrier: data.carrier,
+        hobbies: data.hobby?.split(',').map((str) => Number(str)) || [],
+        favorite: data.favorite?.split(',').map((str) => Number(str)) || [],
+        images: data.avatar_ids.map((url) => ({
+          url,
+        })),
+      }
+    : {
+        nickname: '',
+        signature: '',
+        attribute: undefined as unknown as number,
+        height: undefined,
+        weight: undefined,
+        shape: undefined,
+        carrier: undefined,
+        hobbies: [] as number[],
+        favorite: [] as number[],
+        images: [] as {
+          url: string;
+        }[],
+      };
+}
 
 export default {
   name: 'ProfilePage',
   setup() {
     const instance = Taro.getCurrentInstance();
     const authToken = ref(Taro.getStorageSync('TOKEN'));
+    const global = useGlobalStore();
 
     const themeVars = reactive({
       darkBackground: '#000000',
       darkBackground2: '#000000',
     });
-    const state = reactive({
-      nickname: '',
-      signature: '',
-      attribute: undefined as unknown as number,
-      height: undefined,
-      weight: undefined,
-      shape: undefined,
-      carrier: undefined,
-      hobbies: [] as number[],
-      favorite: [] as number[],
-      images: [] as {
-        url: string;
-      }[],
-    });
+    const state = reactive<FormData>(
+      formatApiDataToFormData(global.userProfile),
+    );
     const drawerController = reactive({
       attributeVisible: false,
       bodyVisible: false,
