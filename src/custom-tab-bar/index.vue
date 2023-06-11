@@ -1,13 +1,13 @@
 <template>
-  <cover-view class="tab-bar" v-show="global.showTabbar">
-    <cover-view class="tab-bar-border"></cover-view>
-    <cover-view
+  <div class="tab-bar" v-show="global.showTabbar">
+    <div class="tab-bar-border"></div>
+    <div
       v-for="(item, index) in list"
       :key="index"
       class="tab-bar-item"
       @tap="switchTab(index, item.pagePath)"
     >
-      <image
+      <img
         class="tab-bar-icon"
         :src="
           global.activeTabIndex === index
@@ -15,15 +15,16 @@
             : item.iconPath
         "
       />
-      <view
+      <div
         class="tab-bar-text"
         :style="{
           color: global.activeTabIndex === index ? selectedColor : color,
         }"
-        >{{ item.text }}</view
       >
-    </cover-view>
-  </cover-view>
+        {{ item.text }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -93,12 +94,10 @@ initUserInfo();
   bottom: 0;
   left: 0;
   right: 0;
-  height: 80px;
   background: #2c2c2c;
   display: flex;
   justify-content: space-between;
-  padding: 0 38px;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding: 15px 38px env(safe-area-inset-bottom);
 
   .tab-bar-border {
     background-color: rgba(0, 0, 0, 0.33);
@@ -117,6 +116,7 @@ initUserInfo();
     flex-direction: column;
   }
   .tab-bar-icon {
+    box-sizing: border-box;
     width: 28px;
     height: 28px;
     margin-bottom: 10px;
