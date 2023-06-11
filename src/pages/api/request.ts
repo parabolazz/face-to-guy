@@ -7,7 +7,7 @@ const interceptor: Taro.interceptor = function (chain: Taro.Chain) {
   let token = Taro.getStorageSync('TOKEN')//拿到本地缓存中存的token
   requestParams.header = {
     ...requestParams.header,
-    Authorization: 'Bearer ' + token //将token添加到头部
+    Authorization: token //将token添加到头部
   }
   return chain.proceed(requestParams).then(res => { return res })
 }
