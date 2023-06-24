@@ -9,10 +9,10 @@
         </nut-grid-item>
         <nut-grid-item
           :class="['home-topic__item', `home-topic__item-${topics[0].color}`]"
+          @click="goMatching"
           v-if="topics[0]"
         >
           <div class="home-topic__item__city">{{ city }}</div>
-
           <div v-for="t in topics[0].title?.split(' ')" :key="t">
             {{ t }}
           </div></nut-grid-item
@@ -20,6 +20,7 @@
       </nut-grid>
       <nut-grid :gutter="12" class="home-topic" :column-num="3">
         <nut-grid-item
+          @click="goMatching"
           :class="['home-topic__item', `home-topic__item-${topic.color}`]"
           v-for="topic in topics.slice(1, topics.length)"
           :key="topic.title"
@@ -111,6 +112,11 @@ export default {
         color: '65BAE8',
       },
     ];
+    const goMatching = () => {
+      Taro.navigateTo({
+        url: '/pages/matching/index',
+      });
+    };
 
     return {
       ...toRefs(state),
@@ -120,6 +126,7 @@ export default {
       goLoginPage,
       goChatsPage,
       MessageItem,
+      goMatching,
       topics,
     };
   },
