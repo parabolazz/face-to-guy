@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AnswerCard: typeof import('./src/components/answerCard/index.vue')['default']
     Countdown: typeof import('./src/components/countdown/index.vue')['default']
     LottieView: typeof import('./src/components/lottieView/index.vue')['default']
     NutActionSheet: typeof import('@nutui/nutui-taro')['ActionSheet']
@@ -32,6 +33,7 @@ declare module '@vue/runtime-core' {
     NutSwiperItem: typeof import('@nutui/nutui-taro')['SwiperItem']
     NutTextarea: typeof import('@nutui/nutui-taro')['Textarea']
     NutUploader: typeof import('@nutui/nutui-taro')['Uploader']
+    QuestionCard: typeof import('./src/components/questionCard/index.vue')['default']
     Uploader: typeof import('./src/components/uploader/index.vue')['default']
   }
 }

@@ -30,6 +30,12 @@
           </div></nut-grid-item
         >
       </nut-grid>
+      <QuestionCard type="image"></QuestionCard>
+      <AnswerCard
+        type="text"
+        title="用一种动物来形容你自己？"
+        answer="https://img.yzcdn.cn/vant/cat.jpeg"
+      ></AnswerCard>
       <view class="home-operation mt-4">
         <nut-button @click="onClick">去信息填写页</nut-button>
         <nut-button @click="goShare">去分享页面</nut-button>
@@ -46,9 +52,10 @@
 
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
-import MessageItem from '../chats/MessageItem.vue';
-
 import Taro from '@tarojs/taro';
+import MessageItem from '../chats/MessageItem.vue';
+import QuestionCard from '../../components/questionCard/index.vue';
+import AnswerCard from '../../components/answerCard/index.vue';
 // import LottieView from '../../components/lottieView/index.vue';
 import { useGlobalStore } from '../../store';
 
