@@ -55,7 +55,11 @@ const props = defineProps<{
 
 const userInfo = ref<ProfileData>({
   nickname: '张三',
-  avatar_ids: ['https://img.yzcdn.cn/vant/cat.jpeg'],
+  avatar_ids: [
+    'https://img.yzcdn.cn/vant/cat.jpeg',
+    // dog picture
+    'https://img.yzcdn.cn/vant/cat.jpeg',
+  ],
   attribute: 0,
   height: 180,
   weight: 60,

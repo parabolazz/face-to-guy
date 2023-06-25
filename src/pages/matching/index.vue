@@ -10,6 +10,7 @@
       :circular="false"
       :indicator-dots="false"
       :autoplay="false"
+      @change="onSwipe"
     >
       <swiper-item class="matching-swiper__card">
         <div class="demo-text-1">1</div>
@@ -24,18 +25,25 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue';
 import { activityList, answerQuestionActivity } from '../../api/matching';
-async function init() {
-  const res = await activityList();
-  const firstAnswer = res.data[0];
-  setTimeout(() => {
-    answerQuestionActivity({
-      activity_id: firstAnswer.id,
-      answer: 'yihuang ceshi',
-    });
-  }, 3000);
-}
-init();
+
+const idx = ref(0);
+// async function init() {
+//   const res = await activityList();
+//   const firstAnswer = res.data[0];
+//   setTimeout(() => {
+//     answerQuestionActivity({
+//       activity_id: firstAnswer.id,
+//       answer: 'yihuang ceshi',
+//     });
+//   }, 3000);
+// }
+// init();
+const onSwipe = (e: any) => {
+  console.log(e);
+  idx.value = e.detail.current;
+};
 </script>
 <style lang="scss">
 .matching {
@@ -48,6 +56,20 @@ init();
       height: 560px;
       color: #fff;
     }
+  }
+
+  swiper {
+    padding-top: 30px;
+  }
+  .swiper-img {
+    width: 100%;
+    display: block;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    border-radius: 6px;
+  }
+  .swiper-img.swiper-active {
+    transform: scale(1); //放大缩放的效果
   }
 }
 </style>
