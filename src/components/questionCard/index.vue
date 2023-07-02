@@ -1,54 +1,52 @@
 <template>
-  <nut-config-provider theme="">
-    <div class="question-card">
-      <div class="question-card__header">
-        <span class="question-card__tag">问题卡</span>
-        <div class="question-card__desc">
-          回答问题后开始在圈子里有曝光，积极完成问题，就会有更多人看到你！
-        </div>
-      </div>
-      <div class="question-card__main">
-        <div class="question-card__main-text">{{ title }}</div>
-        <div class="question-card__main-answer-filed">
-          <nut-input
-            class="question-card__input"
-            v-if="type === 1"
-            input-align="left"
-            :border="false"
-            v-model="answer"
-            placeholder="回答问题，交换答案"
-            type="textarea"
-          />
-          <template v-else>
-            <nut-uploader
-              v-if="!images.length"
-              class="question-card__uploader"
-              :sizeType="['compressed']"
-              :mediaType="['image']"
-              url="https://110.41.140.132/pairs/uploadImg"
-              :headers="{
-                Authorization: authToken,
-              }"
-              v-model:file-list="images"
-              :is-preview="true"
-            />
-            <img
-              class="question-card__uploader"
-              v-else
-              :src="images[0].url"
-              alt="answer image"
-            />
-          </template>
-        </div>
-        <nut-button
-          class="question-card__submit"
-          type="primary"
-          @click="onAnswer"
-          >{{ answer ? '完成编辑' : '请进行编辑' }}</nut-button
-        >
+  <div class="question-card">
+    <div class="question-card__header">
+      <span class="question-card__tag">问题卡</span>
+      <div class="question-card__desc">
+        回答问题后开始在圈子里有曝光，积极完成问题，就会有更多人看到你！
       </div>
     </div>
-  </nut-config-provider>
+    <div class="question-card__main">
+      <div class="question-card__main-text">{{ title }}</div>
+      <div class="question-card__main-answer-filed">
+        <nut-input
+          class="question-card__input"
+          v-if="type === 1"
+          input-align="left"
+          :border="false"
+          v-model="answer"
+          placeholder="回答问题，交换答案"
+          type="textarea"
+        />
+        <template v-else>
+          <nut-uploader
+            v-if="!images.length"
+            class="question-card__uploader"
+            :sizeType="['compressed']"
+            :mediaType="['image']"
+            url="https://110.41.140.132/pairs/uploadImg"
+            :headers="{
+              Authorization: authToken,
+            }"
+            v-model:file-list="images"
+            :is-preview="true"
+          />
+          <img
+            class="question-card__uploader"
+            v-else
+            :src="images[0].url"
+            alt="answer image"
+          />
+        </template>
+      </div>
+      <nut-button
+        class="question-card__submit"
+        type="primary"
+        @click="onAnswer"
+        >{{ answer ? '完成编辑' : '请进行编辑' }}</nut-button
+      >
+    </div>
+  </div>
 </template>
 <script lang="ts" setup>
 import Taro from '@tarojs/taro';
@@ -104,7 +102,8 @@ watch(
 </script>
 <style lang="scss">
 .question-card {
-  height: 565px;
+  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -124,7 +123,7 @@ watch(
     display: inline-block;
     padding: 7px 12px;
     border-radius: 30px;
-    background-color: #000;
+    background-color: #4f4dff;
     color: #fff;
     font-size: 14px;
     margin-bottom: 12px;
@@ -134,9 +133,10 @@ watch(
     font-size: 12px;
     padding-bottom: 22px;
     border-bottom: 0.5px solid #eee;
+    opacity: 0.5;
   }
   .question-card__main-text {
-    margin-top: 36px;
+    margin-top: 30px;
     font-size: 24px;
     color: #fff;
     font-weight: 500;
@@ -149,10 +149,13 @@ watch(
     font-size: 18px;
     font-weight: 500;
   }
+  .question-card__main-answer-filed {
+    margin: 24px 0 42px;
+    flex: 1;
+  }
   .question-card__input {
-    height: 195px;
+    height: 100%;
     border-radius: 9px;
-    margin: 54px 0 36px;
     padding: 10px;
     color: #000;
   }

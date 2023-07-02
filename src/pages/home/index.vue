@@ -42,7 +42,9 @@
         <nut-button @click="goShare">去分享页面</nut-button>
         <nut-button @click="goMatchUserInfo">去匹配对象详情页面</nut-button>
         <nut-button @click="goLoginPage">去登录页面</nut-button>
-        <nut-button @click="goChatsPage">去聊天页面</nut-button>
+        <nut-button @click="goChatsPage">去聊天列表页面</nut-button>
+        <nut-button @click="goChatPage">去聊天页面</nut-button>
+
         <view class="flex">
           <!-- <LottieView /> -->
         </view>
@@ -55,9 +57,6 @@
 import { reactive, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
 import MessageItem from '../chats/MessageItem.vue';
-import QuestionCard from '../../components/questionCard/index.vue';
-import AnswerCard from '../../components/answerCard/index.vue';
-// import LottieView from '../../components/lottieView/index.vue';
 import { useGlobalStore } from '../../store';
 
 export default {
@@ -92,6 +91,11 @@ export default {
       global.setActiveTabIndex(1);
       Taro.switchTab({
         url: '/pages/chats/index',
+      });
+    };
+    const goChatPage = () => {
+      Taro.navigateTo({
+        url: '/pages/chat/index',
       });
     };
     const topics = [
@@ -129,6 +133,7 @@ export default {
       goMatchUserInfo,
       goLoginPage,
       goChatsPage,
+      goChatPage,
       MessageItem,
       goMatching,
       topics,

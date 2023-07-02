@@ -35,11 +35,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  IMatchItem,
-  getActivityList,
-  // answerQuestionActivity,
-} from '../../api/matching';
+import { IMatchItem, getActivityList } from '../../api/matching';
 import QuestionCard from '../../components/questionCard/index.vue';
 import AnswerCard from '../../components/answerCard/index.vue';
 import { computed } from 'vue';
@@ -118,24 +114,21 @@ watch(
 <style lang="scss">
 .matching {
   height: 100%;
-  padding: 54px 12px;
+  padding: 30px 12px 0;
   .matching-swiper {
-    height: 565px;
+    height: 613px;
     overflow: hidden;
     .matching-swiper__card {
       display: flex;
       justify-content: center;
       align-items: center;
       background-color: #6967ff;
-      height: 560px;
+      height: 100%;
       color: #fff;
       border-radius: 9px;
     }
   }
 
-  swiper {
-    padding-top: 30px;
-  }
   .swiper-img {
     width: 100%;
     display: block;

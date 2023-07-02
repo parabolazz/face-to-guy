@@ -8,6 +8,7 @@ export default defineAppConfig({
     'pages/share/index',
     'pages/user/index',
     'pages/matching/index',
+    'pages/chat/index',
   ],
   window: {
     navigationBarBackgroundColor: '#000000',

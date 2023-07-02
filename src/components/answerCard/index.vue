@@ -17,6 +17,9 @@
             </div>
             <div class="answer-card__user-info-desc">{{ desc }}</div>
           </div>
+          <nut-button class="answer-card__user-info-btn" type="primary" plain
+            >看主页</nut-button
+          >
         </div>
         <div class="answer-card__main-ques">Q: {{ title }}</div>
         <div class="answer-card__main-answer" :style="{ height: width + 'px' }">
@@ -36,7 +39,11 @@
           </scroll-view>
         </div>
       </div>
-      <div class="answer-card__footer"></div>
+      <div class="answer-card__footer">
+        <nut-button type="primary" class="answer-card__btn" @click="goChat"
+          >打招呼</nut-button
+        >
+      </div>
     </nut-config-provider>
   </div>
 </template>
@@ -48,17 +55,7 @@ import { watch } from 'vue';
 import { IAnswer } from 'src/api/matching';
 
 const props = defineProps<IAnswer & { isActive: boolean }>();
-
-// const userInfo = ref<ProfileData>({
-//   nickname: '张三',
-//   avatar_ids
-//   attribute: 0,
-//   height: 180,
-//   weight: 60,
-//   shape: 1,
-// });
 const width = ref(0);
-
 const desc = computed(() => {
   const { attribute, height, weight, shape } = props;
   // @ts-ignore
@@ -73,6 +70,12 @@ const desc = computed(() => {
   ];
   return descArr.filter((item) => item).join(' / ');
 });
+
+const goChat = () => {
+  Taro.navigateTo({
+    url: `/pages/chat/index?targetId=12123`,
+  });
+};
 
 watch(
   () => props.isActive,
@@ -98,6 +101,7 @@ watch(
 <style lang="scss">
 .answer-card {
   width: 100%;
+  height: 100%;
   flex: 1;
   background: #6967ff;
   border-radius: 9px;
@@ -107,7 +111,7 @@ watch(
     display: inline-block;
     padding: 7px 12px;
     border-radius: 30px;
-    background-color: #000;
+    background-color: #4f4dff;
     color: #fff;
     font-size: 14px;
     margin-bottom: 12px;
@@ -115,6 +119,16 @@ watch(
   .answer-card__user-info {
     display: flex;
     align-items: center;
+  }
+  .answer-card__user-info-text {
+    flex: 1;
+  }
+  .answer-card__user-info-btn {
+    padding: 8px 16px;
+    border-radius: 10px;
+    background-color: transparent;
+    font-weight: bold;
+    border-width: 2px;
   }
   .answer-card__user-info-avatar {
     width: 54px;
@@ -168,6 +182,14 @@ watch(
     height: 100%;
     word-break: break-word;
     padding: 12px;
+  }
+  .answer-card__btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 12px 0;
+    color: #000;
+    font-weight: bold;
+    border-radius: 9px;
   }
 }
 </style>
