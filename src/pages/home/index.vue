@@ -9,7 +9,7 @@
         </nut-grid-item>
         <nut-grid-item
           :class="['home-topic__item', `home-topic__item-${topics[0].color}`]"
-          @click="goMatching"
+          @click="() => goMatching(topics[0].activityId)"
           v-if="topics[0]"
         >
           <div class="home-topic__item__city">{{ city }}</div>
@@ -20,7 +20,7 @@
       </nut-grid>
       <nut-grid :gutter="12" class="home-topic" :column-num="3">
         <nut-grid-item
-          @click="goMatching"
+          @click="() => goMatching(topic.activityId)"
           :class="['home-topic__item', `home-topic__item-${topic.color}`]"
           v-for="topic in topics.slice(1, topics.length)"
           :key="topic.title"
@@ -31,12 +31,12 @@
           </div></nut-grid-item
         >
       </nut-grid>
-      <QuestionCard type="image"></QuestionCard>
+      <!-- <QuestionCard type="image"></QuestionCard>
       <AnswerCard
         type="text"
         title="用一种动物来形容你自己？"
         answer="https://img.yzcdn.cn/vant/cat.jpeg"
-      ></AnswerCard>
+      ></AnswerCard> -->
       <view class="home-operation mt-4">
         <nut-button @click="onClick">去信息填写页</nut-button>
         <nut-button @click="goShare">去分享页面</nut-button>
@@ -96,25 +96,29 @@ export default {
     };
     const topics = [
       {
+        activityId: 1,
         title: '夜宵局 摇一摇',
         color: 'DBF378',
       },
       {
+        activityId: 2,
         title: '撸铁局 摇一摇',
         color: 'CF83ED',
       },
       {
+        activityId: 3,
         title: '奶茶咖啡 摇一摇',
         color: '74D172',
       },
       {
+        activityId: 4,
         title: '压马路 摇一摇',
         color: '65BAE8',
       },
     ];
-    const goMatching = () => {
+    const goMatching = (activityId: number) => {
       Taro.navigateTo({
-        url: '/pages/matching/index',
+        url: `/pages/matching/index?activityId=${activityId}`,
       });
     };
 

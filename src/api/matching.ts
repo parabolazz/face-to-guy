@@ -1,19 +1,38 @@
 import api from './request';
 
-interface IMatchItem {
-  id: string,
+export interface IQuestion {
+  id: number,
   type: 1 | 2,
   title: string
 }
 
-export const activityList = () => {
+export interface IAnswer {
+  answer: string
+  attribute: number
+  avatar_id: string
+  height: number
+  id: number
+  nickname: string
+  shape: number
+  title: string
+  type: 1 | 2
+  weight: number
+}
+
+export interface IMatchItem extends IQuestion, IAnswer {}
+
+export const getActivityList = () => {
   return api.post<{
-    data: IMatchItem[]
+    data: {
+      ad: IMatchItem[] | null
+      answer: IMatchItem[] | null
+      question: IMatchItem[] | null
+    }
   }>('/pairs/activityList');
 }
 
 export const answerQuestionActivity = (data: {
-  activity_id: string,
+  activity_id: number,
   answer: string
 }) => {
   return api.post('/pairs/activityAnswer', {
