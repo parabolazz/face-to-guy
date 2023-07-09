@@ -1,7 +1,13 @@
 <template>
   <nut-config-provider theme="dark">
     <view class="home">
-      <h3 class="home-title">附近</h3>
+      <div class="home-head">
+        <h3 class="home-title">附近</h3>
+        <div class="home-head__shot" @click="() => (isVisible = true)">
+          Shot: {{ shotCount }}杯
+          <img :src="AddShot" class="home-head__add-shot" alt="add shot" />
+        </div>
+      </div>
       <nut-grid :gutter="12" class="home-topic" :column-num="3">
         <nut-grid-item class="home-topic__item home-topic__first-item">
           <div class="home-topic__item__city">{{ city }}</div>
@@ -31,12 +37,6 @@
           </div></nut-grid-item
         >
       </nut-grid>
-      <!-- <QuestionCard type="image"></QuestionCard>
-      <AnswerCard
-        type="text"
-        title="用一种动物来形容你自己？"
-        answer="https://img.yzcdn.cn/vant/cat.jpeg"
-      ></AnswerCard> -->
       <view class="home-operation mt-4">
         <nut-button @click="onClick">去信息填写页</nut-button>
         <nut-button @click="goShare">去分享页面</nut-button>
@@ -44,101 +44,81 @@
         <nut-button @click="goLoginPage">去登录页面</nut-button>
         <nut-button @click="goChatsPage">去聊天列表页面</nut-button>
         <nut-button @click="goChatPage">去聊天页面</nut-button>
-
-        <view class="flex">
-          <!-- <LottieView /> -->
-        </view>
       </view>
+      <SharePopup v-model:visible="isVisible" />
     </view>
   </nut-config-provider>
 </template>
 
-<script lang="ts">
-import { reactive, toRefs } from 'vue';
+<script lang="ts" setup>
+import { ref } from 'vue';
 import Taro from '@tarojs/taro';
-import MessageItem from '../chats/MessageItem.vue';
 import { useGlobalStore } from '../../store';
+import AddShot from '../../assets/images/shot_add.svg';
+import SharePopup from '../../biz-components/sharePopup/index.vue';
 
-export default {
-  name: 'TestIndex',
-  setup() {
-    const global = useGlobalStore();
+console.log('SharePopup', SharePopup);
 
-    const state = reactive({
-      city: '深圳',
-    });
-    const onClick = () => {
-      Taro.navigateTo({
-        url: '/pages/profile/index',
-      });
-    };
-    const goShare = () => {
-      Taro.navigateTo({
-        url: '/pages/share/index',
-      });
-    };
-    const goMatchUserInfo = () => {
-      Taro.navigateTo({
-        url: '/pages/user/index',
-      });
-    };
-    const goLoginPage = () => {
-      Taro.navigateTo({
-        url: '/pages/login/index',
-      });
-    };
-    const goChatsPage = () => {
-      global.setActiveTabIndex(1);
-      Taro.switchTab({
-        url: '/pages/chats/index',
-      });
-    };
-    const goChatPage = () => {
-      Taro.navigateTo({
-        url: '/pages/chat/index',
-      });
-    };
-    const topics = [
-      {
-        activityId: 1,
-        title: '夜宵局 摇一摇',
-        color: 'DBF378',
-      },
-      {
-        activityId: 2,
-        title: '撸铁局 摇一摇',
-        color: 'CF83ED',
-      },
-      {
-        activityId: 3,
-        title: '奶茶咖啡 摇一摇',
-        color: '74D172',
-      },
-      {
-        activityId: 4,
-        title: '压马路 摇一摇',
-        color: '65BAE8',
-      },
-    ];
-    const goMatching = (activityId: number) => {
-      Taro.navigateTo({
-        url: `/pages/matching/index?activityId=${activityId}`,
-      });
-    };
-
-    return {
-      ...toRefs(state),
-      goShare,
-      onClick,
-      goMatchUserInfo,
-      goLoginPage,
-      goChatsPage,
-      goChatPage,
-      MessageItem,
-      goMatching,
-      topics,
-    };
+const global = useGlobalStore();
+const isVisible = ref(false);
+const shotCount = ref(0);
+const onClick = () => {
+  Taro.navigateTo({
+    url: '/pages/profile/index',
+  });
+};
+const goShare = () => {
+  Taro.navigateTo({
+    url: '/pages/share/index',
+  });
+};
+const goMatchUserInfo = () => {
+  Taro.navigateTo({
+    url: '/pages/user/index',
+  });
+};
+const goLoginPage = () => {
+  Taro.navigateTo({
+    url: '/pages/login/index',
+  });
+};
+const goChatsPage = () => {
+  global.setActiveTabIndex(1);
+  Taro.switchTab({
+    url: '/pages/chats/index',
+  });
+};
+const goChatPage = () => {
+  Taro.navigateTo({
+    url: '/pages/chat/index',
+  });
+};
+const topics = [
+  {
+    activityId: 1,
+    title: '夜宵局 摇一摇',
+    color: 'DBF378',
   },
+  {
+    activityId: 2,
+    title: '撸铁局 摇一摇',
+    color: 'CF83ED',
+  },
+  {
+    activityId: 3,
+    title: '奶茶咖啡 摇一摇',
+    color: '74D172',
+  },
+  {
+    activityId: 4,
+    title: '压马路 摇一摇',
+    color: '65BAE8',
+  },
+];
+const goMatching = (activityId: number) => {
+  Taro.navigateTo({
+    url: `/pages/matching/index?activityId=${activityId}`,
+  });
 };
 </script>
 
@@ -154,6 +134,21 @@ export default {
   justify-content: flex-end;
   margin-bottom: 80px;
   padding: 14px;
+  .home-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .home-head__shot {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+    }
+    .home-head__add-shot {
+      margin-left: 4px;
+      width: 14px;
+      height: 14px;
+    }
+  }
   .home-title {
     margin-bottom: 14px;
     font-size: 22px;

@@ -18,6 +18,8 @@ declare module '@vue/runtime-core' {
     NutCheckboxGroup: typeof import('@nutui/nutui-taro')['CheckboxGroup']
     NutConfigProvider: typeof import('@nutui/nutui-taro')['ConfigProvider']
     NutCountdown: typeof import('@nutui/nutui-taro')['Countdown']
+    NutDialog: typeof import('@nutui/nutui-taro')['Dialog']
+    NutDivider: typeof import('@nutui/nutui-taro')['Divider']
     NutForm: typeof import('@nutui/nutui-taro')['Form']
     NutFormItem: typeof import('@nutui/nutui-taro')['FormItem']
     NutGrid: typeof import('@nutui/nutui-taro')['Grid']
