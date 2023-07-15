@@ -77,11 +77,14 @@ function setSelected(index) {
 async function initUserInfo() {
   const token = Taro.getStorageSync('TOKEN');
   const currentPages = Taro.getCurrentPages();
+  const myUserId = Taro.getStorageSync('USER_ID');
   const lastPage = currentPages[currentPages.length - 1]?.route;
   if (token) {
     if (!global.userProfile) {
-      const profile = await getMyProfile();
-      global.setUserProfile(profile.data);
+      const profile = await getMyProfile(myUserId);
+      if (profile) {
+        global.setUserProfile(profile.data);
+      }
     }
   } else if (lastPage !== 'pages/login/index') {
     Taro.navigateTo({ url: '/pages/login/index' });

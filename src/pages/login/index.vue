@@ -47,23 +47,26 @@ const getPhoneNumber = async (e: any) => {
   if (e.detail.code) {
     console.log('phone number code', e.detail.code);
     try {
-      const { data } = await login({
+      const res = await login({
         code: e.detail.code,
       });
       Taro.showToast({
         title: '登录成功',
         icon: 'none',
       });
-      Taro.setStorageSync('TOKEN', data.token);
+      Taro.setStorageSync('TOKEN', res?.data.token);
+      Taro.setStorageSync('USER_ID', res?.data.user_id);
       //跳转到信息填写页
-      data.is_new
+      res?.data.is_new
         ? Taro.navigateTo({
             url: '/pages/profile/index',
           })
         : Taro.switchTab({
             url: '/pages/home/index',
           });
-    } catch (error) {}
+    } catch (error) {
+      console.log('login error', error);
+    }
   } else {
     Taro.showToast({
       title: '获取手机号失败',

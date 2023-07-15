@@ -7,6 +7,7 @@ export const login = (data: {
     data: {
       is_new: boolean;
       token: string;
+      user_id: number;
     }
   }>('/pairs/login', {data});
 }
@@ -22,14 +23,25 @@ export interface ProfileData {
   carrier?: number
   shape?: number
   favorite?: string
+  shot: number
 }
 
 export const editProfile = (data: ProfileData) => {
   return api.post('/pairs/profileEdit', { data });
 }
 
-export const getMyProfile = () => {
+export const getMyProfile = (user_id: number) => {
   return api.post<{
     data: ProfileData
-  }>('/pairs/profileList');
+  }>('/pairs/profileList', { data: { user_id } });
+}
+
+export enum Action {
+  CheckIn = 1,
+  Ad = 2,
+  Share = 3,
+}
+
+export const updateShot = (shot: number, action: Action) => {
+  return api.post('/pairs/updateShot', { data: { shot, action } });
 }

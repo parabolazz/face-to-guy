@@ -45,6 +45,7 @@
           <nut-button
             type="primary"
             class="share-popup__action-item-btn"
+            :disabled="action.disabled"
             :openType="action.openType"
             >{{ action.buttonText }}</nut-button
           >
@@ -54,10 +55,14 @@
   </nut-action-sheet>
 </template>
 <script lang="ts" setup>
-import { useShareAppMessage, useShareTimeline } from '@tarojs/taro';
+import dayjs from 'dayjs';
+import Taro, { useShareAppMessage, useShareTimeline } from '@tarojs/taro';
 import CalendarIcon from '../../assets/images/calendar.svg';
 import ShareIcon from '../../assets/images/share.svg';
 import VideoIcon from '../../assets/images/video.svg';
+import { ref } from 'vue';
+import { computed } from 'vue';
+import { Action, updateShot } from '../../api/user';
 
 defineProps({
   visible: Boolean,
@@ -68,7 +73,11 @@ const userInfo = {
   shots: 10,
 };
 
+const lastCheckInDay = Taro.getStorageSync('LAST_CHECK_IN_DAY');
 const emit = defineEmits(['update:visible']);
+const hasCheckInToday = ref(
+  lastCheckInDay ? dayjs().format('YYYY-MM-DD') === lastCheckInDay : false,
+);
 const onToggleVisible = (visible: boolean) => {
   emit('update:visible', visible);
 };
@@ -84,16 +93,39 @@ useShareAppMessage(() => {
     title: '快来和我一起干杯吧',
     path: '/pages/home/index',
     imageUrl: '../../assets/images/logo.png',
+    success: async function (res) {
+      // 转发成功之后的回调
+      if (res.errMsg == 'shareAppMessage:ok') {
+        try {
+          await updateShot(2, Action.Share);
+          hasCheckInToday.value = true;
+          Taro.setStorageSync(
+            'LAST_CHECK_IN_DAY',
+            dayjs().format('YYYY-MM-DD'),
+          );
+        } catch (error) {}
+      }
+    },
   };
 });
 
-const shareActions = [
+const shareActions = computed(() => [
   {
     icon: CalendarIcon,
     title: '每日签到',
     tip: 'Shot +3',
     desc: '每日签到都可以领取一次奖励',
-    buttonText: '去签到',
+    buttonText: hasCheckInToday.value ? '已签到' : '去签到',
+    disabled: hasCheckInToday.value,
+    onClick: async () => {
+      try {
+        await updateShot(3, Action.CheckIn);
+        hasCheckInToday.value = true;
+        Taro.setStorageSync('LAST_CHECK_IN_DAY', dayjs().format('YYYY-MM-DD'));
+      } catch (error) {
+        console.log('error', error);
+      }
+    },
   },
   {
     icon: VideoIcon,
@@ -110,7 +142,7 @@ const shareActions = [
     buttonText: '去分享',
     openType: 'share',
   },
-];
+]);
 </script>
 <style lang="scss">
 .share-popup {
