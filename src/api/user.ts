@@ -43,5 +43,5 @@ export enum Action {
 }
 
 export const updateShot = (shot: number, action: Action) => {
-  return api.post('/pairs/updateShot', { data: { shot, action } });
+  return api.post('/pairs/shotUpdate', { data: { shot, action } });
 }

@@ -56,12 +56,15 @@ import Taro from '@tarojs/taro';
 import { useGlobalStore } from '../../store';
 import AddShot from '../../assets/images/shot_add.svg';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
+import { computed } from 'vue';
 
 console.log('SharePopup', SharePopup);
 
 const global = useGlobalStore();
 const isVisible = ref(false);
-const shotCount = ref(0);
+
+const shotCount = computed(() => global.userProfile?.shot || 0);
+
 const onClick = () => {
   Taro.navigateTo({
     url: '/pages/profile/index',

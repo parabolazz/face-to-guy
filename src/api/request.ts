@@ -62,15 +62,15 @@ const request = async <T>(method, url, params) => {
         })
         return
       // @ts-ignore
-      } else if (resp.data?.data?.errno !== 0) {
-      Taro.showToast({
-        title: '出错了！',
-        icon: 'error',
-        duration: 2000
-      })
-      console.log('出错了！', resp)
-      return Promise.reject(resp)
-    }
+      } else if (resp.data?.errno !== 0) {
+        Taro.showToast({
+          title: '出错了！',
+          icon: 'error',
+          duration: 2000
+        })
+        console.log('出错了！', resp)
+        return Promise.reject(resp)
+      }
     console.log('return!')
   return resp.data;
 }

@@ -1,7 +1,14 @@
 import { defineStore } from 'pinia'
+import { ProfileData } from 'src/api/user'
+
+interface State {
+  showTabbar: boolean
+  activeTabIndex: number
+  userProfile?: ProfileData
+}
 
 export const useGlobalStore = defineStore('global', {
-  state: () => {
+  state: (): State => {
     return { showTabbar: true, activeTabIndex: 0, userProfile: undefined }
   },
   actions: {

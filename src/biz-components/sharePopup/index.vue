@@ -9,14 +9,12 @@
       <div class="share-popup__user">
         <img
           class="share-popup__user-avatar"
-          :src="userInfo.avatarUrl"
+          :src="global.userProfile?.avatar_ids?.[0]"
           alt="user logo"
         />
         <div class="share-popup__user-shot-info">
           <div class="share-popup__user-shot">
-            <span class="share-popup__user-shot-count">{{
-              userInfo.shots
-            }}</span>
+            <span class="share-popup__user-shot-count">{{ userShot }}</span>
             Shot
           </div>
           <p>每干杯一次消耗一杯Shot</p>
@@ -47,6 +45,7 @@
             class="share-popup__action-item-btn"
             :disabled="action.disabled"
             :openType="action.openType"
+            @click="action?.onClick"
             >{{ action.buttonText }}</nut-button
           >
         </div>
@@ -63,49 +62,42 @@ import VideoIcon from '../../assets/images/video.svg';
 import { ref } from 'vue';
 import { computed } from 'vue';
 import { Action, updateShot } from '../../api/user';
+import { useGlobalStore } from '../../store';
+import { watch } from 'vue';
 
 defineProps({
   visible: Boolean,
 });
 
-const userInfo = {
-  avatarUrl: 'https://img.yzcdn.cn/vant/cat.jpeg',
-  shots: 10,
-};
-
+const global = useGlobalStore();
 const lastCheckInDay = Taro.getStorageSync('LAST_CHECK_IN_DAY');
+const userShot = computed(() => global.userProfile?.shot || 0);
+
 const emit = defineEmits(['update:visible']);
 const hasCheckInToday = ref(
   lastCheckInDay ? dayjs().format('YYYY-MM-DD') === lastCheckInDay : false,
 );
+const lastShareTime = ref(Taro.getStorageSync('LAST_SHARE_TIME'));
+const canNotShare = computed(() => {
+  return (
+    lastShareTime.value && dayjs().diff(dayjs(lastShareTime.value), 'hour') < 1
+  );
+});
 const onToggleVisible = (visible: boolean) => {
   emit('update:visible', visible);
 };
 useShareTimeline(() => {
   return {
-    title: '快来和我一起干杯吧',
+    title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
     query: 'share=1',
-    imageUrl: '../../assets/images/logo.png',
+    imageUrl: 'http://tmp/Wp6HBLmMTlQB93b219ce2731cae16082af5b0fe33c0a.jpg',
   };
 });
 useShareAppMessage(() => {
   return {
-    title: '快来和我一起干杯吧',
+    title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
     path: '/pages/home/index',
-    imageUrl: '../../assets/images/logo.png',
-    success: async function (res) {
-      // 转发成功之后的回调
-      if (res.errMsg == 'shareAppMessage:ok') {
-        try {
-          await updateShot(2, Action.Share);
-          hasCheckInToday.value = true;
-          Taro.setStorageSync(
-            'LAST_CHECK_IN_DAY',
-            dayjs().format('YYYY-MM-DD'),
-          );
-        } catch (error) {}
-      }
-    },
+    imageUrl: 'http://tmp/Wp6HBLmMTlQB93b219ce2731cae16082af5b0fe33c0a.jpg',
   };
 });
 
@@ -119,7 +111,7 @@ const shareActions = computed(() => [
     disabled: hasCheckInToday.value,
     onClick: async () => {
       try {
-        await updateShot(3, Action.CheckIn);
+        await updateShot(userShot.value + 3, Action.CheckIn);
         hasCheckInToday.value = true;
         Taro.setStorageSync('LAST_CHECK_IN_DAY', dayjs().format('YYYY-MM-DD'));
       } catch (error) {
@@ -140,9 +132,43 @@ const shareActions = computed(() => [
     tip: 'Shot +2',
     desc: '对方点击链接登录即可获得奖励',
     buttonText: '去分享',
-    openType: 'share',
+    openType: canNotShare.value ? undefined : 'share',
+    onClick() {
+      // 如果距离上一次分享不到一个小时
+      if (canNotShare.value) {
+        Taro.showToast({
+          title: '分享太频繁啦，请先休息一下吧',
+          icon: 'none',
+          duration: 2000,
+        });
+        return;
+      } else {
+        setTimeout(async () => {
+          try {
+            await updateShot(userShot.value + 2, Action.Share);
+            lastShareTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
+            Taro.showToast({
+              title: '分享成功',
+              icon: 'success',
+              duration: 2000,
+            });
+          } catch (error) {
+            console.log('error', error);
+          }
+        }, 2000);
+      }
+    },
   },
 ]);
+
+watch(
+  () => lastShareTime.value,
+  (newVal) => {
+    if (newVal) {
+      Taro.setStorageSync('LAST_SHARE_TIME', newVal);
+    }
+  },
+);
 </script>
 <style lang="scss">
 .share-popup {
