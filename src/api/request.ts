@@ -27,20 +27,29 @@ const request = async <T>(method, url, params) => {
     header: {
       'content-type': contentType,
     },
-    success(res) {
-      console.log('success', res?.statusCode)
-    //根据不同返回状态值3进行操作
-      switch (res?.statusCode) {
-        case 401: {
+    async success(res) {
+      console.log('success', res, res.statusCode)
+
+      // 网络错误
+      if(res?.statusCode !== 200) {
+        Taro.showToast({
+          title: '出错了！',
+          icon: 'error',
+          duration: 2000
+        })
+        return Promise.reject(res)
+
+      // 业务错误
+      }
+      //根据不同返回状态值进行操作
+      if(res?.data?.errno === 401) {
           const currPages = Taro.getCurrentPages();
           const currPage = currPages[currPages.length - 1].route;
           currPage !== 'pages/login/index' && Taro.navigateTo({
             url: '/pages/login/index'
           })
           return
-        }
-      }
-      if(res?.statusCode !== 200) {
+        } else if(res?.data?.errno !== 0) {
         Taro.showToast({
           title: '出错了！',
           icon: 'error',

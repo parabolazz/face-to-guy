@@ -3,11 +3,11 @@ const env = process.env.NODE_ENV === 'development' ? 'development' : 'production
 console.log('编译环境：',process.env.NODE_ENV)
 switch (env) {
   case 'development':
-    baseUrlPrefix = 'https://110.41.140.132'
+    baseUrlPrefix = 'https://139.9.209.89'
     // baseUrlPrefix = 'https://pairs.cc'
     break
   case 'production':
-    baseUrlPrefix = 'https://110.41.140.132'
+    baseUrlPrefix = 'https://139.9.209.89'
     // baseUrlPrefix = 'https://pairs.cc'
     break
 }

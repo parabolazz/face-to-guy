@@ -42,15 +42,19 @@
               {{ action.desc }}
             </div>
           </div>
-          <nut-button type="primary" class="share-popup__action-item-btn">{{
-            action.buttonText
-          }}</nut-button>
+          <nut-button
+            type="primary"
+            class="share-popup__action-item-btn"
+            :openType="action.openType"
+            >{{ action.buttonText }}</nut-button
+          >
         </div>
       </div>
     </div>
   </nut-action-sheet>
 </template>
 <script lang="ts" setup>
+import { useShareAppMessage, useShareTimeline } from '@tarojs/taro';
 import CalendarIcon from '../../assets/images/calendar.svg';
 import ShareIcon from '../../assets/images/share.svg';
 import VideoIcon from '../../assets/images/video.svg';
@@ -68,6 +72,20 @@ const emit = defineEmits(['update:visible']);
 const onToggleVisible = (visible: boolean) => {
   emit('update:visible', visible);
 };
+useShareTimeline(() => {
+  return {
+    title: '快来和我一起干杯吧',
+    query: 'share=1',
+    imageUrl: '../../assets/images/logo.png',
+  };
+});
+useShareAppMessage(() => {
+  return {
+    title: '快来和我一起干杯吧',
+    path: '/pages/home/index',
+    imageUrl: '../../assets/images/logo.png',
+  };
+});
 
 const shareActions = [
   {
@@ -90,6 +108,7 @@ const shareActions = [
     tip: 'Shot +2',
     desc: '对方点击链接登录即可获得奖励',
     buttonText: '去分享',
+    openType: 'share',
   },
 ];
 </script>
