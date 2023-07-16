@@ -30,7 +30,7 @@ export const editProfile = (data: ProfileData) => {
   return api.post('/pairs/profileEdit', { data });
 }
 
-export const getMyProfile = (user_id: number) => {
+export const getUserProfile = (user_id: number) => {
   return api.post<{
     data: ProfileData
   }>('/pairs/profileList', { data: { user_id } });

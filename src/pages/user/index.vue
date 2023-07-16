@@ -5,25 +5,16 @@
         <div class="matched-user__profile-photos">
           <div class="matched-user__profile__photos-mask top"></div>
           <div class="matched-user__profile__photos-name absolute">
-            {{ profile.name }}
+            {{ profile.nickname }}
           </div>
           <div class="matched-user__profile__photos-info">
             <div class="flex">
               <div class="matched-user__profile__photos-info-item">
-                {{ profile.type }} /
-              </div>
-              <div class="matched-user__profile__photos-info-item">
-                {{ profile.height }}cm /
-              </div>
-              <div class="matched-user__profile__photos-info-item">
-                {{ profile.weight }}kg /
-              </div>
-              <div class="matched-user__profile__photos-info-item">
-                {{ profile.bodyType }}
+                {{ basicInfo }}
               </div>
             </div>
             <div class="matched-user__profile__photos-info-ip">
-              IP 归属地: {{ profile.ipSite }}
+              IP 归属地: 暂未上线
             </div>
           </div>
           <nut-swiper
@@ -33,7 +24,7 @@
             class="matched-user__profile__swiper"
           >
             <nut-swiper-item
-              v-for="url in profile.urls"
+              v-for="url in profile.avatar_ids"
               :key="url"
               class="matched-user__profile__photos-item"
             >
@@ -48,32 +39,42 @@
           <div class="matched-user__profile__photos-mask bottom"></div>
         </div>
         <div class="matched-user__profile-intro">
-          {{ profile.intro }}
+          {{ profile.signature }}
         </div>
         <div class="matched-user__profile-info">
-          <div class="matched-user__profile-info-row" v-if="profile.job">
+          <div class="matched-user__profile-info-row" v-if="profile.career">
             <img
               class="matched-user__profile-info-icon"
               :src="IconJob"
               alt="job"
             />
-            行业：{{ profile.job }}
+            行业：{{ Career[profile.career] }}
           </div>
-          <div class="matched-user__profile-info-row" v-if="profile.hobbies">
+          <div class="matched-user__profile-info-row" v-if="profile.hobby">
             <img
               class="matched-user__profile-info-icon"
               :src="IconHobby"
               alt="hobby"
             />
-            爱好：{{ profile.hobbies.join(', ') }}
+            爱好：{{
+              profile.hobby
+                .split(',')
+                .map((h) => Hobbies[h])
+                .join(', ')
+            }}
           </div>
-          <div class="matched-user__profile-info-row" v-if="profile.likeType">
+          <div class="matched-user__profile-info-row" v-if="profile.favorite">
             <img
               class="matched-user__profile-info-icon"
               :src="IconFavorite"
               alt="喜好"
             />
-            喜好：{{ profile.likeType.join(', ') }}
+            喜好：{{
+              profile.favorite
+                .split(',')
+                .map((p) => Favorite[p])
+                .join(', ')
+            }}
           </div>
         </div>
       </div>
@@ -93,34 +94,69 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { ref } from 'vue';
 import { useGlobalStore } from '../../store';
 import IconJob from '../../assets/images/job.svg';
 import IconHobby from '../../assets/images/hobby.svg';
 import IconFavorite from '../../assets/images/favorite.svg';
 import IconFavoriteBlack from '../../assets/images/favorite_black.svg';
+import { getCurrentPageParam } from '../../utils/route';
+import { type ProfileData, getUserProfile } from '../../api/user';
+import { computed } from 'vue';
+import {
+  Attribute,
+  Shape,
+  Career,
+  Hobbies,
+  Favorite,
+} from '../../utils/profileEnum';
 
 const globalStore = useGlobalStore();
 globalStore.toggleTabbar(false);
 
-const profile = reactive({
-  urls: [
-    'https://p9.itc.cn/q_70/images03/20200703/e49a469ebe9c4082a68ea652fb1124d6.jpeg',
-    'https://media.vogue.com.tw/photos/5e65e6702b0ea500085cc6b0/2:3/w_2560%2Cc_limit/IMG_9039.JPG',
-    'https://pic2.zhimg.com/80/v2-440034de16c1e3fb1527cb33b4b4f049_1440w.webp',
-  ],
-  name: 'Forever 纯1???',
-  type: 'Tp',
-  height: 188,
-  weight: 88,
-  bodyType: '肌肉',
-  job: '金融',
-  hobbies: ['跑步', '篮球', '滑雪'],
-  likeType: ['肌肉', '匀称'],
-  ipSite: '深圳',
-  intro:
-    '国語、数学、英語、歴史...何でもSimejiAI先生に聞いてみてください！一緒に楽しく勉強しましょう！',
+const userId = getCurrentPageParam().userId;
+
+const profile = ref<ProfileData>({
+  avatar_ids: [],
+  shape: 0,
+  height: 0,
+  hobby: '',
+  signature: '',
+  career: 0,
+  favorite: '',
+  nickname: '',
+  attribute: 0,
+  weight: 0,
+  shot: 0,
 });
+
+const basicInfo = computed(() => {
+  if (!profile.value) return '';
+  const { attribute, height, weight, shape } = profile.value;
+  // @ts-ignore
+  const attrText = Attribute[attribute];
+  // @ts-ignore
+  const shapeText = Shape[shape];
+  const descArr = [
+    attrText,
+    height ? height + 'cm' : undefined,
+    weight ? weight + 'kg' : undefined,
+    shapeText,
+  ];
+  return descArr.filter((item) => item).join(' / ');
+});
+const getData = async () => {
+  try {
+    if (!userId) throw new Error('userId is required');
+    const res = await getUserProfile(Number(userId));
+    if (res) {
+      profile.value = res.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+getData();
 </script>
 
 <style lang="scss">
@@ -139,7 +175,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     height: 1px;
 
     .matched-user__profile {
-      padding: 0 14px 43px;
+      padding: 0 14px 23px;
       overflow-x: hidden;
       .matched-user__profile-photos {
         position: relative;
@@ -206,7 +242,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     .matched-user__profile-intro {
       font-size: 14px;
       color: #fff;
-      margin: 14px 0 12px;
+      margin: 0 0 12px;
     }
     .matched-user__profile-info-icon {
       width: 14px;
@@ -230,7 +266,6 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     height: $footer-height; ///*兼容 IOS<11.2*/
     height: $footer-height-lagecy; ///*兼容 IOS>11.2*/
     display: flex;
-    border-top: 1rpx solid #eaeef1;
     padding-bottom: constant(safe-area-inset-bottom); ///*兼容 IOS<11.2*/
     padding-bottom: env(safe-area-inset-bottom); ///*兼容 IOS>11.2*/
   }

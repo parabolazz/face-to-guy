@@ -21,7 +21,10 @@
           :border="false"
         >
           <nut-grid-item class="me-card__operation">
-            <nut-button class="me-card__operations_btn" plain
+            <nut-button
+              class="me-card__operations_btn"
+              plain
+              @click="goToMyUserPage"
               >查看我的主页</nut-button
             ></nut-grid-item
           >
@@ -87,6 +90,12 @@ const desc = computed(() => {
 const goToProfile = () => {
   Taro.navigateTo({
     url: '/pages/profile/index?from=me',
+  });
+};
+
+const goToMyUserPage = () => {
+  Taro.navigateTo({
+    url: `/pages/user/index?userId=${Taro.getStorageSync('USER_ID')}`,
   });
 };
 

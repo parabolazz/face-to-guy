@@ -29,7 +29,7 @@
 
 <script setup>
 import Taro from '@tarojs/taro';
-import { getMyProfile } from '../api/user';
+import { getUserProfile } from '../api/user';
 import { computed } from 'vue';
 import { useGlobalStore } from '../store';
 import PartyIcon from './images/party.png';
@@ -81,7 +81,7 @@ async function initUserInfo() {
   const lastPage = currentPages[currentPages.length - 1]?.route;
   if (token) {
     if (!global.userProfile) {
-      const profile = await getMyProfile(myUserId);
+      const profile = await getUserProfile(myUserId);
       if (profile) {
         global.setUserProfile(profile.data);
       }
