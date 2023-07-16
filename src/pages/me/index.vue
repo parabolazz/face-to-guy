@@ -3,9 +3,13 @@
     <nut-config-provider theme="dark">
       <div class="me-card">
         <div class="me-card__main">
-          <img class="me-card__avatar" :src="profile.avatar" alt="avatar" />
+          <img
+            class="me-card__avatar"
+            :src="profile?.avatar_ids[0]"
+            alt="avatar"
+          />
           <div class="me-card__info">
-            <div class="me-card__info-name">{{ profile.name }}</div>
+            <div class="me-card__info-name">{{ profile?.nickname }}</div>
             <div class="me-card__info-desc">{{ desc }}</div>
           </div>
         </div>
@@ -58,22 +62,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { RectRight } from '@nutui/icons-vue-taro';
 import Taro from '@tarojs/taro';
-const profile = ref({
-  name: 'Forever 1',
-  type: 'Tp',
-  height: 180,
-  weight: 70,
-  bodyType: '肌肉',
-  avatar:
-    'https://cdn.sspai.com/2022/04/01/avatar/45095b5db98c397cc569446d70c0c9a6.png?imageMogr2/auto-orient/quality/95/thumbnail/!200x200r/gravity/Center/crop/200x200/interlace/1',
-});
+import { useGlobalStore } from '../../store';
+import { Attribute, Shape } from '../../utils/profileEnum';
+
+const global = useGlobalStore();
+
+const profile = computed(() => global.userProfile);
 
 const desc = computed(() => {
-  const { type, height, weight, bodyType } = profile.value;
-  const descArr = [type, height, weight, bodyType].filter((item) => item);
+  if (!profile.value) return '';
+  const { attribute, height, weight, shape } = profile.value;
+  const descArr = [
+    Attribute[attribute],
+    height,
+    weight,
+    Shape[shape as Shape],
+  ].filter((item) => !!item);
   return descArr.join('/');
 });
 

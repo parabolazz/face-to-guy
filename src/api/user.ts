@@ -20,7 +20,7 @@ export interface ProfileData {
   height?: number
   weight?: number
   hobby?: string
-  carrier?: number
+  career?: number
   shape?: number
   favorite?: string
   shot: number

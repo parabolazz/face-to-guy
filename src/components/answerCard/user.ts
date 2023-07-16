@@ -25,7 +25,7 @@ export const enum Hobbies {
   健身,
 }
 
-export const enum Carrier {
+export const enum Career {
   '工业/制造业' = 1,
   '自由职业',
   '贸易/零售',

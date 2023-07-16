@@ -98,7 +98,7 @@
           </nut-form-item>
         </view>
         <view class="profile-block">
-          <nut-form-item label="职业" prop="carrier">
+          <nut-form-item label="职业" prop="career">
             <nut-input
               input-align="right"
               :border="false"
@@ -156,7 +156,7 @@
       :safe-area-inset-bottom="true"
     >
       <nut-picker
-        :columns="optionsController.carrier"
+        :columns="optionsController.career"
         title="请选择职业"
         style="width: 100%"
         @confirm="chooseCarrier"
@@ -199,6 +199,13 @@ import { computed, reactive, ref, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
 import { editProfile, ProfileData } from '../../api/user';
 import { useGlobalStore } from '../../store';
+import {
+  ATTRIBUTE_LIST,
+  SHAPE_LIST,
+  HOBBY_LIST,
+  CARRIER_LIST,
+  FAVORITE_LIST,
+} from '../../utils/profileEnum';
 
 interface FormData {
   nickname: string;
@@ -207,7 +214,7 @@ interface FormData {
   height?: number;
   weight?: number;
   shape?: number;
-  carrier?: number;
+  career?: number;
   hobbies: number[];
   favorite: number[];
   images: {
@@ -224,7 +231,7 @@ function formatApiDataToFormData(data?: ProfileData): FormData {
         height: data.height,
         weight: data.weight,
         shape: data.shape,
-        carrier: data.carrier,
+        career: data.career,
         hobbies: data.hobby?.split(',').map((str) => Number(str)) || [],
         favorite: data.favorite?.split(',').map((str) => Number(str)) || [],
         images: data.avatar_ids.map((url) => ({
@@ -238,7 +245,7 @@ function formatApiDataToFormData(data?: ProfileData): FormData {
         height: undefined,
         weight: undefined,
         shape: undefined,
-        carrier: undefined,
+        career: undefined,
         hobbies: [] as number[],
         favorite: [] as number[],
         images: [] as {
@@ -261,6 +268,7 @@ export default {
     const state = reactive<FormData>(
       formatApiDataToFormData(global.userProfile),
     );
+    console.log('state', state, state.hobbies);
     const drawerController = reactive({
       attributeVisible: false,
       bodyVisible: false,
@@ -269,56 +277,20 @@ export default {
       likeTypeVisible: false,
     });
     const optionsController = {
-      attribute: [
-        { value: 1, name: 'Tp' },
-        { value: 0, name: 'Bottom' },
-        { value: 2, name: 'Vers' },
-        { value: 3, name: 'Others' },
-      ],
-      shape: [
-        { value: 1, name: '猴' },
-        { value: 2, name: '狒狒' },
-        { value: 3, name: '熊' },
-        { value: 4, name: '肌肉' },
-        { value: 5, name: '匀称' },
-      ],
-      hobbies: [
-        { value: 1, text: '运动' },
-        { value: 2, text: '创意艺术' },
-        { value: 3, text: '音乐' },
-        { value: 4, text: '旅游' },
-        { value: 5, text: '阅读' },
-        { value: 6, text: '写作' },
-        { value: 7, text: '游戏' },
-        { value: 8, text: '烹饪' },
-        { value: 9, text: '健身' },
-      ],
-      carrier: [
-        { value: 1, text: '工业/制造业' },
-        { value: 2, text: '自由职业' },
-        { value: 3, text: '贸易/零售' },
-        { value: 4, text: '教育/科研' },
-        { value: 5, text: '专业服务' },
-        { value: 6, text: '房地产/建筑' },
-        { value: 7, text: '服务业' },
-        { value: 8, text: 'IT/ 互联网/ 通信' },
-        { value: 9, text: '文化/艺术' },
-        { value: 10, text: '学生' },
-        { value: 11, text: '广告/营销' },
-        { value: 12, text: '影视/娱乐' },
-        { value: 13, text: '金融' },
-        { value: 14, text: '医药/ 健康/ 健身' },
-      ],
-      favorite: [
-        { value: 1, text: '年上' },
-        { value: 2, text: '小鲜肉' },
-        { value: 3, text: '肌肉' },
-        { value: 4, text: '精瘦' },
-        { value: 5, text: '熊熊' },
-        { value: 6, text: '斯文' },
-        { value: 7, text: '运动系' },
-        { value: 8, text: '居家男' },
-      ],
+      attribute: ATTRIBUTE_LIST,
+      shape: SHAPE_LIST,
+      hobbies: HOBBY_LIST.map((item) => ({
+        value: item.value,
+        text: item.name,
+      })),
+      career: CARRIER_LIST.map((item) => ({
+        value: item.value,
+        text: item.name,
+      })),
+      favorite: FAVORITE_LIST.map((item) => ({
+        value: item.value,
+        text: item.name,
+      })),
     };
     const isEditMode = computed(() => instance?.router?.params.from);
 
@@ -354,7 +326,7 @@ export default {
     });
     const chooseCarrier = ({ selectedValue }) => {
       console.log('selectedValue', selectedValue, selectedValue[0]);
-      state.carrier = selectedValue[0];
+      state.career = selectedValue[0];
       drawerController.carrierVisible = false;
     };
     const chooseType = (item) => {
@@ -392,7 +364,7 @@ export default {
         height: Number(state.height),
         weight: Number(state.weight),
         shape: state.shape,
-        carrier: state.carrier,
+        career: state.career,
         hobby: state.hobbies.join(','),
         favorite: state.favorite.join(','),
         avatar_ids: state.images.map((item) => item.url),
@@ -427,13 +399,14 @@ export default {
     });
 
     const currCarrierName = computed(() => {
-      return state.carrier
-        ? optionsController.carrier.find((item) => item.value === state.carrier)
+      return state.career
+        ? optionsController.career.find((item) => item.value === state.career)
             ?.text || ''
         : '';
     });
 
     const currHobbiesName = computed(() => {
+      console.log('12322', state.hobbies, optionsController.hobbies);
       return state.hobbies.length
         ? optionsController.hobbies
             .filter((item) => state.hobbies.includes(item.value))
