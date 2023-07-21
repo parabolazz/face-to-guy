@@ -111,8 +111,8 @@ import {
   Favorite,
 } from '../../utils/profileEnum';
 
-const globalStore = useGlobalStore();
-globalStore.toggleTabbar(false);
+// const globalStore = useGlobalStore();
+// globalStore.toggleTabbar(false);
 
 const userId = getCurrentPageParam().userId;
 

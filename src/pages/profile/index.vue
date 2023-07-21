@@ -12,7 +12,7 @@
             <nut-uploader
               :sizeType="['compressed']"
               :mediaType="['image']"
-              url="https://139.9.209.89/pairs/uploadImg"
+              url="https://pairs.cc/pairs/uploadImg"
               :headers="{
                 Authorization: authToken,
               }"
