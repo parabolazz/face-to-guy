@@ -10,7 +10,6 @@
             class="profile-form-item__image"
           >
             <Uploader
-              :sizeType="['compressed']"
               :mediaType="['image']"
               url="https://pairs.cc/pairs/uploadImg"
               :headers="{
@@ -414,13 +413,13 @@ export default {
         data: { data: dataText },
       } = res;
       try {
-        const resData = JSON.parse(dataText);
-        state.images.push({
-          status: 'success',
-          message: '上传成功',
-          type: 'image',
-          url: resData.data,
-        });
+        // const resData = JSON.parse(dataText);
+        // state.images.push({
+        //   status: 'success',
+        //   message: '上传成功',
+        //   type: 'image',
+        //   url: resData.data,
+        // });
       } catch (error) {
         Taro.showToast({
           title: '上传失败',
@@ -589,7 +588,7 @@ export default {
     left: 0px;
     width: 100%;
     height: 72px;
-    z-index: 1;
+    z-index: 10;
     background-color: #dbf378;
     flex: 1;
     display: flex;

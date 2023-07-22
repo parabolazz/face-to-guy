@@ -31,7 +31,7 @@ export class Uploader {
         (e: ProgressEvent<XMLHttpRequestEventTarget>) => {
           options.onProgress?.(e, options);
         },
-        false,
+        false
       );
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
@@ -78,7 +78,7 @@ export class UploaderTaro extends Uploader {
           fileType: options.fileType,
           header: {
             'Content-Type': 'multipart/form-data',
-            ...options.headers,
+            ...options.headers
           }, //
           formData: options.formData,
           name: options.name,
@@ -91,18 +91,12 @@ export class UploaderTaro extends Uploader {
           },
           fail(e: any) {
             options.onFailure?.(e, options);
-          },
+          }
         });
         options.onStart?.(options);
-        uploadTask.progress(
-          (res: {
-            progress: any;
-            totalBytesSent: any;
-            totalBytesExpectedToSend: any;
-          }) => {
-            options.onProgress?.(res, options);
-          },
-        );
+        uploadTask.progress((res: { progress: any; totalBytesSent: any; totalBytesExpectedToSend: any }) => {
+          options.onProgress?.(res, options);
+        });
       }
     }
   }

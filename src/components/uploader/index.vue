@@ -1,5 +1,5 @@
 <template>
-  <view :class="classes" class="custom-uploader">
+  <view class="nut-uploader">
     <view class="nut-uploader__slot" v-if="$slots.default">
       <slot></slot>
       <template v-if="Number(maximum) - fileList.length">
@@ -25,9 +25,9 @@
             <Failure color="#fff" v-if="item.status == 'error'" />
             <Loading name="loading" color="#fff" v-else />
           </template>
-          <!-- <view class="nut-uploader__preview__progress__msg">{{
+          <view class="nut-uploader__preview__progress__msg">{{
             item.message
-          }}</view> -->
+          }}</view>
         </view>
 
         <view class="close" v-if="isDeletable" @click="onDelete(item, index)">
@@ -36,12 +36,15 @@
 
         <img
           class="nut-uploader__preview-img__c"
-          mode="aspectFit"
+          :mode="mode"
           @click="fileItemClick(item)"
-          v-if="['image','video'].includes(item.type as string) && item.url"
+          v-if="
+            (item?.type?.includes('image') || item?.type?.includes('video')) &&
+            item.url
+          "
           :src="item.url"
         />
-        <!-- <view v-else class="nut-uploader__preview-img__file">
+        <view v-else class="nut-uploader__preview-img__file">
           <view
             class="nut-uploader__preview-img__file__name"
             @click="fileItemClick(item)"
@@ -49,7 +52,7 @@
             <view class="file__name_tips">{{ item.name }}</view>
           </view>
         </view>
-        <view class="tips">{{ item.name }}</view> -->
+        <view class="tips">{{ item.name }}</view>
       </view>
       <view class="nut-uploader__preview-list" v-else-if="listType == 'list'">
         <view
@@ -86,13 +89,8 @@
         Number(maximum) - fileList.length
       "
     >
-      <slot name="tip"></slot>
       <slot name="upload-icon">
-        <!-- <UploaderIcon color="rgba(255, 255, 255, 0.3)" size="28" /> -->
-        <image
-          style="width: 32px; height: 32px"
-          src="../../assets/images/plus.svg"
-        />
+        <Photograph color="#808080" />
       </slot>
       <nut-button
         class="nut-uploader__input"
@@ -104,25 +102,21 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType, reactive, watch } from 'vue';
+import { PropType, reactive, ref, watch } from 'vue';
+// import { createComponent } from '@/packages/utils/create';
 import { UploaderTaro, UploadOptions } from './uploader';
 import { FileItem, MediaType, SizeType, SourceType } from './type';
-import { cloneDeep } from 'lodash-es';
+// import { funInterceptor, Interceptor } from '@/packages/utils/util';
 // import Progress from '../progress/index.taro.vue';
-// import Button from '../button/index.taro.vue';
+// import Button from '';
+// const { create, translate } = createComponent('uploader');
 import Taro from '@tarojs/taro';
-import {
-  Uploader as UploaderIcon,
-  Failure,
-  Loading,
-  Del,
-  Link,
-} from '@nutui/icons-vue-taro';
+import { Photograph, Failure, Loading, Del, Link } from '@nutui/icons-vue-taro';
 export default {
   components: {
     // [Progress.name]: Progress,
     // [Button.name]: Button,
-    UploaderIcon,
+    Photograph,
     Failure,
     Loading,
     Del,
@@ -150,7 +144,7 @@ export default {
 
     timeout: { type: [Number, String], default: 1000 * 30 },
     // defaultFileList: { type: Array, default: () => new Array<FileItem>() },
-    fileList: { type: Array, default: () => [] },
+    fileList: { type: Array<any>, default: () => [] },
     isPreview: { type: Boolean, default: true },
     // picture、list
     listType: { type: String, default: 'picture' },
@@ -173,12 +167,16 @@ export default {
       default: null,
     },
     beforeDelete: {
-      type: Function as PropType<Interceptor>,
-      default: (file: FileItem, files: FileItem[]) => {
+      type: Function,
+      default: () => {
         return true;
       },
     },
     onChange: { type: Function },
+    mode: {
+      type: String,
+      default: 'aspectFit',
+    },
   },
   emits: [
     'start',
@@ -192,15 +190,15 @@ export default {
     'file-item-click',
   ],
   setup(props, { emit }) {
-    const fileList = reactive(cloneDeep(props.fileList)) as Array<FileItem>;
-    let uploadQueue: Promise<UploaderTaro>[] = [];
+    const fileList = ref(props.fileList as Array<FileItem>);
+    const uploadQueue = ref<Promise<UploaderTaro>[]>([]);
 
-    const classes = computed(() => {
-      const prefixCls = 'nut-uploader';
-      return {
-        [prefixCls]: true,
-      };
-    });
+    watch(
+      () => props.fileList,
+      () => {
+        fileList.value = props.fileList;
+      },
+    );
 
     const chooseImage = () => {
       if (props.disabled) {
@@ -228,7 +226,7 @@ export default {
         Taro.chooseMedia({
           /** 最多可以选择的文件个数 */
           count: props.multiple
-            ? (props.maximum as number) * 1 - props.fileList.length
+            ? Number(props.maximum) - fileList.value.length
             : 1,
           /** 文件类型 */
           mediaType: props.mediaType as any,
@@ -237,7 +235,7 @@ export default {
           /** 拍摄视频最长拍摄时间，单位秒。时间范围为 3s 至 30s 之间 */
           maxDuration: props.maxDuration,
           /** 仅对 mediaType 为 image 时有效，是否压缩所选文件 */
-          sizeType: [],
+          sizeType: props.sizeType,
           /** 仅在 sourceType 为 camera 时生效，使用前置或后置摄像头 */
           camera: props.camera,
           /** 接口调用失败的回调函数 */
@@ -251,7 +249,7 @@ export default {
         Taro.chooseImage({
           // 选择数量
           count: props.multiple
-            ? (props.maximum as number) * 1 - props.fileList.length
+            ? Number(props.maximum) - fileList.value.length
             : 1,
           // 可以指定是原图还是压缩图，默认二者都有
           sizeType: props.sizeType,
@@ -266,22 +264,22 @@ export default {
 
     const onChangeMedia = (res: Taro.chooseMedia.SuccessCallbackResult) => {
       // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-      const { type, tempFiles } = res;
+      const { tempFiles } = res;
       const _files: Taro.chooseMedia.ChooseMedia[] =
         filterFiles<Taro.chooseMedia.ChooseMedia>(tempFiles);
       readFile<Taro.chooseMedia.ChooseMedia>(_files);
       emit('change', {
-        fileList,
+        fileList: fileList.value,
       });
     };
     const onChangeImage = (res: Taro.chooseImage.SuccessCallbackResult) => {
       // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-      const { tempFilePaths, tempFiles } = res;
+      const { tempFiles } = res;
       const _files: Taro.chooseImage.ImageFile[] =
         filterFiles<Taro.chooseImage.ImageFile>(tempFiles);
       readFile<Taro.chooseImage.ImageFile>(_files);
       emit('change', {
-        fileList,
+        fileList: fileList.value,
       });
     };
 
@@ -321,13 +319,24 @@ export default {
       ) => {
         fileItem.status = 'success';
         fileItem.message = 'success';
-        emit('success', {
-          data,
-          responseText: data,
-          option,
-          fileItem,
-        });
-        emit('update:fileList', fileList);
+        try {
+          const { data: dataText } = data;
+          const dataObj = JSON.parse(dataText);
+          if (dataObj.data) {
+            fileItem.url = dataObj.data;
+            emit('success', {
+              data,
+              responseText: data,
+              option,
+              fileItem,
+            });
+            emit('update:fileList', fileList.value);
+          } else {
+            throw new Error('上传失败');
+          }
+        } catch (error) {
+          uploadOption.onFailure?.(data, option);
+        }
       };
       uploadOption.onFailure = (
         data: Taro.uploadFile.SuccessCallbackResult,
@@ -346,8 +355,8 @@ export default {
       if (props.autoUpload) {
         task.uploadTaro(Taro.uploadFile, Taro.getEnv());
       } else {
-        uploadQueue.push(
-          new Promise((resolve, reject) => {
+        uploadQueue.value.push(
+          new Promise((resolve) => {
             resolve(task);
           }),
         );
@@ -356,14 +365,15 @@ export default {
 
     const clearUploadQueue = (index = -1) => {
       if (index > -1) {
-        uploadQueue.splice(index, 1);
+        uploadQueue.value.splice(index, 1);
       } else {
-        uploadQueue = [];
-        fileList.splice(0, fileList.length);
+        uploadQueue.value = [];
+        fileList.value = [];
+        emit('update:fileList', fileList.value);
       }
     };
     const submit = () => {
-      Promise.all(uploadQueue).then((res) => {
+      Promise.all(uploadQueue.value).then((res) => {
         res.forEach((i) => i.uploadTaro(Taro.uploadFile, Taro.getEnv()));
       });
     };
@@ -414,7 +424,7 @@ export default {
           fileItem.url =
             fileType == 'video' ? file.thumbTempFilePath : filepath;
         }
-        fileList.push(fileItem);
+        fileList.value.push(fileItem);
         executeUpload(fileItem, index);
       });
     };
@@ -434,7 +444,7 @@ export default {
       if (oversizes.length) {
         emit('oversize', oversizes);
       }
-      let currentFileLength = files.length + fileList.length;
+      let currentFileLength = files.length + fileList.value.length;
       if (currentFileLength > maximum) {
         files.splice(files.length - (currentFileLength - maximum));
       }
@@ -442,10 +452,10 @@ export default {
     };
 
     const deleted = (file: FileItem, index: number) => {
-      fileList.splice(index, 1);
+      fileList.value.splice(index, 1);
       emit('delete', {
         file,
-        fileList,
+        fileList: fileList.value,
         index,
       });
     };
@@ -454,24 +464,14 @@ export default {
       clearUploadQueue(index);
       deleted(file, index);
       // funInterceptor(props.beforeDelete, {
-      //   args: [file, fileList],
+      //   args: [file, fileList.value],
       //   done: () => deleted(file, index),
       // });
     };
 
-    watch(
-      () => props.fileList,
-      () => {
-        props.fileList?.forEach((file, index) => {
-          fileList[index] = cloneDeep(file);
-        });
-      },
-    );
-
     return {
       onDelete,
       fileList,
-      classes,
       chooseImage,
       fileItemClick,
       clearUploadQueue,
@@ -481,48 +481,29 @@ export default {
 };
 </script>
 <style lang="scss">
-// .nut-theme-dark {
-//   .nut-uploader__preview-list {
-//     background: $dark-background2;
-//     color: $dark-color;
-//   }
-//   .close {
-//     color: $dark-color !important;
-//   }
-// }
+.nut-theme-dark {
+  .nut-uploader__preview-list {
+    background: $dark-background2;
+    color: $dark-color;
+  }
+  .close {
+    color: $dark-color !important;
+  }
+}
 .nut-uploader {
   position: relative;
   display: flex;
   flex-wrap: wrap;
+
   &__slot {
     position: relative;
-  }
-  width: 100%;
-  height: 100%;
-  .picture {
-    box-sizing: border-box;
-    width: 33.33%;
-    margin-right: 0px;
-    &.nut-uploader__upload {
-      border: none;
-      .nut-uploader__input {
-        width: 100px !important;
-        height: 100px !important;
-        left: 50%;
-        transform: translateX(-50%);
-        opacity: 1;
-        border: 2rpx dashed #d9d9d9;
-        background: transparent;
-        border-radius: 10px;
-      }
-    }
   }
 
   &__upload {
     position: relative;
-    background: transparent;
-    border: 1px dashed #d9d9d9;
-    border-radius: 10px;
+    background: $uploader-background;
+    width: $uploader-picture-width;
+    height: $uploader-picture-height;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -627,11 +608,8 @@ export default {
         position: absolute;
         right: 0;
         top: 0;
-        color: #fff;
+        color: rgba(0, 0, 0, 0.6);
         transform: translate(50%, -50%);
-        z-index: 1;
-        background: #000;
-        border-radius: 50%;
       }
       .tips {
         position: absolute;
