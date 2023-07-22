@@ -9,7 +9,7 @@
             required
             class="profile-form-item__image"
           >
-            <nut-uploader
+            <Uploader
               :sizeType="['compressed']"
               :mediaType="['image']"
               url="https://pairs.cc/pairs/uploadImg"
@@ -17,13 +17,14 @@
                 Authorization: authToken,
               }"
               @success="onUploadSuccess"
-              v-model:file-list="state.images"
-              :is-preview="true"
+              @delete="onDelete"
+              :file-list="state.images"
+              :is-preview="false"
             >
               <template #tip>
                 <view class="tip" v-if="state.images.length === 0">头像</view>
               </template>
-            </nut-uploader>
+            </Uploader>
           </nut-form-item>
         </view>
         <view class="profile-block">
@@ -197,6 +198,7 @@
 <script lang="ts">
 import { computed, reactive, ref, toRefs } from 'vue';
 import Taro from '@tarojs/taro';
+import Uploader from '../../components/uploader/index.vue';
 import { editProfile, ProfileData } from '../../api/user';
 import { useGlobalStore } from '../../store';
 import {
@@ -218,6 +220,9 @@ interface FormData {
   hobbies: number[];
   favorite: number[];
   images: {
+    status: 'success';
+    message: '上传成功';
+    type: 'image';
     url: string;
   }[];
 }
@@ -236,6 +241,9 @@ function formatApiDataToFormData(data?: ProfileData): FormData {
         favorite: data.favorite?.split(',').map((str) => Number(str)) || [],
         images: data.avatar_ids.map((url) => ({
           url,
+          status: 'success',
+          message: '上传成功',
+          type: 'image',
         })),
       }
     : {
@@ -268,7 +276,6 @@ export default {
     const state = reactive<FormData>(
       formatApiDataToFormData(global.userProfile),
     );
-    console.log('state', state, state.hobbies);
     const drawerController = reactive({
       attributeVisible: false,
       bodyVisible: false,
@@ -353,35 +360,70 @@ export default {
       drawerController.likeTypeVisible = false;
     };
     const onSubmit = async () => {
-      const { valid } = await formRef.value.validate();
-      if (!valid) {
-        return;
+      try {
+        const { valid } = await formRef.value.validate();
+        if (!valid) {
+          return;
+        }
+        const data = {
+          nickname: state.nickname,
+          signature: state.signature,
+          attribute: state.attribute,
+          height: Number(state.height),
+          weight: Number(state.weight),
+          shape: state.shape,
+          career: state.career,
+          hobby: state.hobbies.join(','),
+          favorite: state.favorite.join(','),
+          avatar_ids: state.images.map((item) => item.url),
+          shot: global.userProfile!.shot,
+        };
+        Taro.showToast({
+          title: '加载中',
+          icon: 'loading',
+        });
+        await editProfile(data);
+        Taro.hideToast();
+        if (!isEditMode.value) {
+          global.setActiveTabIndex(0);
+          Taro.switchTab({
+            url: '/pages/home/index',
+          });
+        }
+        Taro.showToast({
+          title: '修改成功',
+          icon: 'success',
+        });
+      } catch (error) {
+        Taro.showToast({
+          title: '修改失败',
+          icon: 'none',
+        });
       }
-      const data = {
-        nickname: state.nickname,
-        signature: state.signature,
-        attribute: state.attribute,
-        height: Number(state.height),
-        weight: Number(state.weight),
-        shape: state.shape,
-        career: state.career,
-        hobby: state.hobbies.join(','),
-        favorite: state.favorite.join(','),
-        avatar_ids: state.images.map((item) => item.url),
-      };
-      Taro.showToast({
-        title: '加载中',
-        icon: 'loading',
-      });
-      await editProfile(data);
-      Taro.hideToast();
-      Taro.switchTab({
-        url: '/pages/home/index',
-      });
+    };
+    const onDelete = (files, FileList, index) => {
+      console.log('onDelete', onDelete);
+      state.images.splice(index, 1);
     };
 
-    const onUploadSuccess = () => {
-      console.log('state.images', state.images);
+    const onUploadSuccess = (res) => {
+      const {
+        data: { data: dataText },
+      } = res;
+      try {
+        const resData = JSON.parse(dataText);
+        state.images.push({
+          status: 'success',
+          message: '上传成功',
+          type: 'image',
+          url: resData.data,
+        });
+      } catch (error) {
+        Taro.showToast({
+          title: '上传失败',
+          icon: 'none',
+        });
+      }
     };
     const currAttributeName = computed(() => {
       return state.attribute
@@ -447,6 +489,7 @@ export default {
       currFavoritesName,
       currCarrierName,
       onUploadSuccess,
+      onDelete,
     };
   },
 };

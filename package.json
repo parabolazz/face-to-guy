@@ -83,6 +83,7 @@
     "@tarojs/shared": "3.6.6",
     "@tarojs/taro": "3.6.6",
     "dayjs": "^1.11.9",
+    "lodash-es": "^4.17.21",
     "lottie-miniprogram": "^1.0.12",
     "pinia": "^2.0.35",
     "vue": "^3.3.0"

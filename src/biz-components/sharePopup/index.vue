@@ -114,6 +114,15 @@ const shareActions = computed(() => [
         await updateShot(userShot.value + 3, Action.CheckIn);
         hasCheckInToday.value = true;
         Taro.setStorageSync('LAST_CHECK_IN_DAY', dayjs().format('YYYY-MM-DD'));
+        Taro.showToast({
+          title: '签到成功',
+          icon: 'success',
+          duration: 2000,
+        });
+        global.setUserProfile({
+          ...global.userProfile!,
+          shot: userShot.value + 3,
+        });
       } catch (error) {
         console.log('error', error);
       }
@@ -147,6 +156,10 @@ const shareActions = computed(() => [
           try {
             await updateShot(userShot.value + 2, Action.Share);
             lastShareTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
+            global.setUserProfile({
+              ...global.userProfile!,
+              shot: userShot.value + 2,
+            });
             Taro.showToast({
               title: '分享成功',
               icon: 'success',

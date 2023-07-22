@@ -41,7 +41,7 @@
           v-if="['image','video'].includes(item.type as string) && item.url"
           :src="item.url"
         />
-        <view v-else class="nut-uploader__preview-img__file">
+        <!-- <view v-else class="nut-uploader__preview-img__file">
           <view
             class="nut-uploader__preview-img__file__name"
             @click="fileItemClick(item)"
@@ -49,7 +49,7 @@
             <view class="file__name_tips">{{ item.name }}</view>
           </view>
         </view>
-        <view class="tips">{{ item.name }}</view>
+        <view class="tips">{{ item.name }}</view> -->
       </view>
       <view class="nut-uploader__preview-list" v-else-if="listType == 'list'">
         <view
@@ -104,9 +104,10 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType, reactive } from 'vue';
+import { computed, PropType, reactive, watch } from 'vue';
 import { UploaderTaro, UploadOptions } from './uploader';
 import { FileItem, MediaType, SizeType, SourceType } from './type';
+import { cloneDeep } from 'lodash-es';
 // import Progress from '../progress/index.taro.vue';
 // import Button from '../button/index.taro.vue';
 import Taro from '@tarojs/taro';
@@ -191,7 +192,7 @@ export default {
     'file-item-click',
   ],
   setup(props, { emit }) {
-    const fileList = reactive(props.fileList) as Array<FileItem>;
+    const fileList = reactive(cloneDeep(props.fileList)) as Array<FileItem>;
     let uploadQueue: Promise<UploaderTaro>[] = [];
 
     const classes = computed(() => {
@@ -458,6 +459,15 @@ export default {
       // });
     };
 
+    watch(
+      () => props.fileList,
+      () => {
+        props.fileList?.forEach((file, index) => {
+          fileList[index] = cloneDeep(file);
+        });
+      },
+    );
+
     return {
       onDelete,
       fileList,
@@ -481,14 +491,14 @@ export default {
 //   }
 // }
 .nut-uploader {
-  //   position: relative;
-  //   display: flex;
-  //   flex-wrap: wrap;
-  //   &__slot {
-  //     position: relative;
-  //   }
-  //   width: 100%;
-  //   height: 100%;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  &__slot {
+    position: relative;
+  }
+  width: 100%;
+  height: 100%;
   .picture {
     box-sizing: border-box;
     width: 33.33%;
@@ -521,161 +531,156 @@ export default {
     }
   }
 
-  //   &__input {
-  //     position: absolute !important;
-  //     top: 0;
-  //     left: 0;
-  //     width: 100% !important;
-  //     height: 100% !important;
-  //     overflow: hidden;
-  //     cursor: pointer !important;
-  //     opacity: 0;
-  //     &:disabled,
-  //     &.disabled {
-  //       cursor: not-allowed !important;
-  //     }
-  //   }
+  &__input {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+    cursor: pointer !important;
+    opacity: 0;
+    &:disabled,
+    &.disabled {
+      cursor: not-allowed !important;
+    }
+  }
 
-  //   &__preview {
-  //     display: flex;
-  //     align-items: center;
-  //     justify-content: center;
-  //     margin-right: 10px;
-  //     margin-bottom: 10px;
-  //     box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
+  &__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
 
-  //     &__progress {
-  //       position: absolute;
-  //       left: 0;
-  //       top: 0;
-  //       width: 100%;
-  //       height: 100%;
-  //       background: rgba(0, 0, 0, 0.6);
-  //       display: flex;
-  //       flex-direction: column;
-  //       align-items: center;
-  //       justify-content: center;
-  //       &__msg {
-  //         color: $white;
-  //         font-size: 12px;
-  //         margin-top: 6px;
-  //       }
-  //     }
-  //     &.list {
-  //       width: 100%;
-  //       margin-right: 0px;
-  //       margin-bottom: 0px;
-  //       margin-top: 10px;
-  //     }
-  //     &-list {
-  //       width: 100%;
-  //       height: 32px;
-  //       display: flex;
-  //       flex-direction: column;
-  //       position: relative;
-  //       .nut-uploader__preview-img__file__name {
-  //         padding: 2px 4px;
-  //         display: flex;
-  //         align-items: center;
-  //         height: 100%;
-  //         .file__name_tips {
-  //           margin-left: 4px;
-  //           padding: 0 20px;
-  //           @include oneline-ellipsis();
-  //         }
-  //       }
+    &__progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      &__msg {
+        color: $white;
+        font-size: 12px;
+        margin-top: 6px;
+      }
+    }
+    &.list {
+      width: 100%;
+      margin-right: 0px;
+      margin-bottom: 0px;
+      margin-top: 10px;
+    }
+    &-list {
+      width: 100%;
+      height: 32px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      .nut-uploader__preview-img__file__name {
+        padding: 2px 4px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        .file__name_tips {
+          margin-left: 4px;
+          padding: 0 20px;
+          @include oneline-ellipsis();
+        }
+      }
 
-  //       .nut-uploader__preview-img__file__del {
-  //         position: absolute;
-  //         right: 6px;
-  //         top: 6px;
-  //       }
-  //       .nut-uploader__preview-img__file__link {
-  //         position: absolute;
-  //         left: 6px;
-  //         top: 8px;
-  //       }
-  //       .nut-progress {
-  //         position: absolute;
-  //         left: 0;
-  //         right: 0;
-  //         bottom: 0;
-  //         .nut-progress-outer {
-  //           height: 2px !important;
-  //         }
-  //       }
-  //     }
-  //     &-img {
-  //       position: relative;
-  //       width: $uploader-picture-width;
-  //       height: $uploader-picture-height;
-  //       display: flex;
-  //       align-items: center;
-  //       justify-content: center;
-  //       border-radius: 6px;
-  //       .close {
-  //         position: absolute;
-  //         right: 0;
-  //         top: 0;
-  //         color: rgba(0, 0, 0, 0.6);
-  //         transform: translate(50%, -50%);
-  //         z-index: 1;
-  //         background: #000;
-  //         border-radius: 50%;
-  //       }
-  //       .tips {
-  //         position: absolute;
-  //         bottom: 0;
-  //         left: 0;
-  //         right: 0;
-  //         text-align: center;
-  //         display: flex;
-  //         align-items: center;
-  //         justify-content: center;
-  //         font-size: 12px;
-  //         color: $white;
-  //         height: 0px;
-  //         transition: height 0.3s;
-  //         background: rgba(0, 0, 0, 0.54);
-  //         @include oneline-ellipsis();
-  //       }
-  //       &__c {
-  //         max-width: 100%;
-  //         max-height: 100%;
-  //         border-radius: 6px;
-  //       }
-  //       &__file {
-  //         height: 100%;
-  //         width: 100%;
-  //         display: flex;
-  //         align-items: center;
-  //         justify-content: center;
-  //         transition: all 0.3s;
+      .nut-uploader__preview-img__file__del {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+      }
+      .nut-uploader__preview-img__file__link {
+        position: absolute;
+        left: 6px;
+        top: 8px;
+      }
+      .nut-progress {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        .nut-progress-outer {
+          height: 2px !important;
+        }
+      }
+    }
+    &-img {
+      position: relative;
+      width: $uploader-picture-width;
+      height: $uploader-picture-height;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: #fff;
+        transform: translate(50%, -50%);
+        z-index: 1;
+        background: #000;
+        border-radius: 50%;
+      }
+      .tips {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: $white;
+        height: 0px;
+        transition: height 0.3s;
+        background: rgba(0, 0, 0, 0.54);
+        @include oneline-ellipsis();
+      }
+      &__c {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 6px;
+      }
+      &__file {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
 
-  //         &__name {
-  //           display: flex;
-  //           width: 100%;
-  //           font-size: 12px;
-  //           color: $text-color;
-  //           padding: 10px;
-  //           height: 100%;
-  //           overflow: hidden;
-  //           box-sizing: border-box;
-  //           align-items: center;
-  //           &.error {
-  //             color: red !important;
-  //           }
-  //           &.success {
-  //             color: #1890ff !important;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
+        &__name {
+          display: flex;
+          width: 100%;
+          font-size: 12px;
+          color: $text-color;
+          padding: 10px;
+          height: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+          align-items: center;
+          &.error {
+            color: red !important;
+          }
+          &.success {
+            color: #1890ff !important;
+          }
+        }
+      }
+    }
+  }
 }
-// .custom-uploader {
-//   .nut-uploader__preview {
-//     position: absolute;
-//   }
-// }
 </style>
