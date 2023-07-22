@@ -21,14 +21,17 @@ export interface IAnswer {
 
 export interface IMatchItem extends IQuestion, IAnswer {}
 
-export const getActivityList = () => {
+export const getActivityList = (data: {
+  current_page: number
+  activity_id: number
+}) => {
   return api.post<{
     data: {
       ad: IMatchItem[] | null
       answer: IMatchItem[] | null
       question: IMatchItem[] | null
     }
-  }>('/pairs/activityList');
+  }>('/pairs/activityList', {data});
 }
 
 export const answerQuestionActivity = (data: {

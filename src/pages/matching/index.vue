@@ -87,6 +87,7 @@ const PAGE_SIZE = 11;
 
 const idx = ref(0);
 const isLastPage = computed(() => activityList.value.length < PAGE_SIZE);
+const currentPage = ref(0);
 const activityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const prepareActivityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const takeEnoughShotDialog = ref(false);
@@ -101,7 +102,10 @@ const userShot = ref(23);
 
 async function fetchData() {
   try {
-    const { data } = await getActivityList();
+    const { data } = await getActivityList({
+      current_page: currentPage.value,
+      activity_id: 1,
+    });
     const questionList = (data.question || []).map((item) => ({
       ...item,
       cardType: 'question',
@@ -120,6 +124,7 @@ async function fetchData() {
       title: '广告',
       type: 1,
     };
+    currentPage.value += 1;
     return questionList.concat(answerList, adList, [nextPage]);
   } catch (error) {
     return [];
@@ -159,9 +164,11 @@ watch(
       console.log('trigger!');
       prepareActivityList.value = await fetchData();
     } else if (v === PAGE_SIZE - 1) {
+      // 跳转到下一页
       setTimeout(() => {
         activityList.value = [];
         idx.value = 0;
+        currentPage.value += 1;
         nextTick(() => {
           activityList.value = prepareActivityList.value;
           prepareActivityList.value = [];
