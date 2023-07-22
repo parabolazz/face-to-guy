@@ -17,7 +17,11 @@
             </div>
             <div class="answer-card__user-info-desc">{{ desc }}</div>
           </div>
-          <nut-button class="answer-card__user-info-btn" type="primary" plain
+          <nut-button
+            class="answer-card__user-info-btn"
+            type="primary"
+            plain
+            @click="goToViewUser"
             >看主页</nut-button
           >
         </div>
@@ -73,7 +77,13 @@ const desc = computed(() => {
 
 const goChat = () => {
   Taro.navigateTo({
-    url: `/pages/chat/index?targetId=12123`,
+    url: `/pages/chat/index?targetId=${props}}`,
+  });
+};
+
+const goToViewUser = () => {
+  Taro.navigateTo({
+    url: `/pages/user/index?userId=${props.user_id}`,
   });
 };
 

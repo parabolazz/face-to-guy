@@ -17,6 +17,7 @@ export interface IAnswer {
   title: string
   type: 1 | 2
   weight: number
+  user_id: number
 }
 
 export interface IMatchItem extends IQuestion, IAnswer {}

@@ -82,29 +82,34 @@ import { computed } from 'vue';
 import { watch } from 'vue';
 import { nextTick } from '@tarojs/taro';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
+import { useGlobalStore } from '../../store';
+import Taro from '@tarojs/taro';
 
 const PAGE_SIZE = 11;
 
+const instance = Taro.getCurrentInstance();
+const global = useGlobalStore();
 const idx = ref(0);
 const isLastPage = computed(() => activityList.value.length < PAGE_SIZE);
 const currentPage = ref(0);
 const activityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const prepareActivityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const takeEnoughShotDialog = ref(false);
-const noShotDialog = ref(true);
+const noShotDialog = ref(false);
 const sharePopupVisible = ref(false);
 const onOpenSharePopup = () => {
   noShotDialog.value = false;
   sharePopupVisible.value = true;
 };
 
-const userShot = ref(23);
+const userShot = computed(() => global.userProfile?.shot || 0);
+const activityId = computed(() => instance?.router?.params.activityId);
 
 async function fetchData() {
   try {
     const { data } = await getActivityList({
       current_page: currentPage.value,
-      activity_id: 1,
+      activity_id: Number(activityId.value),
     });
     const questionList = (data.question || []).map((item) => ({
       ...item,
@@ -181,6 +186,7 @@ watch(
 <style lang="scss">
 .matching {
   height: 100%;
+  padding: 0 20px;
   .matching-swiper {
     height: 613px;
     overflow: hidden;
