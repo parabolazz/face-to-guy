@@ -208,6 +208,8 @@ import {
   CARRIER_LIST,
   FAVORITE_LIST,
 } from '../../utils/profileEnum';
+import { onMounted } from 'vue';
+import { watch } from 'vue';
 
 interface FormData {
   nickname: string;
@@ -383,6 +385,8 @@ export default {
           icon: 'loading',
         });
         await editProfile(data);
+        await global.getUserProfile();
+
         Taro.hideToast();
         if (!isEditMode.value) {
           global.setActiveTabIndex(0);
@@ -401,8 +405,7 @@ export default {
         });
       }
     };
-    const onDelete = (files, FileList, index) => {
-      console.log('onDelete', onDelete);
+    const onDelete = ({ index }) => {
       state.images.splice(index, 1);
     };
 
@@ -465,6 +468,30 @@ export default {
             .join(', ')
         : '';
     });
+    onMounted(() => {
+      Taro.getLocation({
+        type: 'wgs84',
+        success: function (res) {
+          console.log('res', res);
+        },
+      });
+    });
+    watch(
+      () => global.userProfile,
+      (newVal) => {
+        const newFormData = formatApiDataToFormData(newVal);
+        Object.keys(newFormData).forEach((key) => {
+          state[key] = newFormData[key];
+        });
+      },
+    );
+    watch(
+      () => state.images,
+      (newVal, oldVal) => {
+        console.log('newVal oldVal', newVal, oldVal);
+      },
+      { deep: true },
+    );
     return {
       state,
       ...toRefs(state),

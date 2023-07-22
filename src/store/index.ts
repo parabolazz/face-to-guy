@@ -1,5 +1,6 @@
+import Taro from '@tarojs/taro'
 import { defineStore } from 'pinia'
-import { ProfileData } from 'src/api/user'
+import { ProfileData, getUserProfile } from '../api/user'
 
 interface State {
   showTabbar: boolean
@@ -20,6 +21,13 @@ export const useGlobalStore = defineStore('global', {
     },
     setUserProfile(data) {
       this.userProfile = data
+    },
+    async getUserProfile() {
+        const myUserId = Taro.getStorageSync('USER_ID');
+        const profile = await getUserProfile(myUserId);
+        if (profile) {
+          this.setUserProfile(profile.data);
+        }
     }
   },
 })
