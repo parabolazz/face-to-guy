@@ -3,4 +3,5 @@ page {
   --nut-button-primary-color: #dbf378;
   --nut-button-primary-background-color: #dbf378;
   --nut-primary-color: #dbf378;
+  --nut-overlay-bg-color: rgba(78, 78, 78, 0.6);
 }

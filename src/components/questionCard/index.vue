@@ -46,7 +46,7 @@
         type="primary"
         :disabled="!answer"
         @click="onAnswer"
-        >{{ answer ? '完成编辑' : '请进行编辑' }}</nut-button
+        >完成编辑</nut-button
       >
     </div>
   </div>
@@ -181,6 +181,11 @@ watch(
     height: 195px;
     border: 1px dashed #eee;
     border-radius: 9px;
+  }
+  .nut-button--disabled {
+    background-color: #d9d9d9 !important;
+    color: #666565 !important;
+    opacity: 1;
   }
 }
 </style>

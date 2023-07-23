@@ -155,21 +155,46 @@
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
-      <nut-picker
-        :columns="optionsController.career"
-        title="请选择职业"
-        style="width: 100%"
-        @confirm="chooseCarrier"
-        @cancel="drawerController.carrierVisible = false"
+      <div class="flex justify-end">
+        <div
+          class="choose-confirm-btn"
+          @click="() => (drawerController.carrierVisible = false)"
+        >
+          确定
+        </div>
+      </div>
+      <picker-view
+        indicator-class="profile-picker-indicator"
+        style="width: 100%; height: 300px"
+        mask-class="profile-picker-mask"
+        :value="[currentCarrierIndex]"
+        @change="chooseCarrier"
       >
-      </nut-picker>
+        <picker-view-column>
+          <view
+            v-for="opt in optionsController.career"
+            :key="opt.value"
+            class="profile-picker-text"
+            >{{ opt.text }}</view
+          >
+        </picker-view-column>
+      </picker-view>
     </nut-popup>
     <nut-popup
+      overlay-class="choose-confirm-overlay"
       position="bottom"
       v-model:visible="drawerController.hobbyVisible"
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
+      <div class="flex justify-end">
+        <div
+          class="choose-confirm-btn"
+          @click="() => (drawerController.hobbyVisible = false)"
+        >
+          确定
+        </div>
+      </div>
       <!-- 傻逼nut-ui一定要用ref -->
       <nut-checkbox-group v-model="hobbies" :max="3">
         <nut-cell v-for="item in optionsController.hobbies" :key="item.value">
@@ -179,11 +204,20 @@
     </nut-popup>
 
     <nut-popup
+      overlay-class="choose-confirm-overlay"
       position="bottom"
       v-model:visible="drawerController.likeTypeVisible"
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
+      <div class="flex justify-end">
+        <div
+          class="choose-confirm-btn"
+          @click="() => (drawerController.likeTypeVisible = false)"
+        >
+          确定
+        </div>
+      </div>
       <!-- 傻逼nut-ui一定要用ref -->
       <nut-checkbox-group v-model="favorite" :max="3">
         <nut-cell v-for="item in optionsController.favorite" :key="item.value">
@@ -301,7 +335,12 @@ export default {
       })),
     };
     const isEditMode = computed(() => instance?.router?.params.from);
-
+    const currentCarrierIndex = computed(() => {
+      const index = optionsController.career.findIndex(
+        (item) => item.value === state.career,
+      );
+      return index === -1 ? 0 : index;
+    });
     const valueForPicker = reactive({
       attribute: [state.attribute],
       height: [state.height],
@@ -332,10 +371,10 @@ export default {
     const likeTypeText = computed(() => {
       return state.favorite.join('，');
     });
-    const chooseCarrier = ({ selectedValue }) => {
-      console.log('selectedValue', selectedValue, selectedValue[0]);
-      state.career = selectedValue[0];
-      drawerController.carrierVisible = false;
+    const chooseCarrier = (e) => {
+      const index = e.detail.value[0];
+      const val = optionsController.career[index];
+      state.career = val.value;
     };
     const chooseType = (item) => {
       console.log('item', item);
@@ -374,8 +413,8 @@ export default {
           weight: Number(state.weight),
           shape: state.shape,
           career: state.career,
-          hobby: state.hobbies.join(','),
-          favorite: state.favorite.join(','),
+          hobby: '',
+          favorite: '',
           avatar_ids: state.images.map((item) => item.url),
           shot: global.userProfile!.shot,
         };
@@ -387,16 +426,22 @@ export default {
         await global.getUserProfile();
 
         Taro.hideToast();
-        if (!isEditMode.value) {
+        if (isEditMode.value) {
+          Taro.showToast({
+            title: '修改成功',
+            icon: 'success',
+          });
+          setTimeout(() => {
+            Taro.navigateBack({
+              delta: 1,
+            });
+          }, 500);
+        } else {
           global.setActiveTabIndex(0);
           Taro.switchTab({
             url: '/pages/home/index',
           });
         }
-        Taro.showToast({
-          title: '修改成功',
-          icon: 'success',
-        });
       } catch (error) {
         Taro.showToast({
           title: '修改失败',
@@ -512,6 +557,7 @@ export default {
       currFavoritesName,
       currCarrierName,
       onUploadSuccess,
+      currentCarrierIndex,
     };
   },
 };
@@ -605,5 +651,38 @@ export default {
 .profile-block {
   padding-top: 14px;
   background-color: #1d1d1d;
+}
+.choose-confirm-btn {
+  display: inline-block;
+  margin: 12px 12px 0 0;
+  color: #dbf378;
+  padding: 2px 4px;
+  font-weight: bold;
+}
+
+.profile-picker-mask {
+  max-width: auto;
+  background: rgb(0, 240, 244);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(38, 38, 38, 0.1) 45%,
+    rgba(38, 38, 38, 0.1) 55%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  background-size: 750px 300px !important;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: 9;
+}
+.profile-picker-indicator {
+  color: #fff;
+}
+.profile-picker-text {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
 }
 </style>
