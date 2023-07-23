@@ -37,14 +37,14 @@
           </div></nut-grid-item
         >
       </nut-grid>
-      <view class="home-operation mt-4">
+      <!-- <view class="home-operation mt-4">
         <nut-button @click="onClick">去信息填写页</nut-button>
         <nut-button @click="goShare">去分享页面</nut-button>
         <nut-button @click="goMatchUserInfo">去匹配对象详情页面</nut-button>
         <nut-button @click="goLoginPage">去登录页面</nut-button>
         <nut-button @click="goChatsPage">去聊天列表页面</nut-button>
         <nut-button @click="goChatPage">去聊天页面</nut-button>
-      </view>
+      </view> -->
       <SharePopup v-model:visible="isVisible" />
     </view>
   </nut-config-provider>
@@ -64,38 +64,39 @@ const global = useGlobalStore();
 const isVisible = ref(false);
 
 const shotCount = computed(() => global.userProfile?.shot || 0);
+const city = ref('深圳');
 
-const onClick = () => {
-  Taro.navigateTo({
-    url: '/pages/profile/index',
-  });
-};
-const goShare = () => {
-  Taro.navigateTo({
-    url: '/pages/share/index',
-  });
-};
-const goMatchUserInfo = () => {
-  Taro.navigateTo({
-    url: '/pages/user/index',
-  });
-};
-const goLoginPage = () => {
-  Taro.navigateTo({
-    url: '/pages/login/index',
-  });
-};
-const goChatsPage = () => {
-  global.setActiveTabIndex(1);
-  Taro.switchTab({
-    url: '/pages/chats/index',
-  });
-};
-const goChatPage = () => {
-  Taro.navigateTo({
-    url: '/pages/chat/index',
-  });
-};
+// const onClick = () => {
+//   Taro.navigateTo({
+//     url: '/pages/profile/index',
+//   });
+// };
+// const goShare = () => {
+//   Taro.navigateTo({
+//     url: '/pages/share/index',
+//   });
+// };
+// const goMatchUserInfo = () => {
+//   Taro.navigateTo({
+//     url: '/pages/user/index',
+//   });
+// };
+// const goLoginPage = () => {
+//   Taro.navigateTo({
+//     url: '/pages/login/index',
+//   });
+// };
+// const goChatsPage = () => {
+//   global.setActiveTabIndex(1);
+//   Taro.switchTab({
+//     url: '/pages/chats/index',
+//   });
+// };
+// const goChatPage = () => {
+//   Taro.navigateTo({
+//     url: '/pages/chat/index',
+//   });
+// };
 const topics = [
   {
     activityId: 1,
@@ -199,7 +200,7 @@ const goMatching = (activityId: number) => {
         position: relative;
         .home-topic__item__city {
           position: absolute;
-          top: 14px;
+          top: 12px;
           left: 14px;
           padding: 4px 8px;
           background-color: #000;
