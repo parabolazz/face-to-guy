@@ -10,13 +10,13 @@
             class="profile-form-item__image"
           >
             <Uploader
+              :size-type="['compressed']"
               :mediaType="['image']"
               url="https://pairs.cc/pairs/uploadImg"
               :headers="{
                 Authorization: authToken,
               }"
               @success="onUploadSuccess"
-              @delete="onDelete"
               :file-list="state.images"
               :is-preview="false"
             >
@@ -404,9 +404,6 @@ export default {
         });
       }
     };
-    const onDelete = ({ index }) => {
-      state.images.splice(index, 1);
-    };
 
     const onUploadSuccess = (res) => {
       const {
@@ -515,7 +512,6 @@ export default {
       currFavoritesName,
       currCarrierName,
       onUploadSuccess,
-      onDelete,
     };
   },
 };

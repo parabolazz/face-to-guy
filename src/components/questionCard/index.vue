@@ -11,7 +11,7 @@
       <div class="question-card__main-answer-filed">
         <nut-input
           class="question-card__input"
-          v-if="type === 1"
+          v-if="type === 2"
           input-align="left"
           :border="false"
           v-model="answer"
@@ -19,7 +19,7 @@
           type="textarea"
         />
         <template v-else>
-          <nut-uploader
+          <Uploader
             v-if="!images.length"
             class="question-card__uploader"
             :sizeType="['compressed']"
@@ -30,18 +30,21 @@
             }"
             v-model:file-list="images"
             :is-preview="true"
+            mode="aspectFill"
           />
           <img
             class="question-card__uploader"
             v-else
             :src="images[0].url"
             alt="answer image"
+            mode="aspectFit"
           />
         </template>
       </div>
       <nut-button
         class="question-card__submit"
         type="primary"
+        :disabled="!answer"
         @click="onAnswer"
         >{{ answer ? '完成编辑' : '请进行编辑' }}</nut-button
       >
@@ -52,6 +55,7 @@
 import Taro from '@tarojs/taro';
 import { ref, watch } from 'vue';
 import { answerQuestionActivity } from '../../api/matching';
+import Uploader from '../../components/uploader/index.vue';
 
 defineProps<{
   type: 1 | 2;

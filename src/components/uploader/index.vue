@@ -221,57 +221,59 @@ export default {
           document.body.appendChild(obj);
         }
       }
-      if (Taro.getEnv() == 'WEAPP') {
-        // chooseMedia 目前只支持微信小程序原生，其余端全部使用 chooseImage API
-        Taro.chooseMedia({
-          /** 最多可以选择的文件个数 */
-          count: props.multiple
-            ? Number(props.maximum) - fileList.value.length
-            : 1,
-          /** 文件类型 */
-          mediaType: props.mediaType as any,
-          /** 图片和视频选择的来源 */
-          sourceType: props.sourceType,
-          /** 拍摄视频最长拍摄时间，单位秒。时间范围为 3s 至 30s 之间 */
-          maxDuration: props.maxDuration,
-          /** 仅对 mediaType 为 image 时有效，是否压缩所选文件 */
-          sizeType: props.sizeType,
-          /** 仅在 sourceType 为 camera 时生效，使用前置或后置摄像头 */
-          camera: props.camera,
-          /** 接口调用失败的回调函数 */
-          fail: (res: TaroGeneral.CallbackResult) => {
-            emit('failure', res);
-          },
-          /** 接口调用成功的回调函数 */
-          success: onChangeMedia,
-        });
-      } else {
-        Taro.chooseImage({
-          // 选择数量
-          count: props.multiple
-            ? Number(props.maximum) - fileList.value.length
-            : 1,
-          // 可以指定是原图还是压缩图，默认二者都有
-          sizeType: props.sizeType,
-          sourceType: props.sourceType,
-          success: onChangeImage,
-          fail: (res: any) => {
-            emit('failure', res);
-          },
-        });
-      }
+      // if (Taro.getEnv() == 'WEAPP') {
+      //   // chooseMedia 目前只支持微信小程序原生，其余端全部使用 chooseImage API
+      //   Taro.chooseMedia({
+      //     /** 最多可以选择的文件个数 */
+      //     count: props.multiple
+      //       ? Number(props.maximum) - fileList.value.length
+      //       : 1,
+      //     /** 文件类型 */
+      //     mediaType: props.mediaType as any,
+      //     /** 图片和视频选择的来源 */
+      //     sourceType: props.sourceType,
+      //     /** 拍摄视频最长拍摄时间，单位秒。时间范围为 3s 至 30s 之间 */
+      //     maxDuration: props.maxDuration,
+      //     /** 仅对 mediaType 为 image 时有效，是否压缩所选文件 */
+      //     sizeType: props.sizeType,
+      //     /** 仅在 sourceType 为 camera 时生效，使用前置或后置摄像头 */
+      //     camera: props.camera,
+      //     /** 接口调用失败的回调函数 */
+      //     fail: (res: TaroGeneral.CallbackResult) => {
+      //       emit('failure', res);
+      //     },
+      //     /** 接口调用成功的回调函数 */
+      //     success: onChangeMedia,
+      //   });
+      // } else {
+      Taro.chooseImage({
+        // 选择数量
+        count: props.multiple
+          ? Number(props.maximum) - fileList.value.length
+          : 1,
+        // 可以指定是原图还是压缩图，默认二者都有
+        sizeType: props.sizeType,
+        sourceType: props.sourceType,
+        success: onChangeImage,
+        fail: (res: any) => {
+          emit('failure', res);
+        },
+      });
+      // }
     };
 
-    const onChangeMedia = (res: Taro.chooseMedia.SuccessCallbackResult) => {
-      // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-      const { tempFiles } = res;
-      const _files: Taro.chooseMedia.ChooseMedia[] =
-        filterFiles<Taro.chooseMedia.ChooseMedia>(tempFiles);
-      readFile<Taro.chooseMedia.ChooseMedia>(_files);
-      emit('change', {
-        fileList: fileList.value,
-      });
-    };
+    // const onChangeMedia = (res: Taro.chooseMedia.SuccessCallbackResult) => {
+    //   // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+    //   const { tempFiles } = res;
+    //   console.log('tempFiles', tempFiles);
+
+    //   const _files: Taro.chooseMedia.ChooseMedia[] =
+    //     filterFiles<Taro.chooseMedia.ChooseMedia>(tempFiles);
+    //   readFile<Taro.chooseMedia.ChooseMedia>(_files);
+    //   emit('change', {
+    //     fileList: fileList.value,
+    //   });
+    // };
     const onChangeImage = (res: Taro.chooseImage.SuccessCallbackResult) => {
       // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
       const { tempFiles } = res;

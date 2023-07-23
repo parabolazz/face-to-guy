@@ -5,6 +5,7 @@
         <div class="me-card__main">
           <img
             class="me-card__avatar"
+            mode="aspectFill"
             :src="profile?.avatar_ids[0]"
             alt="avatar"
           />
