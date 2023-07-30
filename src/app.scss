@@ -26,3 +26,22 @@ image {
 .nut-picker {
   background-color: #000 !important;
 }
+// 固定类型的popup
+.pairs-popup {
+  .pairs-popup__content {
+    position: relative;
+    &:before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 4px;
+      border-radius: 27px;
+      margin: 0 auto;
+      background-color: #565656;
+      z-index: 1;
+    }
+  }
+}

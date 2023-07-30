@@ -1,14 +1,15 @@
 <template>
   <nut-action-sheet
     :visible="visible"
-    class="share-popup"
+    class="pairs-popup share-popup"
     @update:visible="onToggleVisible"
   >
-    <div class="share-popup__content">
+    <div class="pairs-popup__content share-popup__content">
       <div class="share-popup-collapse"></div>
       <div class="share-popup__user">
         <img
           class="share-popup__user-avatar"
+          mode="aspectFill"
           :src="global.userProfile?.avatar_ids?.[0]"
           alt="user logo"
         />
@@ -197,19 +198,11 @@ watch(
     overflow: hidden;
   }
 
-  .share-popup-collapse {
-    width: 40px;
-    height: 4px;
-    border-radius: 27px;
-    margin: 0 auto;
-    background-color: #565656;
-    margin-bottom: 21px;
-  }
   .share-popup__user {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 20px;
+    margin: 20px 0;
   }
   .share-popup__user-avatar {
     width: 72px;

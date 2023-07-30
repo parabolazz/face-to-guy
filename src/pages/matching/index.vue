@@ -68,7 +68,16 @@
         >
       </div>
     </nut-dialog>
-    <nut-config-provider theme="dark">
+    <nut-config-provider
+      theme="dark"
+      :themeVars="{
+        darkBackground2: '#2c2c2c',
+      }"
+    >
+      <SwitchWechatPopup
+        v-model:visible="switchWechatVisible"
+        @onOpenSharePopup="onOpenSharePopup"
+      />
       <SharePopup v-model:visible="sharePopupVisible" />
     </nut-config-provider>
   </div>
@@ -82,6 +91,7 @@ import { computed } from 'vue';
 import { watch } from 'vue';
 import { nextTick } from '@tarojs/taro';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
+import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue';
 import { useGlobalStore } from '../../store';
 import Taro from '@tarojs/taro';
 
@@ -97,6 +107,8 @@ const prepareActivityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const takeEnoughShotDialog = ref(false);
 const noShotDialog = ref(false);
 const sharePopupVisible = ref(false);
+const switchWechatVisible = ref(false);
+
 const onOpenSharePopup = () => {
   noShotDialog.value = false;
   sharePopupVisible.value = true;
@@ -150,8 +162,9 @@ const onAnswer = () => {
     idx.value = 0;
   }
 };
-const goChat = () => {
-  console.log('goChat');
+const goChat = (userId) => {
+  console.log('userId', userId);
+  switchWechatVisible.value = true;
 };
 const onConfirmGoChat = () => {
   takeEnoughShotDialog.value = false;

@@ -75,10 +75,12 @@ const desc = computed(() => {
   return descArr.filter((item) => item).join(' / ');
 });
 
+const emit = defineEmits<{
+  (e: 'goChat', value: number): void;
+}>();
+
 const goChat = () => {
-  Taro.navigateTo({
-    url: `/pages/chat/index?targetId=${props}}`,
-  });
+  emit('goChat', props.user_id);
 };
 
 const goToViewUser = () => {
