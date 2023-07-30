@@ -80,22 +80,41 @@
       </div>
     </scroll-view>
     <div class="matched-user__footer">
-      <div class="matched-user__footer__btn">再看看</div>
-      <div class="matched-user__footer__btn">
+      <nut-button
+        :disabled="!profile.avatar_ids.length"
+        type="primary"
+        class="matched-user__footer__btn"
+        @click="goChat"
+      >
         <img
           class="matched-user__footer__btn__love-icon"
           :src="IconFavoriteBlack"
           alt="love him"
         />
-        我可以
-      </div>
+        留个联系方式给TA
+      </nut-button>
     </div>
+
+    <nut-config-provider
+      theme="dark"
+      :themeVars="{
+        darkBackground2: '#2c2c2c',
+      }"
+    >
+      <SwitchWechatPopup
+        v-model:visible="switchWechatVisible"
+        @onOpenSharePopup="onOpenSharePopup"
+      />
+
+      <SharePopup v-model:visible="sharePopupVisible" />
+    </nut-config-provider>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useGlobalStore } from '../../store';
+import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue';
+import SharePopup from '../../biz-components/sharePopup/index.vue';
 import IconJob from '../../assets/images/job.svg';
 import IconHobby from '../../assets/images/hobby.svg';
 import IconFavorite from '../../assets/images/favorite.svg';
@@ -110,6 +129,7 @@ import {
   Hobbies,
   Favorite,
 } from '../../utils/profileEnum';
+// import { useGlobalStore } from '../../store';
 
 // const globalStore = useGlobalStore();
 // globalStore.toggleTabbar(false);
@@ -129,7 +149,8 @@ const profile = ref<ProfileData>({
   weight: 0,
   shot: 0,
 });
-
+const switchWechatVisible = ref(false);
+const sharePopupVisible = ref(false);
 const basicInfo = computed(() => {
   if (!profile.value) return '';
   const { attribute, height, weight, shape } = profile.value;
@@ -157,6 +178,14 @@ const getData = async () => {
   }
 };
 getData();
+
+const onOpenSharePopup = () => {
+  sharePopupVisible.value = true;
+};
+
+const goChat = () => {
+  switchWechatVisible.value = true;
+};
 </script>
 
 <style lang="scss">
@@ -271,13 +300,11 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   }
   .matched-user__footer__btn {
     flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     border-radius: 10px;
     font-weight: 500;
     height: 62px;
     font-size: 20px;
+    border-width: 0px;
     .matched-user__footer__btn__love-icon {
       width: 16px;
       height: 14px;

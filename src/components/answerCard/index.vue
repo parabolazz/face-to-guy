@@ -138,7 +138,7 @@ watch(
   .answer-card__user-info-btn {
     padding: 8px 16px;
     border-radius: 10px;
-    background-color: transparent;
+    background-color: transparent !important;
     font-weight: bold;
     border-width: 2px;
   }

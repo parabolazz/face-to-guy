@@ -73,7 +73,7 @@ const onChat = async () => {
     if (!valid) {
       return;
     }
-    if (Number(global.userProfile?.shot) < 1) {
+    if (Number(global.userProfile?.shot) > 1) {
       Taro.showToast({
         title: 'Shot不足, 快去做任务获取shot吧！',
         icon: 'none',

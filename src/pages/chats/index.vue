@@ -1,23 +1,54 @@
 <template>
   <view class="chats">
-    <div class="chats-list">
-      <virtual-list
-        wclass="List"
-        :height="500"
-        :item-data="list"
-        :item-count="list.length"
-        :item-size="74"
-        :item="MessageItem"
-        width="100%"
-      />
-    </div>
-    <div class="chats-placeholder"></div>
+    <nut-config-provider theme="dark">
+      <nut-tabs v-model="currentTab">
+        <nut-tab-pane title="搭讪我的">
+          <nut-list
+            :height="176"
+            :margin="12"
+            :listData="list"
+            class="chats-list"
+          >
+            <template v-slot>
+              <LikeMeCard class="chats-item" />
+            </template>
+          </nut-list>
+          <!-- <virtual-list
+            wclass="List"
+            :item-data="list"
+            :item-size="176"
+            :item-count="list.length"
+            :item="MyLikeCard"
+            :margin="12"
+            width="100%"
+          /> -->
+        </nut-tab-pane>
+        <nut-tab-pane title="我搭讪的">
+          <div class="chats-list">
+            <nut-list
+              :height="176"
+              :margin="12"
+              :listData="list"
+              class="chats-list"
+            >
+              <template v-slot>
+                <MyLikeCard class="chats-item" />
+              </template>
+            </nut-list>
+          </div>
+        </nut-tab-pane>
+      </nut-tabs>
+      <div class="chats-placeholder"></div>
+    </nut-config-provider>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import MessageItem from './MessageItem.vue';
+import MyLikeCard from './MyLikeCard.vue';
+import LikeMeCard from './LikeMeCard.vue';
+
+const currentTab = ref('0');
 
 function buildData(offset = 0) {
   return Array(10)
@@ -42,10 +73,15 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: #000;
   height: 100%;
   padding-bottom: $footer-height;
   padding-bottom: $footer-height-lagecy;
-  .chats-list {
+  .nut-tab-pane {
+    padding: 0 12px;
+  }
+  .chats-item {
+    margin-bottom: 12px;
   }
   .chats-placeholder {
     padding: 46px 0;
