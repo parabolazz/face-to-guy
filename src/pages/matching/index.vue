@@ -81,8 +81,10 @@
       }"
     >
       <SwitchWechatPopup
+        :targetUserId="targetUserId"
         v-model:visible="switchWechatVisible"
         @onOpenSharePopup="onOpenSharePopup"
+        @update:visible="() => (targetUserId = -1)"
       />
       <SharePopup v-model:visible="sharePopupVisible" />
     </nut-config-provider>
@@ -119,6 +121,7 @@ const noShotDialog = ref(false);
 const sharePopupVisible = ref(false);
 const switchWechatVisible = ref(false);
 const walkGroups = ref<number[]>([]);
+const targetUserId = ref<number>(-1);
 
 const onOpenSharePopup = () => {
   noShotDialog.value = false;
@@ -179,7 +182,7 @@ const onAnswer = () => {
   }
 };
 const goChat = (userId) => {
-  console.log('userId', userId);
+  targetUserId.value = userId;
   switchWechatVisible.value = true;
 };
 const onConfirmGoChat = () => {

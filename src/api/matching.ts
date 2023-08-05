@@ -45,3 +45,14 @@ export const answerQuestionActivity = (data: {
     data
   });
 }
+
+export const leaveMessage = (data: {
+  user_id: number,
+  follow_user_id: number,
+  wechat: string,
+  message: string
+}) => {
+  return api.post('/pairs/leaveMessage', {
+    data
+  })
+}
