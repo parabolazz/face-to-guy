@@ -23,16 +23,18 @@ export interface IAnswer {
 export interface IMatchItem extends IQuestion, IAnswer {}
 
 export const getActivityList = (data: {
-  current_page: number
-  activity_id: number
+  a_id: number,
+  user_id: number,
+  groups: string
 }) => {
   return api.post<{
     data: {
       ad: IMatchItem[] | null
       answer: IMatchItem[] | null
       question: IMatchItem[] | null
+      group: number
     }
-  }>('/pairs/activityList', {data});
+  }>('/pairs/activityList', { data });
 }
 
 export const answerQuestionActivity = (data: {

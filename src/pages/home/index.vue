@@ -32,7 +32,7 @@
           :key="topic.title"
         >
           <div class="home-topic__item__city">{{ city }}</div>
-          <div v-for="t in topics[0].title?.split(' ')" :key="t">
+          <div v-for="t in topic.title?.split(' ')" :key="t">
             {{ t }}
           </div></nut-grid-item
         >
@@ -100,22 +100,22 @@ const city = ref('深圳');
 const topics = [
   {
     activityId: 1,
-    title: '夜宵局 摇一摇',
+    title: '吃喝玩乐 摇一摇',
     color: 'DBF378',
   },
   {
     activityId: 2,
-    title: '撸铁局 摇一摇',
+    title: '运动户外 摇一摇',
     color: 'CF83ED',
   },
   {
     activityId: 3,
-    title: '奶茶咖啡 摇一摇',
+    title: '旅游看世界',
     color: '74D172',
   },
   {
     activityId: 4,
-    title: '压马路 摇一摇',
+    title: '一起上岸！',
     color: '65BAE8',
   },
 ];

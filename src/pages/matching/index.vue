@@ -29,7 +29,13 @@
           :isActive="idx === index"
           @goChat="goChat"
         ></AnswerCard>
-        <div v-else>马上加载更多内容！</div>
+        <div v-else>
+          {{
+            preparedAnswers.length === 0
+              ? '已经滑到底啦！'
+              : '马上加载更多内容！'
+          }}
+        </div>
       </swiper-item>
     </swiper>
 
@@ -95,19 +101,24 @@ import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue'
 import { useGlobalStore } from '../../store';
 import Taro from '@tarojs/taro';
 
-const PAGE_SIZE = 11;
+const DEFAULT_ANSWER_SIZE = 6;
 
 const instance = Taro.getCurrentInstance();
 const global = useGlobalStore();
 const idx = ref(0);
-const isLastPage = computed(() => activityList.value.length < PAGE_SIZE);
-const currentPage = ref(0);
+const preparedAnswers = computed(() =>
+  prepareActivityList.value.filter((item) => item.cardType === 'answer'),
+);
+const activeAnswers = computed(() =>
+  activityList.value.filter((item) => item.cardType === 'answer'),
+);
 const activityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const prepareActivityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const takeEnoughShotDialog = ref(false);
 const noShotDialog = ref(false);
 const sharePopupVisible = ref(false);
 const switchWechatVisible = ref(false);
+const walkGroups = ref<number[]>([]);
 
 const onOpenSharePopup = () => {
   noShotDialog.value = false;
@@ -119,30 +130,35 @@ const activityId = computed(() => instance?.router?.params.activityId);
 
 async function fetchData() {
   try {
-    const { data } = await getActivityList({
-      current_page: currentPage.value,
-      activity_id: Number(activityId.value),
+    const res = await getActivityList({
+      a_id: Number(activityId.value),
+      groups: walkGroups.value.join(','),
+      user_id: Taro.getStorageSync('USER_ID'),
     });
-    const questionList = (data.question || []).map((item) => ({
-      ...item,
-      cardType: 'question',
-    }));
-    const answerList = (data.answer || []).map((item) => ({
-      ...item,
-      cardType: 'answer',
-    }));
-    const adList = (data.ad || []).map((item) => ({
-      ...item,
-      cardType: 'ad',
-    }));
-    const nextPage = {
-      cardType: 'next',
-      id: -1,
-      title: '广告',
-      type: 1,
-    };
-    currentPage.value += 1;
-    return questionList.concat(answerList, adList, [nextPage]);
+    if (res) {
+      const { data } = res;
+      const questionList = (data.question || []).map((item) => ({
+        ...item,
+        cardType: 'question',
+      }));
+      const answerList = (data.answer || []).map((item) => ({
+        ...item,
+        cardType: 'answer',
+      }));
+      const adList = (data.ad || []).map((item) => ({
+        ...item,
+        cardType: 'ad',
+      }));
+      const nextPage = {
+        cardType: 'next',
+        id: -1,
+        title: '广告',
+        type: 1,
+      };
+      data.group && walkGroups.value.push(data.group);
+      return questionList.concat(answerList, adList, [nextPage]);
+    }
+    return [];
   } catch (error) {
     return [];
   }
@@ -168,33 +184,43 @@ const goChat = (userId) => {
 };
 const onConfirmGoChat = () => {
   takeEnoughShotDialog.value = false;
-  goChat();
 };
 const onCancel = () => {
   takeEnoughShotDialog.value = false;
 };
 init();
-watch(
-  () => idx.value,
-  async (v) => {
-    console.log('idx', v, v === PAGE_SIZE);
-    if (v === PAGE_SIZE - 3 && !isLastPage.value) {
-      console.log('trigger!');
+watch(idx, async (v, oldV) => {
+  // 当前数据量为满额时，划到倒数第三页的时候请求下一页数据
+  const activeAnswerLength = activeAnswers.value.length;
+  if (oldV > v) {
+    return;
+  }
+  if (
+    activeAnswerLength === DEFAULT_ANSWER_SIZE &&
+    v === activityList.value.length - 3
+  ) {
+    prepareActivityList.value = await fetchData();
+    // 当前数据量不满额时，划到第一个的时候就请求下一页数据
+  } else if (v === 0) {
+    if (activeAnswerLength && activeAnswerLength < DEFAULT_ANSWER_SIZE) {
       prepareActivityList.value = await fetchData();
-    } else if (v === PAGE_SIZE - 1) {
-      // 跳转到下一页
-      setTimeout(() => {
-        activityList.value = [];
-        idx.value = 0;
-        currentPage.value += 1;
-        nextTick(() => {
-          activityList.value = prepareActivityList.value;
-          prepareActivityList.value = [];
-        });
-      }, 1000);
     }
-  },
-);
+  } else if (
+    v === activityList.value.length - 1 &&
+    prepareActivityList.value.length
+  ) {
+    // 跳转到下一页
+    setTimeout(() => {
+      activityList.value = [];
+      idx.value = -1;
+      nextTick(() => {
+        activityList.value = prepareActivityList.value;
+        prepareActivityList.value = [];
+        idx.value = 0;
+      });
+    }, 500);
+  }
+});
 </script>
 <style lang="scss">
 .matching {
