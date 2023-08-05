@@ -33,7 +33,11 @@
           </nut-form-item>
         </div>
         <nut-form-item>
-          <nut-button type="primary" class="submit-btn" @click="onChat"
+          <nut-button
+            type="primary"
+            class="submit-btn"
+            @click="onChat"
+            :loading="loading"
             >消耗一杯Shot打招呼</nut-button
           >
         </nut-form-item>
@@ -45,10 +49,12 @@
 import { ref, computed } from 'vue';
 import Taro from '@tarojs/taro';
 import { useGlobalStore } from '../../store';
+import { leaveMessage } from '../../api/matching';
 
-defineProps({
-  visible: Boolean,
-});
+const props = defineProps<{
+  visible: boolean;
+  targetUserId: number;
+}>();
 
 const global = useGlobalStore();
 const emit = defineEmits(['update:visible', 'onOpenSharePopup']);
@@ -61,6 +67,7 @@ const rules = computed(() => ({
   wechatId: [{ required: true, message: '请输入微信号' }],
   message: [{ required: true, message: '请输入你的留言' }],
 }));
+const loading = ref(false);
 
 const onToggleVisible = (visible: boolean) => {
   emit('update:visible', visible);
@@ -81,9 +88,21 @@ const onChat = async () => {
       emit('onOpenSharePopup');
       return;
     }
+    loading.value = true;
+    await leaveMessage({
+      user_id: Taro.getStorageSync('USER_ID'),
+      follow_user_id: props.targetUserId,
+      wechat: infoForm.value.wechatId,
+      message: infoForm.value.message,
+    });
     Taro.setStorageSync('USER_WECHAT_ID', infoForm.value.wechatId);
-  } catch (e) {
-    // todo
+    Taro.showToast({
+      title: '打招呼成功！',
+      icon: 'none',
+    });
+    onToggleVisible(false);
+  } finally {
+    loading.value = false;
   }
 };
 </script>
