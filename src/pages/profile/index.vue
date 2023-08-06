@@ -16,9 +16,9 @@
               :headers="{
                 Authorization: authToken,
               }"
-              @success="onUploadSuccess"
               :file-list="state.images"
               :is-preview="false"
+              mode="aspectFill"
             >
               <template #tip>
                 <view class="tip" v-if="state.images.length === 0">头像</view>
@@ -29,6 +29,7 @@
         <view class="profile-block">
           <nut-form-item prop="nickname" label="昵称" required>
             <nut-input
+              placeholder-class="placeholder"
               input-align="right"
               :border="false"
               v-model="state.nickname"
@@ -48,6 +49,7 @@
         <view class="profile-block">
           <nut-form-item label="属性" prop="attribute" required>
             <nut-input
+              placeholder-class="placeholder"
               input-align="right"
               :border="false"
               v-model="currAttributeName"
@@ -59,8 +61,9 @@
           </nut-form-item>
 
           <nut-form-item label="身高" prop="height">
-            <view class="flex">
+            <view class="flex items-center">
               <nut-input
+                placeholder-class="placeholder"
                 input-align="right"
                 :border="false"
                 v-model="state.height"
@@ -68,13 +71,14 @@
                 placeholder="请输入身高"
                 type="digit"
               />
-              CM
+              <span>CM</span>
             </view>
           </nut-form-item>
 
           <nut-form-item label="体重" prop="weight">
-            <view class="flex">
+            <view class="flex items-center">
               <nut-input
+                placeholder-class="placeholder"
                 input-align="right"
                 :border="false"
                 v-model="state.weight"
@@ -82,12 +86,13 @@
                 placeholder="请输入体重"
                 type="digit"
               />
-              KG
+              <span>KG</span>
             </view>
           </nut-form-item>
 
           <nut-form-item label="体型" prop="shape">
             <nut-input
+              placeholder-class="placeholder"
               input-align="right"
               :border="false"
               v-model="currShapeName"
@@ -100,6 +105,7 @@
         <view class="profile-block">
           <nut-form-item label="职业" prop="career">
             <nut-input
+              placeholder-class="placeholder"
               input-align="right"
               :border="false"
               v-model="currCarrierName"
@@ -137,18 +143,68 @@
       }}</view>
     </view>
 
-    <nut-action-sheet
+    <nut-popup
+      position="bottom"
       v-model:visible="drawerController.attributeVisible"
-      :menu-items="optionsController.attribute as any"
-      @choose="chooseType"
+      style="width: 100%"
+      :safe-area-inset-bottom="true"
     >
-    </nut-action-sheet>
-    <nut-action-sheet
+      <div class="flex justify-end">
+        <div
+          class="choose-confirm-btn"
+          @click="() => (drawerController.attributeVisible = false)"
+        >
+          确定
+        </div>
+      </div>
+      <picker-view
+        indicator-class="profile-picker-indicator"
+        style="width: 100%; height: 200px"
+        mask-class="profile-picker-mask"
+        :value="[currentAttributeIndex]"
+        @change="chooseAttribute"
+      >
+        <picker-view-column>
+          <view
+            v-for="opt in optionsController.attribute"
+            :key="opt.value"
+            class="profile-picker-text"
+            >{{ opt.name }}</view
+          >
+        </picker-view-column>
+      </picker-view>
+    </nut-popup>
+    <nut-popup
+      position="bottom"
       v-model:visible="drawerController.bodyVisible"
-      :menu-items="optionsController.shape as any"
-      @choose="chooseBodyType"
+      style="width: 100%"
+      :safe-area-inset-bottom="true"
     >
-    </nut-action-sheet>
+      <div class="flex justify-end">
+        <div
+          class="choose-confirm-btn"
+          @click="() => (drawerController.bodyVisible = false)"
+        >
+          确定
+        </div>
+      </div>
+      <picker-view
+        indicator-class="profile-picker-indicator"
+        style="width: 100%; height: 200px"
+        mask-class="profile-picker-mask"
+        :value="[currentShapeIndex]"
+        @change="chooseShape"
+      >
+        <picker-view-column>
+          <view
+            v-for="opt in optionsController.shape"
+            :key="opt.value"
+            class="profile-picker-text"
+            >{{ opt.name }}</view
+          >
+        </picker-view-column>
+      </picker-view>
+    </nut-popup>
     <nut-popup
       position="bottom"
       v-model:visible="drawerController.carrierVisible"
@@ -341,6 +397,18 @@ export default {
       );
       return index === -1 ? 0 : index;
     });
+    const currentAttributeIndex = computed(() => {
+      const index = optionsController.attribute.findIndex(
+        (item) => item.value === state.attribute,
+      );
+      return index === -1 ? 0 : index;
+    });
+    const currentShapeIndex = computed(() => {
+      const index = optionsController.shape.findIndex(
+        (item) => item.value === state.shape,
+      );
+      return index === -1 ? 0 : index;
+    });
     const valueForPicker = reactive({
       attribute: [state.attribute],
       height: [state.height],
@@ -375,6 +443,16 @@ export default {
       const index = e.detail.value[0];
       const val = optionsController.career[index];
       state.career = val.value;
+    };
+    const chooseAttribute = (e) => {
+      const index = e.detail.value[0];
+      const val = optionsController.attribute[index];
+      state.attribute = val.value;
+    };
+    const chooseShape = (e) => {
+      const index = e.detail.value[0];
+      const val = optionsController.shape[index];
+      state.shape = val.value;
     };
     const chooseType = (item) => {
       console.log('item', item);
@@ -413,8 +491,10 @@ export default {
           weight: Number(state.weight),
           shape: state.shape,
           career: state.career,
-          hobby: '',
-          favorite: '',
+          hobby: state.hobbies.filter((item) => Number(item) !== 0).join(','),
+          favorite: state.favorite
+            .filter((item) => Number(item) !== 0)
+            .join(','),
           avatar_ids: state.images.map((item) => item.url),
           shot: global.userProfile!.shot,
         };
@@ -450,25 +530,6 @@ export default {
       }
     };
 
-    const onUploadSuccess = (res) => {
-      const {
-        data: { data: dataText },
-      } = res;
-      try {
-        // const resData = JSON.parse(dataText);
-        // state.images.push({
-        //   status: 'success',
-        //   message: '上传成功',
-        //   type: 'image',
-        //   url: resData.data,
-        // });
-      } catch (error) {
-        Taro.showToast({
-          title: '上传失败',
-          icon: 'none',
-        });
-      }
-    };
     const currAttributeName = computed(() => {
       return state.attribute
         ? optionsController.attribute.find(
@@ -556,8 +617,11 @@ export default {
       currHobbiesName,
       currFavoritesName,
       currCarrierName,
-      onUploadSuccess,
       currentCarrierIndex,
+      chooseAttribute,
+      currentAttributeIndex,
+      currentShapeIndex,
+      chooseShape,
     };
   },
 };
@@ -630,13 +694,13 @@ export default {
     left: 0px;
     width: 100%;
     height: 72px;
+    padding: 20px 0px 30px;
     z-index: 10;
     background-color: #dbf378;
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: #000;
   }
@@ -647,10 +711,13 @@ export default {
   .nut-cell-group .nut-cell::after {
     border-bottom: none;
   }
+  .nut-form-item__label {
+    color: #dbf378;
+  }
 }
 .profile-block {
   padding-top: 14px;
-  background-color: #1d1d1d;
+  background-color: #141414;
 }
 .choose-confirm-btn {
   display: inline-block;
@@ -665,10 +732,12 @@ export default {
   background: rgb(0, 240, 244);
   background: linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(38, 38, 38, 0.1) 45%,
-    rgba(38, 38, 38, 0.1) 55%,
-    rgba(0, 0, 0, 0.7) 100%
+    rgba(50, 50, 50, 1) 0%,
+    rgba(50, 50, 50, 0.5) 20%,
+    rgba(98, 98, 98, 0.1) 45%,
+    rgba(98, 98, 98, 0.1) 55%,
+    rgba(50, 50, 50, 0.5) 80%,
+    rgba(50, 50, 50, 1) 100%
   );
   background-size: 750px 300px !important;
   background-position: center center;
@@ -684,5 +753,8 @@ export default {
   justify-content: center;
   align-items: center;
   color: #fff;
+}
+.nut-theme-dark .nut-popup {
+  background-color: #323232;
 }
 </style>

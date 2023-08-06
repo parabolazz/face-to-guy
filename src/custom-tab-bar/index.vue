@@ -98,7 +98,7 @@ initUserInfo();
   background: #2c2c2c;
   display: flex;
   justify-content: space-between;
-  padding: 15px 38px env(safe-area-inset-bottom);
+  padding: 15px 38px calc(env(safe-area-inset-bottom) - 5px);
 
   .tab-bar-border {
     background-color: rgba(0, 0, 0, 0.33);
@@ -120,7 +120,7 @@ initUserInfo();
     box-sizing: border-box;
     width: 28px;
     height: 28px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .tab-bar-text {
     font-size: 12px;

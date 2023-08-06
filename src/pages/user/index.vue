@@ -82,6 +82,7 @@
     <div class="matched-user__footer">
       <nut-button
         :disabled="!profile.avatar_ids.length"
+        v-if="!isMyself"
         type="primary"
         class="matched-user__footer__btn"
         @click="goChat"
@@ -129,6 +130,7 @@ import {
   Hobbies,
   Favorite,
 } from '../../utils/profileEnum';
+import Taro from '@tarojs/taro';
 // import { useGlobalStore } from '../../store';
 
 // const globalStore = useGlobalStore();
@@ -165,6 +167,9 @@ const basicInfo = computed(() => {
     shapeText,
   ];
   return descArr.filter((item) => item).join(' / ');
+});
+const isMyself = computed(() => {
+  return Number(userId) === Number(Taro.getStorageSync('USER_ID'));
 });
 const getData = async () => {
   try {

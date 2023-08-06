@@ -23,7 +23,7 @@
         >
           <nut-grid-item class="me-card__operation">
             <nut-button
-              class="me-card__operations_btn"
+              class="me-card__operations_btn default"
               plain
               @click="goToMyUserPage"
               >查看我的主页</nut-button
@@ -110,6 +110,7 @@ const onLogout = () => {
         Taro.reLaunch({
           url: '/pages/login/index',
         });
+        global.setActiveTabIndex(0);
       }
     },
   });
@@ -118,7 +119,7 @@ const onLogout = () => {
 
 <style lang="scss">
 .me {
-  background-color: #2c2c2c;
+  background-color: #141414;
   height: 100%;
   .me-card {
     display: flex;
@@ -132,8 +133,8 @@ const onLogout = () => {
       margin-bottom: 30px;
     }
     .me-card__avatar {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       background-color: #eee;
       margin-right: 16px;
@@ -161,6 +162,10 @@ const onLogout = () => {
         font-size: 16px;
         background-color: transparent;
         border-radius: 10px;
+        &.default {
+          border-color: #999999;
+          color: #999999;
+        }
       }
     }
   }

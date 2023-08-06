@@ -529,6 +529,10 @@ export default {
     }
   }
 
+  &__preview.picture:nth-child(3n + 2) {
+    flex: 1;
+  }
+
   &__preview {
     display: flex;
     align-items: center;
@@ -536,6 +540,7 @@ export default {
     margin-right: 10px;
     margin-bottom: 10px;
     box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
+    // 第二个撑满
 
     &__progress {
       position: absolute;

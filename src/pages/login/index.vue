@@ -103,7 +103,7 @@ const getPhoneNumber = async (e: any) => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 120px;
+    margin-top: 90px;
     .login-main__vision {
       display: flex;
       justify-content: center;
