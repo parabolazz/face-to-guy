@@ -2,26 +2,47 @@
   <div class="my-like-card">
     <div class="my-like-card__info">
       <div class="flex">
-        <img :src="info.avatar_id" alt="avatar" class="my-like-card__avatar" />
+        <img :src="data.avatar_id" alt="avatar" class="my-like-card__avatar" />
         <div class="my-like-card__ids">
-          <div class="nick-name">{{ info.nick_name }}</div>
-          <div class="wechat-id">微信号：{{ info.wechatId }}</div>
+          <div class="nick-name">{{ data.nickname }}</div>
+          <div class="wechat-id">微信号：{{ data.wechat }}</div>
         </div>
       </div>
-      <nut-button type="primary" plain class="my-like-card__btn"
+      <nut-button
+        type="primary"
+        plain
+        class="my-like-card__btn"
+        @click="copyWechatId"
         >复制微信</nut-button
       >
     </div>
-    <div class="my-like-card__message">{{ info.messgae }}</div>
+    <div class="my-like-card__message">{{ data.message }}</div>
   </div>
 </template>
 <script lang="ts" setup>
-const info = {
-  avatar_id: 'https://avatars.githubusercontent.com/u/499550?v=4',
-  nick_name: 'hello mark',
-  wechatId: 'asdssss11',
-  messgae:
-    'Hi～靓仔，在观看了你的答案卡之后，我对你非常感兴趣，以下是我的微信号：XXXXXX。如果你也对我感兴趣，可以加我微信',
+import Taro from '@tarojs/taro';
+
+const props = defineProps<{
+  data: {
+    user_id: number;
+    avatar_id: string;
+    nickname: string;
+    wechat: string;
+    message: string;
+  };
+}>();
+
+const copyWechatId = () => {
+  Taro.setClipboardData({
+    data: props.data.wechat,
+    success: function () {
+      Taro.getClipboardData({
+        success: function (res) {
+          console.log(res.data); // data
+        },
+      });
+    },
+  });
 };
 </script>
 <style lang="scss">

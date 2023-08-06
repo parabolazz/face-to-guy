@@ -2,9 +2,9 @@
   <div class="my-like-card">
     <div class="my-like-card__info">
       <div class="flex">
-        <img :src="info.avatar_id" alt="avatar" class="my-like-card__avatar" />
+        <img :src="data.avatar_id" alt="avatar" class="my-like-card__avatar" />
         <div class="my-like-card__ids">
-          <div class="nick-name">{{ info.nick_name }}</div>
+          <div class="nick-name">{{ data.nickname }}</div>
           <div class="wechat-id">{{ basicInfo }}</div>
         </div>
       </div>
@@ -24,19 +24,21 @@ import { computed } from 'vue';
 import { Attribute, Shape } from '../../utils/profileEnum';
 import Taro from '@tarojs/taro';
 
-const info = {
-  avatar_id: 'https://avatars.githubusercontent.com/u/499550?v=4',
-  nick_name: 'hello mark',
-  attribute: 1,
-  height: 172,
-  weight: 65,
-  shape: 1,
-  user_id: 2,
-};
+const props = defineProps<{
+  data: {
+    avatar_id: string;
+    nickname: string;
+    attribute: number;
+    height: number;
+    weight: number;
+    shape: number;
+    user_id: number;
+  };
+}>();
 
 const basicInfo = computed(() => {
-  if (!info) return '';
-  const { attribute, height, weight, shape } = info;
+  if (!props.data) return '';
+  const { attribute, height, weight, shape } = props.data;
   // @ts-ignore
   const attrText = Attribute[attribute];
   // @ts-ignore
@@ -52,7 +54,7 @@ const basicInfo = computed(() => {
 
 const goToUserPage = () => {
   Taro.navigateTo({
-    url: `/pages/user/index?userId=${info.user_id}`,
+    url: `/pages/user/index?userId=${props.data.user_id}`,
   });
 };
 </script>

@@ -60,7 +60,7 @@ const request = async <T>(method, url, params) => {
         currPage !== 'pages/login/index' && Taro.navigateTo({
           url: '/pages/login/index'
         })
-        return
+        return resp.data;
       // @ts-ignore
       } else if (resp.data?.errno !== 0) {
         Taro.showToast({

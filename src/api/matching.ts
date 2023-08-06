@@ -56,3 +56,39 @@ export const leaveMessage = (data: {
     data
   })
 }
+
+export interface IChatMeUp {
+  user_id: number,
+  nickname: string,
+  avatar_id: string
+  wechat: string,
+  message: string,
+}
+
+export const getChatMeUpList = (data: {
+  user_id: number,
+  follow: 0
+}) => {
+  return api.post<{data: IChatMeUp[]}>('/pairs/chatUpList', {
+    data
+  });
+}
+
+export interface IMyChatUp {
+  attribute: number,
+  avatar_id: string,
+  height: number,
+  nickname: string,
+  shape: number,
+  user_id: number,
+  weight:  number,
+}
+
+export const getMyChatUpList = (data: {
+  user_id: number,
+  follow: 1, // 0 代表被搭讪列表，1 代表搭讪列表
+  }) => {
+  return api.post<{data: IMyChatUp[]}>('/pairs/chatUpList', {
+    data
+  });
+}
