@@ -48,7 +48,7 @@ const list = [
     /** 页面路径，必须在 pages 中先定义 */
     pagePath: '/pages/home/index',
     /** tab 上按钮文字 */
-    text: '派对',
+    text: '圈子',
     /** 图片路径，icon 大小限制为 40kb，建议尺寸为 81px * 81px，当 position 为 top 时，此参数无效，不支持网络图片 */
     iconPath: PartyIcon,
     /** 选中时的图片路径，icon 大小限制为 40kb，建议尺寸为 81px * 81px ，当 position 为 top 时，此参数无效 */

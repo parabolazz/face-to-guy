@@ -9,26 +9,10 @@
         </div>
       </div>
       <nut-grid :gutter="12" class="home-topic" :column-num="3">
-        <nut-grid-item class="home-topic__item home-topic__first-item">
-          <div class="home-topic__item__city">{{ city }}</div>
-          <div>还不知道，先摇人</div>
-        </nut-grid-item>
-        <nut-grid-item
-          :class="['home-topic__item', `home-topic__item-${topics[0].color}`]"
-          @click="() => goMatching(topics[0].activityId)"
-          v-if="topics[0]"
-        >
-          <div class="home-topic__item__city">{{ city }}</div>
-          <div v-for="t in topics[0].title?.split(' ')" :key="t">
-            {{ t }}
-          </div></nut-grid-item
-        >
-      </nut-grid>
-      <nut-grid :gutter="12" class="home-topic" :column-num="3">
         <nut-grid-item
           @click="() => goMatching(topic.activityId)"
           :class="['home-topic__item', `home-topic__item-${topic.color}`]"
-          v-for="topic in topics.slice(1, topics.length)"
+          v-for="topic in topics.slice(0, topics.length - 1)"
           :key="topic.title"
         >
           <div class="home-topic__item__city">{{ city }}</div>
@@ -37,14 +21,22 @@
           </div></nut-grid-item
         >
       </nut-grid>
-      <!-- <view class="home-operation mt-4">
-        <nut-button @click="onClick">去信息填写页</nut-button>
-        <nut-button @click="goShare">去分享页面</nut-button>
-        <nut-button @click="goMatchUserInfo">去匹配对象详情页面</nut-button>
-        <nut-button @click="goLoginPage">去登录页面</nut-button>
-        <nut-button @click="goChatsPage">去聊天列表页面</nut-button>
-        <nut-button @click="goChatPage">去聊天页面</nut-button>
-      </view> -->
+      <nut-grid :gutter="12" class="home-topic" :column-num="3">
+        <!-- <nut-grid-item class="home-topic__item home-topic__first-item">
+          <div class="home-topic__item__city">{{ city }}</div>
+          <div>还不知道，先摇人</div>
+        </nut-grid-item> -->
+        <nut-grid-item
+          :class="['home-topic__item', `home-topic__item-${topics[3].color}`]"
+          @click="() => goMatching(topics[3].activityId)"
+          v-if="topics[3]"
+        >
+          <div class="home-topic__item__city">{{ city }}</div>
+          <div v-for="t in topics[3].title?.split(' ')" :key="t">
+            {{ t }}
+          </div>
+        </nut-grid-item>
+      </nut-grid>
       <SharePopup v-model:visible="isVisible" />
     </view>
   </nut-config-provider>

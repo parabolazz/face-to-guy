@@ -42,7 +42,7 @@
       </div>
       <div class="me-menu">
         <nut-cell-group class="me-menu__group">
-          <nut-cell round-radius="0" title="关于我们">
+          <!-- <nut-cell round-radius="0" title="关于我们">
             <template #link>
               <RectRight color="#fff" />
             </template>
@@ -56,7 +56,7 @@
             <template #link>
               <RectRight color="#fff" />
             </template>
-          </nut-cell>
+          </nut-cell> -->
           <nut-cell round-radius="0" title="退出登录" @click="onLogout">
           </nut-cell>
         </nut-cell-group>

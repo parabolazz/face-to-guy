@@ -42,8 +42,12 @@ const copyWechatId = () => {
     data: props.data.wechat,
     success: function () {
       Taro.getClipboardData({
-        success: function (res) {
-          console.log(res.data); // data
+        success: function () {
+          Taro.showToast({
+            title: '复制成功，快回到微信添加好友吧！',
+            icon: 'none',
+            duration: 2000,
+          });
         },
       });
     },

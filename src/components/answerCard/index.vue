@@ -36,7 +36,14 @@
           <scroll-view
             v-else
             :scroll-y="true"
-            style="height: 100%; width: 100%"
+            :enable-flex="true"
+            style="
+              height: 100%;
+              width: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
             class="answer-card__main-answer-text"
           >
             {{ answer }}

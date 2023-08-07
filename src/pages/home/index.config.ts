@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '摇人',
+  navigationBarTitleText: 'Pairs',
   usingComponents: {},
   enableShareAppMessage: true,
   enableShareTimeline: true

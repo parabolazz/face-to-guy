@@ -59,7 +59,7 @@ import dayjs from 'dayjs';
 import Taro, { useShareAppMessage, useShareTimeline } from '@tarojs/taro';
 import CalendarIcon from '../../assets/images/calendar.svg';
 import ShareIcon from '../../assets/images/share.svg';
-import VideoIcon from '../../assets/images/video.svg';
+// import VideoIcon from '../../assets/images/video.svg';
 import { ref } from 'vue';
 import { computed } from 'vue';
 import { Action, updateShot } from '../../api/user';
@@ -129,13 +129,13 @@ const shareActions = computed(() => [
       }
     },
   },
-  {
-    icon: VideoIcon,
-    title: '看广告XX秒',
-    tip: 'Shot +1',
-    desc: '可无限次观看广告获得奖励',
-    buttonText: '看广告',
-  },
+  // {
+  //   icon: VideoIcon,
+  //   title: '看广告XX秒',
+  //   tip: 'Shot +1',
+  //   desc: '可无限次观看广告获得奖励',
+  //   buttonText: '看广告',
+  // },
   {
     icon: ShareIcon,
     title: '分享小程序',
@@ -187,7 +187,7 @@ watch(
 <style lang="scss">
 .share-popup {
   .nut-popup {
-    height: calc(390px + env(safe-area-inset-bottom));
+    height: calc(320px + env(safe-area-inset-bottom));
   }
   .nut-action-sheet {
     height: 100%;

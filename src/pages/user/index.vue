@@ -92,7 +92,7 @@
           :src="IconFavoriteBlack"
           alt="love him"
         />
-        留个联系方式给TA
+        打个招呼
       </nut-button>
     </div>
 
@@ -318,13 +318,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
       margin-right: 6px;
     }
   }
-  .matched-user__footer__btn:first-child {
-    margin-right: 14px;
-    border: 2px solid #ffffff;
-    color: #fff;
-  }
-  .matched-user__footer__btn:last-child {
-    background-color: #dbf378;
+  .matched-user__footer__btn {
     color: #000;
   }
 }
