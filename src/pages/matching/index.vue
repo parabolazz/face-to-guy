@@ -19,6 +19,7 @@
       >
         <QuestionCard
           v-if="item.cardType === 'question'"
+          :userId="userId"
           :title="item.title"
           :type="item.type"
           @onAnswer="onAnswer"
@@ -122,6 +123,7 @@ const sharePopupVisible = ref(false);
 const switchWechatVisible = ref(false);
 const walkGroups = ref<number[]>([]);
 const targetUserId = ref<number>(-1);
+const userId = Taro.getStorageSync('USER_ID');
 
 const onOpenSharePopup = () => {
   noShotDialog.value = false;

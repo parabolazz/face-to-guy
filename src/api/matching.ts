@@ -40,6 +40,7 @@ export const getActivityList = (data: {
 export const answerQuestionActivity = (data: {
   activity_id: number,
   answer: string
+  user_id: number
 }) => {
   return api.post('/pairs/activityAnswer', {
     data

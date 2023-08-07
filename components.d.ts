@@ -25,7 +25,6 @@ declare module '@vue/runtime-core' {
     NutGrid: typeof import('@nutui/nutui-taro')['Grid']
     NutGridItem: typeof import('@nutui/nutui-taro')['GridItem']
     NutInput: typeof import('@nutui/nutui-taro')['Input']
-    NutList: typeof import('@nutui/nutui-taro')['List']
     NutPopup: typeof import('@nutui/nutui-taro')['Popup']
     NutProgress: typeof import('@nutui/nutui-taro')['Progress']
     NutRadio: typeof import('@nutui/nutui-taro')['Radio']

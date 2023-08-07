@@ -553,7 +553,6 @@ export default {
     });
 
     const currHobbiesName = computed(() => {
-      console.log('12322', state.hobbies, optionsController.hobbies);
       return state.hobbies.length
         ? optionsController.hobbies
             .filter((item) => state.hobbies.includes(item.value))

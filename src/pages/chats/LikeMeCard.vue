@@ -2,7 +2,12 @@
   <div class="my-like-card">
     <div class="my-like-card__info">
       <div class="flex">
-        <img :src="data.avatar_id" alt="avatar" class="my-like-card__avatar" />
+        <img
+          :src="data.avatar_id"
+          alt="avatar"
+          class="my-like-card__avatar"
+          mode="aspectFill"
+        />
         <div class="my-like-card__ids">
           <div class="nick-name">{{ data.nickname }}</div>
           <div class="wechat-id">微信号：{{ data.wechat }}</div>

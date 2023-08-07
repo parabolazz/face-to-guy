@@ -103,6 +103,7 @@
       }"
     >
       <SwitchWechatPopup
+        :targetUserId="userId"
         v-model:visible="switchWechatVisible"
         @onOpenSharePopup="onOpenSharePopup"
       />

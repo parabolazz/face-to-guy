@@ -37,7 +37,7 @@
             v-else
             :src="images[0].url"
             alt="answer image"
-            mode="aspectFit"
+            mode="aspectFill"
           />
         </template>
       </div>
@@ -57,9 +57,10 @@ import { ref, watch } from 'vue';
 import { answerQuestionActivity } from '../../api/matching';
 import Uploader from '../../components/uploader/index.vue';
 
-defineProps<{
+const props = defineProps<{
   type: 1 | 2;
   title: string;
+  userId: number;
 }>();
 const instance = Taro.getCurrentInstance();
 
@@ -76,6 +77,7 @@ const onAnswer = async () => {
     await answerQuestionActivity({
       activity_id: Number(instance.router?.params.activityId!),
       answer: answer.value,
+      user_id: props.userId,
     });
     Taro.showToast({
       title: '回答成功！',

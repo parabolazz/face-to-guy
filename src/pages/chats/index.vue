@@ -75,7 +75,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     margin-bottom: 12px;
   }
   .chats-placeholder {
-    padding: 40px 0;
+    padding: 46px 0;
     background-color: #1b1b1b;
     height: $footer-height;
     height: $footer-height-lagecy;
