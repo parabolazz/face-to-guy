@@ -56,7 +56,11 @@
 </template>
 <script lang="ts" setup>
 import dayjs from 'dayjs';
-import Taro, { useShareAppMessage, useShareTimeline } from '@tarojs/taro';
+import Taro, {
+  useShareAppMessage,
+  useShareTimeline,
+  useDidShow,
+} from '@tarojs/taro';
 import CalendarIcon from '../../assets/images/calendar.svg';
 import ShareIcon from '../../assets/images/share.svg';
 // import VideoIcon from '../../assets/images/video.svg';
@@ -73,7 +77,7 @@ defineProps({
 const global = useGlobalStore();
 const lastCheckInDay = Taro.getStorageSync('LAST_CHECK_IN_DAY');
 const userShot = computed(() => global.userProfile?.shot || 0);
-
+const isSharing = ref(false);
 const emit = defineEmits(['update:visible']);
 const hasCheckInToday = ref(
   lastCheckInDay ? dayjs().format('YYYY-MM-DD') === lastCheckInDay : false,
@@ -100,6 +104,28 @@ useShareAppMessage(() => {
     path: '/pages/home/index',
     imageUrl: 'http://tmp/Wp6HBLmMTlQB93b219ce2731cae16082af5b0fe33c0a.jpg',
   };
+});
+useDidShow(() => {
+  if (isSharing.value) {
+    setTimeout(async () => {
+      try {
+        await updateShot(userShot.value + 2, Action.Share);
+        lastShareTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        global.setUserProfile({
+          ...global.userProfile!,
+          shot: userShot.value + 2,
+        });
+        Taro.showToast({
+          title: '分享成功',
+          icon: 'success',
+          duration: 2000,
+        });
+      } catch (error) {
+        console.log('error', error);
+      }
+    }, 1000);
+    isSharing.value = false;
+  }
 });
 
 const shareActions = computed(() => [
@@ -142,7 +168,7 @@ const shareActions = computed(() => [
     tip: 'Shot +2',
     desc: '对方点击链接登录即可获得奖励',
     buttonText: '去分享',
-    openType: canNotShare.value ? undefined : 'share',
+    openType: 'share',
     onClick() {
       // 如果距离上一次分享不到一个小时
       if (canNotShare.value) {
@@ -153,23 +179,7 @@ const shareActions = computed(() => [
         });
         return;
       } else {
-        setTimeout(async () => {
-          try {
-            await updateShot(userShot.value + 2, Action.Share);
-            lastShareTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
-            global.setUserProfile({
-              ...global.userProfile!,
-              shot: userShot.value + 2,
-            });
-            Taro.showToast({
-              title: '分享成功',
-              icon: 'success',
-              duration: 2000,
-            });
-          } catch (error) {
-            console.log('error', error);
-          }
-        }, 2000);
+        isSharing.value = true;
       }
     },
   },

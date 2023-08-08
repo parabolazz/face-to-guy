@@ -137,7 +137,7 @@ import Taro from '@tarojs/taro';
 // const globalStore = useGlobalStore();
 // globalStore.toggleTabbar(false);
 
-const userId = getCurrentPageParam().userId;
+const userId = Number(getCurrentPageParam().userId);
 
 const profile = ref<ProfileData>({
   avatar_ids: [],
@@ -170,12 +170,12 @@ const basicInfo = computed(() => {
   return descArr.filter((item) => item).join(' / ');
 });
 const isMyself = computed(() => {
-  return Number(userId) === Number(Taro.getStorageSync('USER_ID'));
+  return userId === Number(Taro.getStorageSync('USER_ID'));
 });
 const getData = async () => {
   try {
     if (!userId) throw new Error('userId is required');
-    const res = await getUserProfile(Number(userId));
+    const res = await getUserProfile(userId);
     if (res) {
       profile.value = res.data;
     }

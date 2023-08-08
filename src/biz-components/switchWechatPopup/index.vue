@@ -14,6 +14,7 @@
         <div>
           <nut-form-item prop="wechatId" label="你的微信号" required>
             <nut-input
+              cursor-spacing="50"
               v-model="infoForm.wechatId"
               placeholder="请输入你的微信号"
               max-length="50"
@@ -23,6 +24,7 @@
           </nut-form-item>
           <nut-form-item prop="message" label="给对方的留言" required>
             <nut-textarea
+              cursor-spacing="50"
               rows="3"
               limit-show
               v-model="infoForm.message"
@@ -97,7 +99,7 @@ const onChat = async () => {
     });
     Taro.setStorageSync('USER_WECHAT_ID', infoForm.value.wechatId);
     Taro.showToast({
-      title: '打招呼成功！',
+      title: '打招呼成功，对方看到后会加你微信哦',
       icon: 'none',
     });
     onToggleVisible(false);
