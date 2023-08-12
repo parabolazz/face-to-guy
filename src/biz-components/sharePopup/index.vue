@@ -68,7 +68,6 @@ import { ref } from 'vue';
 import { computed } from 'vue';
 import { Action, updateShot } from '../../api/user';
 import { useGlobalStore } from '../../store';
-import { watch } from 'vue';
 
 defineProps({
   visible: Boolean,
@@ -76,18 +75,16 @@ defineProps({
 
 const global = useGlobalStore();
 const lastCheckInDay = Taro.getStorageSync('LAST_CHECK_IN_DAY');
+const lastShareDay = Taro.getStorageSync('LAST_SHARE_DAY');
 const userShot = computed(() => global.userProfile?.shot || 0);
 const isSharing = ref(false);
 const emit = defineEmits(['update:visible']);
 const hasCheckInToday = ref(
   lastCheckInDay ? dayjs().format('YYYY-MM-DD') === lastCheckInDay : false,
 );
-const lastShareTime = ref(Taro.getStorageSync('LAST_SHARE_TIME'));
-const canNotShare = computed(() => {
-  return (
-    lastShareTime.value && dayjs().diff(dayjs(lastShareTime.value), 'hour') < 1
-  );
-});
+const hasShareToday = ref(
+  lastShareDay ? dayjs().format('YYYY-MM-DD') === lastShareDay : false,
+);
 const onToggleVisible = (visible: boolean) => {
   emit('update:visible', visible);
 };
@@ -110,7 +107,6 @@ useDidShow(() => {
     setTimeout(async () => {
       try {
         await updateShot(userShot.value + 2, Action.Share);
-        lastShareTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
         global.setUserProfile({
           ...global.userProfile!,
           shot: userShot.value + 2,
@@ -120,6 +116,8 @@ useDidShow(() => {
           icon: 'success',
           duration: 2000,
         });
+        hasShareToday.value = true;
+        Taro.setStorageSync('LAST_SHARE_DAY', dayjs().format('YYYY-MM-DD'));
       } catch (error) {
         console.log('error', error);
       }
@@ -167,32 +165,14 @@ const shareActions = computed(() => [
     title: '分享小程序',
     tip: 'Shot +2',
     desc: '对方点击链接登录即可获得奖励',
-    buttonText: '去分享',
+    buttonText: hasShareToday.value ? '今天已分享' : '去分享',
+    disabled: hasShareToday.value,
     openType: 'share',
     onClick() {
-      // 如果距离上一次分享不到一个小时
-      if (canNotShare.value) {
-        Taro.showToast({
-          title: '分享太频繁啦，请先休息一下吧',
-          icon: 'none',
-          duration: 2000,
-        });
-        return;
-      } else {
-        isSharing.value = true;
-      }
+      isSharing.value = true;
     },
   },
 ]);
-
-watch(
-  () => lastShareTime.value,
-  (newVal) => {
-    if (newVal) {
-      Taro.setStorageSync('LAST_SHARE_TIME', newVal);
-    }
-  },
-);
 </script>
 <style lang="scss">
 .share-popup {

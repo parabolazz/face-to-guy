@@ -39,8 +39,9 @@
             type="primary"
             class="submit-btn"
             @click="onChat"
+            :disabled="disabled"
             :loading="loading"
-            >消耗一杯Shot打招呼</nut-button
+            >{{ disabled ? '你已打过招呼' : '消耗一杯Shot打招呼' }}</nut-button
           >
         </nut-form-item>
       </nut-form>
@@ -59,11 +60,16 @@ const props = defineProps<{
 }>();
 
 const global = useGlobalStore();
+const hasChatMap = Taro.getStorageSync('HAS_CHAT_MAP') || {};
+
 const emit = defineEmits(['update:visible', 'onOpenSharePopup']);
 const formRef = ref();
 const infoForm = ref({
   wechatId: Taro.getStorageSync('USER_WECHAT_ID') || '',
   message: '',
+});
+const disabled = computed(() => {
+  return hasChatMap[props.targetUserId];
 });
 const rules = computed(() => ({
   wechatId: [{ required: true, message: '请输入微信号' }],
@@ -78,7 +84,6 @@ const onToggleVisible = (visible: boolean) => {
 const onChat = async () => {
   try {
     const { valid } = await formRef.value.validate();
-    console.log('valid', valid);
     if (!valid) {
       return;
     }
@@ -102,6 +107,8 @@ const onChat = async () => {
       title: '打招呼成功，对方看到后会加你微信哦',
       icon: 'none',
     });
+    hasChatMap[props.targetUserId] = 1;
+    Taro.setStorage({ key: 'HAS_CHAT_MAP', data: hasChatMap });
     onToggleVisible(false);
   } finally {
     loading.value = false;

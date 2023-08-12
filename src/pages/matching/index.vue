@@ -104,11 +104,9 @@ import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue'
 import { useGlobalStore } from '../../store';
 import Taro from '@tarojs/taro';
 
-const DEFAULT_ANSWER_SIZE = 6;
-
 const instance = Taro.getCurrentInstance();
 const global = useGlobalStore();
-const idx = ref(0);
+const idx = ref(-1);
 const preparedAnswers = computed(() =>
   prepareActivityList.value.filter((item) => item.cardType === 'answer'),
 );
@@ -171,6 +169,7 @@ async function fetchData() {
 async function init() {
   const data = await fetchData();
   activityList.value = data;
+  idx.value = 0;
 }
 const onSwipe = (e: any) => {
   idx.value = e.detail.current;
@@ -200,16 +199,12 @@ watch(idx, async (v, oldV) => {
   if (oldV > v) {
     return;
   }
-  if (
-    activeAnswerLength === DEFAULT_ANSWER_SIZE &&
-    v === activityList.value.length - 3
-  ) {
-    prepareActivityList.value = await fetchData();
-    // 当前数据量不满额时，划到第一个的时候就请求下一页数据
-  } else if (v === 0) {
-    if (activeAnswerLength && activeAnswerLength < DEFAULT_ANSWER_SIZE) {
+  // 刷到第一条的时候就请求下一条
+  if (v === 0) {
+    if (activeAnswerLength) {
       prepareActivityList.value = await fetchData();
     }
+    // 刷到最后一条有内容的数据的时候，准备替换内容
   } else if (
     v === activityList.value.length - 1 &&
     prepareActivityList.value.length
@@ -223,7 +218,7 @@ watch(idx, async (v, oldV) => {
         prepareActivityList.value = [];
         idx.value = 0;
       });
-    }, 500);
+    }, 300);
   }
 });
 </script>
