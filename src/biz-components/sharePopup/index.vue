@@ -167,7 +167,7 @@ const shareActions = computed(() => [
     desc: '对方点击链接登录即可获得奖励',
     buttonText: hasShareToday.value ? '今天已分享' : '去分享',
     disabled: hasShareToday.value,
-    openType: 'share',
+    openType: hasShareToday.value ? undefined : 'share',
     onClick() {
       isSharing.value = true;
     },
