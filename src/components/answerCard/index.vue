@@ -99,20 +99,16 @@ const goToViewUser = () => {
 watch(
   () => props.isActive,
   (isActive) => {
-    console.log('isActive', isActive);
     if (isActive) {
-      // eventCenter.once(getCurrentInstance().router!.onReady, () => {
       const query = Taro.createSelectorQuery();
 
       query.select('.answer-card__main-ques').boundingClientRect();
       query.exec((res) => {
         const firstDom = res[0];
-        console.log('firstDom', firstDom);
         if (firstDom) {
           width.value = firstDom.width;
         }
       });
-      // });
     }
   },
 );

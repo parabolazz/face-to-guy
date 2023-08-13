@@ -9,14 +9,13 @@
     <div class="question-card__main">
       <div class="question-card__main-text">{{ title }}</div>
       <div class="question-card__main-answer-filed">
-        <nut-input
+        <nut-textarea
           class="question-card__input"
-          v-if="type === 2"
+          v-if="type === 1"
           input-align="left"
           :border="false"
           v-model="answer"
           placeholder="回答问题，交换答案"
-          type="textarea"
         />
         <template v-else>
           <Uploader
@@ -46,7 +45,7 @@
         type="primary"
         :disabled="!answer"
         @click="onAnswer"
-        >完成编辑</nut-button
+        >提交</nut-button
       >
     </div>
   </div>
@@ -61,6 +60,7 @@ const props = defineProps<{
   type: 1 | 2;
   title: string;
   userId: number;
+  id: number;
 }>();
 const instance = Taro.getCurrentInstance();
 
@@ -75,9 +75,10 @@ const answer = ref('');
 const onAnswer = async () => {
   try {
     await answerQuestionActivity({
-      activity_id: Number(instance.router?.params.activityId!),
+      a_id: Number(instance.router?.params.activityId!),
       answer: answer.value,
       user_id: props.userId,
+      activity_id: props.id,
     });
     Taro.showToast({
       title: '回答成功！',
@@ -156,14 +157,21 @@ watch(
     font-weight: 500;
   }
   .question-card__main-answer-filed {
+    display: flex;
     margin: 24px 0 42px;
+    border-radius: 9px;
+    overflow: hidden;
     flex: 1;
   }
   .question-card__input {
     height: 100%;
-    border-radius: 9px;
     padding: 10px;
     color: #000;
+    display: flex;
+    align-items: stretch;
+  }
+  .nut-textarea {
+    padding: 0;
   }
   .nut-uploader__upload {
     width: 195px;

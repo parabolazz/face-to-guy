@@ -22,6 +22,7 @@
           :userId="userId"
           :title="item.title"
           :type="item.type"
+          :id="item.id"
           @onAnswer="onAnswer"
         />
         <AnswerCard

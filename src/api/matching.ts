@@ -41,6 +41,7 @@ export const answerQuestionActivity = (data: {
   activity_id: number,
   answer: string
   user_id: number
+  a_id: number
 }) => {
   return api.post('/pairs/activityAnswer', {
     data
