@@ -8,7 +8,7 @@
     </div>
     <div class="question-card__main">
       <div class="question-card__main-text">{{ title }}</div>
-      <div class="question-card__main-answer-filed">
+      <div class="question-card__main-answer-field">
         <nut-textarea
           class="question-card__input"
           v-if="type === 1"
@@ -156,11 +156,12 @@ watch(
     font-size: 18px;
     font-weight: 500;
   }
-  .question-card__main-answer-filed {
+  .question-card__main-answer-field {
     display: flex;
     margin: 24px 0 42px;
     border-radius: 9px;
     overflow: hidden;
+    height: 277px;
     flex: 1;
   }
   .question-card__input {
