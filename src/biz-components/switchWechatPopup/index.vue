@@ -53,6 +53,7 @@ import { ref, computed } from 'vue';
 import Taro from '@tarojs/taro';
 import { useGlobalStore } from '../../store';
 import { leaveMessage } from '../../api/matching';
+import { Action, updateShot } from '../../api/user';
 
 const props = defineProps<{
   visible: boolean;
@@ -69,7 +70,7 @@ const infoForm = ref({
   message: '',
 });
 const disabled = computed(() => {
-  return hasChatMap[props.targetUserId];
+  return false || hasChatMap[props.targetUserId];
 });
 const rules = computed(() => ({
   wechatId: [{ required: true, message: '请输入微信号' }],
@@ -84,10 +85,10 @@ const onToggleVisible = (visible: boolean) => {
 const onChat = async () => {
   try {
     const { valid } = await formRef.value.validate();
-    if (!valid) {
+    if (!valid || !global.userProfile?.shot) {
       return;
     }
-    if (Number(global.userProfile?.shot) < 1) {
+    if (Number(global.userProfile.shot) < 1) {
       Taro.showToast({
         title: 'Shot不足, 快去做任务获取shot吧！',
         icon: 'none',
@@ -96,6 +97,11 @@ const onChat = async () => {
       return;
     }
     loading.value = true;
+    await updateShot(1, Action.Consume);
+    global.setUserProfile({
+      ...global.userProfile!,
+      shot: Number(global.userProfile.shot) - 1,
+    });
     await leaveMessage({
       user_id: Taro.getStorageSync('USER_ID'),
       follow_user_id: props.targetUserId,

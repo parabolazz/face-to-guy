@@ -40,6 +40,7 @@ export enum Action {
   CheckIn = 1,
   Ad = 2,
   Share = 3,
+  Consume = 4
 }
 
 export const updateShot = (shot: number, action: Action) => {
