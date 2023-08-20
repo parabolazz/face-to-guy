@@ -19,7 +19,7 @@
         />
         <template v-else>
           <Uploader
-            v-if="!images.length"
+            v-if="!successImages.length"
             class="question-card__uploader"
             :sizeType="['compressed']"
             :mediaType="['image']"
@@ -31,6 +31,7 @@
             :is-preview="false"
             mode="aspectFill"
             @failure="onUploadFailure"
+            @delete="onDelete"
           />
           <img
             class="question-card__uploader"
@@ -56,6 +57,7 @@ import Taro from '@tarojs/taro';
 import { ref, watch } from 'vue';
 import { answerQuestionActivity } from '../../api/matching';
 import Uploader from '../../components/uploader/index.vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
   type: 1 | 2;
@@ -70,9 +72,16 @@ const authToken = ref(Taro.getStorageSync('TOKEN'));
 const images = ref<
   {
     url: string;
+    status: string;
   }[]
 >([]);
 const answer = ref('');
+const successImages = computed(() =>
+  images.value.filter((item) => item.status === 'success'),
+);
+const onDelete = () => {
+  images.value = [];
+};
 const onAnswer = async () => {
   try {
     await answerQuestionActivity({
@@ -96,6 +105,7 @@ const onAnswer = async () => {
   }
 };
 const onUploadFailure = (data) => {
+  debugger;
   const dataText = data.data.data;
   if (dataText.includes('451')) {
     Taro.showToast({
@@ -113,7 +123,7 @@ const onUploadFailure = (data) => {
 watch(
   () => images.value,
   (v) => {
-    if (v && !v[0]?.url?.includes('//tmp')) {
+    if (v.length && v[0].status === 'success') {
       Taro.showToast({
         title: '上传成功',
         icon: 'success',
@@ -134,6 +144,35 @@ watch(
   background: #6967ff;
   border-radius: 9px;
   padding: 12px 12px 36px;
+
+  .nut-uploader {
+    padding: 13px 0 5px;
+    &__upload {
+      position: relative;
+      background: transparent;
+      border: 1px dashed #d9d9d9;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.list {
+      }
+    }
+    .nut-uploader__preview__progress {
+      width: 100%;
+      height: 100%;
+      z-index: 11;
+    }
+    .nut-uploader__preview-img {
+      width: 195px;
+      height: 195px;
+      border-radius: 9px;
+    }
+    .picture.nut-uploader__upload {
+      position: absolute;
+    }
+  }
   .question-card__header {
     flex-shrink: 0;
   }
@@ -177,7 +216,6 @@ watch(
     display: flex;
     margin: 24px 0 42px;
     border-radius: 9px;
-    overflow: hidden;
   }
   .question-card__input {
     max-height: 100%;
@@ -196,7 +234,6 @@ watch(
     width: 195px;
     height: 195px;
     background-color: transparent;
-    border: 1px dashed #eee;
     border-radius: 9px;
     .nutui-iconfont.nut-icon.nut-icon-photograph {
       color: #dad9d9 !important;
@@ -208,7 +245,8 @@ watch(
   .question-card__uploader {
     width: 195px;
     height: 195px;
-    border: 1px dashed #eee;
+    padding: 0;
+    // border: 1px dashed #eee;
     border-radius: 9px;
   }
   .nut-button--disabled {

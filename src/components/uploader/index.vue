@@ -617,6 +617,7 @@ export default {
         top: 0;
         color: rgba(0, 0, 0, 0.6);
         transform: translate(50%, -50%);
+        z-index: 12;
       }
       .tips {
         position: absolute;
