@@ -13,7 +13,6 @@
           class="question-card__input"
           v-if="type === 1"
           input-align="left"
-          :autosize="{ maxHeight: 300, minHeight: 200 }"
           :border="false"
           v-model="answer"
           placeholder="回答问题，交换答案"
@@ -29,8 +28,9 @@
               Authorization: authToken,
             }"
             v-model:file-list="images"
-            :is-preview="true"
+            :is-preview="false"
             mode="aspectFill"
+            @failure="onUploadFailure"
           />
           <img
             class="question-card__uploader"
@@ -95,10 +95,25 @@ const onAnswer = async () => {
     });
   }
 };
+const onUploadFailure = (data) => {
+  const dataText = data.data.data;
+  if (dataText.includes('451')) {
+    Taro.showToast({
+      title: '请上传合法图片！',
+      icon: 'error',
+      duration: 4000,
+    });
+  } else {
+    Taro.showToast({
+      title: '上传失败',
+      icon: 'error',
+    });
+  }
+};
 watch(
-  () => images.value.length,
+  () => images.value,
   (v) => {
-    if (v) {
+    if (v && !images.value[0]?.url?.includes('tmp')) {
       Taro.showToast({
         title: '上传成功',
         icon: 'success',
@@ -106,6 +121,7 @@ watch(
       answer.value = images.value[0].url;
     }
   },
+  { deep: true },
 );
 </script>
 <style lang="scss">
@@ -165,13 +181,14 @@ watch(
   }
   .question-card__input {
     max-height: 100%;
+    height: 200px;
     padding: 10px;
     color: #000;
     overflow: hidden;
   }
   .nut-textarea {
     padding: 0;
-    max-height: 100%;
+    height: 200px;
     height: 100%;
     overflow: hidden;
   }
