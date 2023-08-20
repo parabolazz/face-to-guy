@@ -113,12 +113,12 @@ const onUploadFailure = (data) => {
 watch(
   () => images.value,
   (v) => {
-    if (v && !images.value[0]?.url?.includes('tmp')) {
+    if (v && !v[0]?.url?.includes('//tmp')) {
       Taro.showToast({
         title: '上传成功',
         icon: 'success',
       });
-      answer.value = images.value[0].url;
+      answer.value = v[0].url;
     }
   },
   { deep: true },
