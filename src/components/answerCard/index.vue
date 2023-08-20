@@ -9,6 +9,7 @@
               class="answer-card__user-info-avatar"
               :src="avatar_id"
               alt="avatar"
+              mode="aspectFill"
             />
           </div>
           <div class="answer-card__user-info-text">
@@ -32,6 +33,7 @@
             :src="answer"
             alt="answer"
             style="width: 100%; height: 100%"
+            mode="aspectFill"
           />
           <scroll-view
             v-else

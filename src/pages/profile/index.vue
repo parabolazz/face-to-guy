@@ -572,7 +572,7 @@ export default {
     });
 
     const onUploadFailure = (data) => {
-      const dataText = data.data.data;
+      const dataText = data?.data?.data || '';
       if (dataText.includes('451')) {
         Taro.showToast({
           title: '请上传合法图片！',
