@@ -6,11 +6,12 @@ interface State {
   showTabbar: boolean
   activeTabIndex: number
   userProfile?: ProfileData
+  unreadCount?: number
 }
 
 export const useGlobalStore = defineStore('global', {
   state: (): State => {
-    return { showTabbar: true, activeTabIndex: 0, userProfile: undefined }
+    return { showTabbar: true, activeTabIndex: 0, userProfile: undefined, unreadCount: undefined }
   },
   actions: {
     toggleTabbar(flag) {
@@ -21,6 +22,9 @@ export const useGlobalStore = defineStore('global', {
     },
     setUserProfile(data) {
       this.userProfile = data
+    },
+    setUnReadCount(count) {
+      this.unreadCount = count
     },
     async getUserProfile() {
         const myUserId = Taro.getStorageSync('USER_ID');

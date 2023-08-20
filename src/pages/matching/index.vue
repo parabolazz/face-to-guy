@@ -2,11 +2,9 @@
   <div class="matching">
     <swiper
       class="matching-swiper"
-      indicator-color="#999"
-      indicator-active-color="#333"
+      indicator-dots
       :vertical="true"
       :circular="false"
-      :indicator-dots="false"
       :autoplay="false"
       :current="idx"
       :scrollWithAnimation="false"
@@ -33,9 +31,9 @@
         ></AnswerCard>
         <div v-else>
           {{
-            preparedAnswers.length === 0
-              ? '已经滑到底啦！'
-              : '马上加载更多内容！'
+            prepareActivityList.length > 1
+              ? '马上加载更多内容！'
+              : '已经滑到底啦！'
           }}
         </div>
       </swiper-item>

@@ -3,7 +3,12 @@
     <nut-config-provider theme="dark" class="full-height">
       <nut-tabs v-model="currentTab">
         <nut-tab-pane title="搭讪我的">
-          <scroll-view class="chats-list">
+          <scroll-view>
+            <nut-noticebar
+              text="请注意甄别虚假信息，注意个人人身财产安全"
+              :background="'#1b1b1b'"
+              :color="`#D9500B`"
+            ></nut-noticebar>
             <LikeMeCard
               v-for="item in chatMeUpList"
               :key="item.user_id"
@@ -37,7 +42,7 @@ import {
   getMyChatUpList,
   IChatMeUp,
   IMyChatUp,
-} from '../../api/matching';
+} from '../../api/message';
 import Taro from '@tarojs/taro';
 import { onMounted } from 'vue';
 

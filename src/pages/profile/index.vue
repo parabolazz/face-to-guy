@@ -19,6 +19,7 @@
               :file-list="state.images"
               :is-preview="false"
               mode="aspectFill"
+              @failure="onUploadFailure"
             >
               <template #tip>
                 <view class="tip" v-if="state.images.length === 0">头像</view>
@@ -569,6 +570,22 @@ export default {
             .join(', ')
         : '';
     });
+
+    const onUploadFailure = (data) => {
+      const dataText = data.data.data;
+      if (dataText.includes('451')) {
+        Taro.showToast({
+          title: '请上传合法图片！',
+          icon: 'error',
+          duration: 4000,
+        });
+      } else {
+        Taro.showToast({
+          title: '上传失败',
+          icon: 'error',
+        });
+      }
+    };
     onMounted(() => {
       Taro.getLocation({
         type: 'wgs84',
@@ -621,6 +638,7 @@ export default {
       currentAttributeIndex,
       currentShapeIndex,
       chooseShape,
+      onUploadFailure,
     };
   },
 };

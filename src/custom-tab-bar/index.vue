@@ -7,14 +7,16 @@
       class="tab-bar-item"
       @tap="switchTab(index, item.pagePath)"
     >
-      <img
-        class="tab-bar-icon"
-        :src="
-          global.activeTabIndex === index
-            ? item.selectedIconPath
-            : item.iconPath
-        "
-      />
+      <nut-badge dot :hidden="!item.needBadge || !global.unreadCount">
+        <img
+          class="tab-bar-icon"
+          :src="
+            global.activeTabIndex === index
+              ? item.selectedIconPath
+              : item.iconPath
+          "
+        />
+      </nut-badge>
       <div
         class="tab-bar-text"
         :style="{
@@ -38,6 +40,7 @@ import MessageIcon from './images/message.png';
 import MessageSelectedIcon from './images/message_selected.png';
 import MeIcon from './images/me.png';
 import MeSelectedICon from './images/me_selected.png';
+import { getUnreadMessageLength } from '../api/message';
 
 const color = '#5F5F5F';
 const selectedColor = '#DBF378';
@@ -59,6 +62,7 @@ const list = [
     text: '消息',
     iconPath: MessageIcon,
     selectedIconPath: MessageSelectedIcon,
+    needBadge: 1,
   },
   {
     pagePath: '/pages/me/index',
@@ -78,11 +82,14 @@ async function initUserInfo() {
   const token = Taro.getStorageSync('TOKEN');
   const currentPages = Taro.getCurrentPages();
   const lastPage = currentPages[currentPages.length - 1];
-  console.log('currentPages', currentPages[currentPages.length - 1]);
-
   if (token) {
     if (!global.userProfile) {
       global.getUserProfile();
+      // 每5分钟调一次
+      fetchIfMsgRead();
+      setInterval(() => {
+        fetchIfMsgRead();
+      }, 1000 * 60 * 5);
     }
   } else if (
     lastPage?.route !== 'pages/login/index' &&
@@ -90,6 +97,14 @@ async function initUserInfo() {
   ) {
     Taro.navigateTo({ url: '/pages/login/index' });
   }
+}
+async function fetchIfMsgRead() {
+  try {
+    const res = await getUnreadMessageLength({
+      user_id: Taro.getStorageSync('USER_ID'),
+    });
+    global.setUnReadCount(res.data || 0);
+  } catch (error) {}
 }
 initUserInfo();
 </script>

@@ -28,7 +28,7 @@
               rows="3"
               limit-show
               v-model="infoForm.message"
-              placeholder="真诚的留言有助于对方了解你"
+              placeholder="真诚的留言有助于对方了解你，请勿发送色情低俗，骚扰攻击等违法违规信息"
               max-length="50"
               :border="false"
             />
@@ -52,7 +52,7 @@
 import { ref, computed } from 'vue';
 import Taro from '@tarojs/taro';
 import { useGlobalStore } from '../../store';
-import { leaveMessage } from '../../api/matching';
+import { leaveMessage } from '../../api/message';
 import { Action, updateShot } from '../../api/user';
 
 const props = defineProps<{
