@@ -9,6 +9,8 @@ export default defineAppConfig({
     'pages/user/index',
     'pages/matching/index',
     'pages/chat/index',
+    'pages/terms/index',
+    'pages/privacy/index',
   ],
   window: {
     navigationBarBackgroundColor: '#000000',

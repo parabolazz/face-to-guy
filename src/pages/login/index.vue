@@ -9,7 +9,7 @@
         v-if="!hasAgreed"
         class="login-btn"
         @click="triggerToast"
-        >微信快捷登录</nut-button
+        >一键快捷登录</nut-button
       >
       <nut-button
         v-else
@@ -17,13 +17,24 @@
         class="login-btn"
         open-type="getPhoneNumber"
         @getphonenumber="getPhoneNumber"
-        >微信快捷登录</nut-button
+        >一键快捷登录</nut-button
       >
       <p class="login-btn-tips">没有账号则直接注册</p>
     </div>
     <div class="login-footer">
       <nut-radio-group v-model="hasAgreed" direction="horizontal">
-        <nut-radio label="1">同意《用户服务协议》和《隐私保护协议》</nut-radio>
+        <nut-radio label="1">
+          <div class="flex">
+            同意
+            <div style="color: #3370ff" @click="onViewUserTerms">
+              《用户服务协议》
+            </div>
+            和
+            <div style="color: #3370ff" @click="onViewPrivacy">
+              《隐私保护协议》
+            </div>
+          </div>
+        </nut-radio>
       </nut-radio-group>
     </div>
   </view>
@@ -73,6 +84,20 @@ const getPhoneNumber = async (e: any) => {
       icon: 'none',
     });
   }
+};
+
+const onViewUserTerms = (e) => {
+  e.stopPropagation();
+  Taro.navigateTo({
+    url: '/pages/terms/index?noLogin=1',
+  });
+};
+
+const onViewPrivacy = (e) => {
+  e.stopPropagation();
+  Taro.navigateTo({
+    url: '/pages/privacy/index?noLogin=1',
+  });
 };
 </script>
 

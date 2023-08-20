@@ -77,12 +77,17 @@ function setSelected(index) {
 async function initUserInfo() {
   const token = Taro.getStorageSync('TOKEN');
   const currentPages = Taro.getCurrentPages();
-  const lastPage = currentPages[currentPages.length - 1]?.route;
+  const lastPage = currentPages[currentPages.length - 1];
+  console.log('currentPages', currentPages[currentPages.length - 1]);
+
   if (token) {
     if (!global.userProfile) {
       global.getUserProfile();
     }
-  } else if (lastPage !== 'pages/login/index') {
+  } else if (
+    lastPage?.route !== 'pages/login/index' &&
+    !lastPage.options.noLogin
+  ) {
     Taro.navigateTo({ url: '/pages/login/index' });
   }
 }
