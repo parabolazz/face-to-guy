@@ -13,6 +13,7 @@
           class="question-card__input"
           v-if="type === 1"
           input-align="left"
+          :autosize="{ maxHeight: 300, minHeight: 300 }"
           :border="false"
           v-model="answer"
           placeholder="回答问题，交换答案"
@@ -161,15 +162,14 @@ watch(
     margin: 24px 0 42px;
     border-radius: 9px;
     overflow: hidden;
-    height: 277px;
     flex: 1;
   }
   .question-card__input {
     height: 100%;
+    max-height: 100%;
     padding: 10px;
     color: #000;
-    display: flex;
-    align-items: stretch;
+    overflow: hidden;
   }
   .nut-textarea {
     padding: 0;
