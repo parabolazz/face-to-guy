@@ -10,7 +10,12 @@
             alt="avatar"
           />
           <div class="me-card__info">
-            <div class="me-card__info-name">{{ profile?.nickname }}</div>
+            <div class="me-card__info-name" v-if="profile">
+              {{ profile?.nickname }}
+            </div>
+            <div class="me-card__info-name" v-else @click="goToLogin">
+              未登录用户
+            </div>
             <div class="me-card__info-desc">{{ desc }}</div>
           </div>
         </div>
@@ -20,6 +25,7 @@
           :column-num="2"
           :gutter="8"
           :border="false"
+          v-if="profile"
         >
           <nut-grid-item class="me-card__operation">
             <nut-button
@@ -57,7 +63,14 @@
               <RectRight color="#fff" />
             </template>
           </nut-cell> -->
-          <nut-cell round-radius="0" title="退出登录" @click="onLogout">
+          <nut-cell
+            v-if="profile"
+            round-radius="0"
+            title="退出登录"
+            @click="onLogout"
+          >
+          </nut-cell>
+          <nut-cell v-else round-radius="0" title="登录" @click="goToLogin">
           </nut-cell>
         </nut-cell-group>
       </div>
@@ -67,7 +80,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { RectRight } from '@nutui/icons-vue-taro';
+// import { RectRight } from '@nutui/icons-vue-taro';
 import Taro from '@tarojs/taro';
 import { useGlobalStore } from '../../store';
 import { Attribute, Shape } from '../../utils/profileEnum';
@@ -88,6 +101,12 @@ const desc = computed(() => {
   return descArr.join('/');
 });
 
+const goToLogin = () => {
+  Taro.navigateTo({
+    url: '/pages/login/index',
+  });
+};
+
 const goToProfile = () => {
   Taro.navigateTo({
     url: '/pages/profile/index?from=me',
@@ -107,10 +126,13 @@ const onLogout = () => {
     success: function (res) {
       if (res.confirm) {
         Taro.removeStorageSync('TOKEN');
-        Taro.reLaunch({
-          url: '/pages/login/index',
-        });
+        Taro.removeStorageSync('USER_ID');
+
+        global.setUserProfile(null);
         global.setActiveTabIndex(0);
+        Taro.switchTab({
+          url: '/pages/home/index',
+        });
       }
     },
   });

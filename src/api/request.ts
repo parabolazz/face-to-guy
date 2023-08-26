@@ -55,12 +55,19 @@ const request = async <T>(method, url, params) => {
       // 根据不同返回状态值进行操作
       // @ts-ignore
       if (resp.data?.errno === 401) {
-        const currPages = Taro.getCurrentPages();
-        const currPage = currPages[currPages.length - 1].route;
-        currPage !== 'pages/login/index' && Taro.navigateTo({
-          url: '/pages/login/index'
+        Taro.showToast({
+          title: '请登录后再操作',
+          icon: 'none',
+          duration: 2000
         })
-        return resp.data;
+        setTimeout(() => {
+          const currPages = Taro.getCurrentPages();
+          const currPage = currPages[currPages.length - 1].route;
+          currPage !== 'pages/login/index' && Taro.navigateTo({
+            url: '/pages/login/index'
+          })
+        }, 1000);
+        return Promise.reject(resp);
       // @ts-ignore
       } else if (resp.data?.errno !== 0) {
         Taro.showToast({

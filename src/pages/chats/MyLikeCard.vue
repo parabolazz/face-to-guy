@@ -23,7 +23,9 @@
 import { computed } from 'vue';
 import { Attribute, Shape } from '../../utils/profileEnum';
 import Taro from '@tarojs/taro';
+import { useGlobalStore } from '../../store';
 
+const global = useGlobalStore();
 const props = defineProps<{
   data: {
     avatar_id: string;
@@ -53,9 +55,15 @@ const basicInfo = computed(() => {
 });
 
 const goToUserPage = () => {
-  Taro.navigateTo({
-    url: `/pages/user/index?userId=${props.data.user_id}`,
-  });
+  if (global.userProfile) {
+    Taro.navigateTo({
+      url: `/pages/user/index?userId=${props.data.user_id}`,
+    });
+  } else {
+    Taro.navigateTo({
+      url: `/pages/login/index`,
+    });
+  }
 };
 </script>
 <style lang="scss">

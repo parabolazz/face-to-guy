@@ -41,6 +41,7 @@ import MessageSelectedIcon from './images/message_selected.png';
 import MeIcon from './images/me.png';
 import MeSelectedICon from './images/me_selected.png';
 import { getUnreadMessageLength } from '../api/message';
+import { onMounted } from 'vue';
 
 const color = '#5F5F5F';
 const selectedColor = '#DBF378';
@@ -78,35 +79,35 @@ function switchTab(index, url) {
 function setSelected(index) {
   global.setActiveTabIndex(index);
 }
-async function initUserInfo() {
-  const token = Taro.getStorageSync('TOKEN');
-  const currentPages = Taro.getCurrentPages();
-  const lastPage = currentPages[currentPages.length - 1];
-  if (token) {
-    if (!global.userProfile) {
-      global.getUserProfile();
-      // 每5分钟调一次
-      fetchIfMsgRead();
-      setInterval(() => {
-        fetchIfMsgRead();
-      }, 1000 * 60 * 5);
-    }
-  } else if (
-    lastPage?.route !== 'pages/login/index' &&
-    !lastPage.options.noLogin
-  ) {
-    Taro.navigateTo({ url: '/pages/login/index' });
+// async function initUserInfo() {
+// console.log(1);
+// const token = Taro.getStorageSync('TOKEN');
+// console.log('trigger!');
+// const currentPages = Taro.getCurrentPages();
+// const lastPage = currentPages[currentPages.length - 1];
+// if (token) {
+// if (!global.userProfile) {
+// global.getUserProfile();
+// 每5分钟调一次
+// fetchIfMsgRead();
+// 这里有bug
+// setInterval(() => {
+//   fetchIfMsgRead();
+// }, 1000 * 60 * 5);
+// }
+// } else if (
+// lastPage?.route !== 'pages/login/index' &&
+// !lastPage.options.noLogin
+// ) {
+// Taro.navigateTo({ url: '/pages/login/index' });
+// }
+// }
+// initUserInfo();
+onMounted(() => {
+  if (Taro.getStorageSync('TOKEN') && !global.unreadMsgInterval) {
+    global.fetchIfMsgRead();
   }
-}
-async function fetchIfMsgRead() {
-  try {
-    const res = await getUnreadMessageLength({
-      user_id: Taro.getStorageSync('USER_ID'),
-    });
-    global.setUnReadCount(res.data || 0);
-  } catch (error) {}
-}
-initUserInfo();
+});
 </script>
 
 <style lang="scss">

@@ -84,6 +84,10 @@ const onToggleVisible = (visible: boolean) => {
 
 const onChat = async () => {
   try {
+    if (!global.userProfile) {
+      Taro.navigateTo({ url: '/pages/login/index' });
+      return;
+    }
     const { valid } = await formRef.value.validate();
     if (!valid || !global.userProfile?.shot) {
       return;

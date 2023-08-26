@@ -45,8 +45,10 @@ import Taro from '@tarojs/taro';
 import { ref } from 'vue';
 import { login } from '../../api/user';
 import LogoImage from '../../assets/images/logo.png';
+import { useGlobalStore } from '../../store';
 const hasAgreed = ref(false);
 
+const global = useGlobalStore();
 const triggerToast = () => {
   Taro.showToast({
     title: '请先同意下方的用户协议',
@@ -67,14 +69,14 @@ const getPhoneNumber = async (e: any) => {
       });
       Taro.setStorageSync('TOKEN', res?.data.token);
       Taro.setStorageSync('USER_ID', res?.data.user_id);
+      global.getUserProfile();
+      global.fetchIfMsgRead();
       //跳转到信息填写页
       res?.data.is_new
         ? Taro.navigateTo({
             url: '/pages/profile/index',
           })
-        : Taro.switchTab({
-            url: '/pages/home/index',
-          });
+        : Taro.navigateBack();
     } catch (error) {
       console.log('login error', error);
     }

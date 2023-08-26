@@ -3,7 +3,7 @@
     <view class="home">
       <div class="home-head">
         <h3 class="home-title">附近</h3>
-        <div class="home-head__shot" @click="() => (isVisible = true)">
+        <div class="home-head__shot" @click="showShot">
           Shot: {{ shotCount }}杯
           <img :src="AddShot" class="home-head__add-shot" alt="add shot" />
         </div>
@@ -89,6 +89,15 @@ const city = ref('深圳');
 //     url: '/pages/chat/index',
 //   });
 // };
+const showShot = () => {
+  if (global.userProfile) {
+    isVisible.value = true;
+  } else {
+    Taro.navigateTo({
+      url: '/pages/login/index',
+    });
+  }
+};
 const topics = [
   {
     activityId: 1,

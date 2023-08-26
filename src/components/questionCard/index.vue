@@ -97,12 +97,7 @@ const onAnswer = async () => {
     setTimeout(() => {
       emit('onAnswer');
     }, 500);
-  } catch (error) {
-    Taro.showToast({
-      title: '系统出错，请稍后再试！',
-      icon: 'error',
-    });
-  }
+  } catch (error) {}
 };
 const onUploadFailure = (data) => {
   const dataText = data?.data?.data || '';

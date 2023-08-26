@@ -3,7 +3,7 @@
     <nut-config-provider theme="dark" class="full-height">
       <nut-tabs v-model="currentTab">
         <nut-tab-pane title="搭讪我的">
-          <scroll-view>
+          <scroll-view v-if="global.userProfile">
             <nut-noticebar
               text="请注意甄别虚假信息，注意个人人身财产安全"
               :background="'#1b1b1b'"
@@ -16,9 +16,13 @@
               class="chats-item"
             />
           </scroll-view>
+          <div class="login-tips" v-else>
+            请先进行
+            <div class="login-tips__btn" @click="goToLogin">登录</div>
+          </div>
         </nut-tab-pane>
         <nut-tab-pane title="我搭讪的">
-          <scroll-view class="chats-list">
+          <scroll-view class="chats-list" v-if="global.userProfile">
             <MyLikeCard
               v-for="item in myChatUpList"
               :data="item"
@@ -26,6 +30,10 @@
               class="chats-item"
             />
           </scroll-view>
+          <div class="login-tips" v-else>
+            请先进行
+            <div class="login-tips__btn" @click="goToLogin">登录</div>
+          </div>
         </nut-tab-pane>
       </nut-tabs>
       <div class="chats-placeholder"></div>
@@ -44,20 +52,30 @@ import {
   IMyChatUp,
 } from '../../api/message';
 import Taro from '@tarojs/taro';
-import { onMounted } from 'vue';
+import { useGlobalStore } from '../../store';
 
+const global = useGlobalStore();
 const currentTab = ref('0');
 const chatMeUpList = ref<IChatMeUp[]>([]);
 const myChatUpList = ref<IMyChatUp[]>([]);
-const userId = Taro.getStorageSync('USER_ID');
 
-onMounted(() => {
-  getChatMeUpList({ user_id: userId, follow: 0 }).then((res) => {
-    chatMeUpList.value = res.data;
+const goToLogin = () => {
+  Taro.navigateTo({
+    url: '/pages/login/index',
   });
-  getMyChatUpList({ user_id: userId, follow: 1 }).then((res) => {
-    myChatUpList.value = res.data;
-  });
+};
+
+Taro.useDidShow(() => {
+  if (Taro.getStorageSync('TOKEN')) {
+    const userId = Taro.getStorageSync('USER_ID');
+
+    getChatMeUpList({ user_id: userId, follow: 0 }).then((res) => {
+      chatMeUpList.value = res.data;
+    });
+    getMyChatUpList({ user_id: userId, follow: 1 }).then((res) => {
+      myChatUpList.value = res.data;
+    });
+  }
 });
 </script>
 
@@ -89,6 +107,15 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   }
   .chats-list {
     margin-top: 10px;
+  }
+  .login-tips {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    .login-tips__btn {
+      text-decoration: underline;
+      color: #dbf378;
+    }
   }
 }
 </style>
