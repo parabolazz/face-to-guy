@@ -127,9 +127,9 @@ const onLogout = () => {
       if (res.confirm) {
         Taro.removeStorageSync('TOKEN');
         Taro.removeStorageSync('USER_ID');
-
         global.setUserProfile(null);
         global.setActiveTabIndex(0);
+        global.setUnReadCount(0);
         Taro.switchTab({
           url: '/pages/home/index',
         });

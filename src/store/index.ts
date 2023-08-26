@@ -46,7 +46,7 @@ export const useGlobalStore = defineStore('global', {
         const res = await getUnreadMessageLength({
           user_id: Taro.getStorageSync('USER_ID'),
         });
-        global.setUnReadCount(res.data || 0);
+        this.setUnReadCount(res.data || 0);
       }
       try {
         callUnreadMsgApi()
