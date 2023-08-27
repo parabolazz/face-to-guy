@@ -87,19 +87,30 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #1b1b1b;
+  background-color: #000000;
   height: 100%;
   padding-bottom: $footer-height;
   padding-bottom: $footer-height-lagecy;
+  .nut-tabs__list {
+    background-color: #000000;
+  }
   .nut-tab-pane {
     padding: 0 12px;
+    background: #000;
+  }
+  .nut-noticebar .nut-noticebar__page {
+    background-color: #000;
+    padding: 0;
+    .nut-noticebar__page-lefticon {
+      margin-left: 0;
+    }
   }
   .chats-item {
     margin-bottom: 12px;
   }
   .chats-placeholder {
     padding: 46px 0;
-    background-color: #1b1b1b;
+    background-color: #000000;
     height: $footer-height;
     height: $footer-height-lagecy;
     margin-bottom: constant(safe-area-inset-bottom); ///*兼容 IOS<11.2*/

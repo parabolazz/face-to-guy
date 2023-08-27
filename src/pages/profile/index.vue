@@ -126,7 +126,11 @@
               {{ currHobbiesName || '请选择兴趣爱好' }}
             </div>
           </nut-form-item>
-          <nut-form-item label="喜欢的类型" prop="favorite">
+          <nut-form-item
+            label="喜欢的类型"
+            prop="favorite"
+            class="last-form-item"
+          >
             <div
               :class="[
                 'profile-form-item__value',
@@ -254,7 +258,11 @@
       </div>
       <!-- 傻逼nut-ui一定要用ref -->
       <nut-checkbox-group v-model="hobbies" :max="3">
-        <nut-cell v-for="item in optionsController.hobbies" :key="item.value">
+        <nut-cell
+          v-for="item in optionsController.hobbies"
+          :key="item.value"
+          class="popup-cell"
+        >
           <nut-checkbox :label="item.value">{{ item.text }}</nut-checkbox>
         </nut-cell>
       </nut-checkbox-group>
@@ -277,7 +285,11 @@
       </div>
       <!-- 傻逼nut-ui一定要用ref -->
       <nut-checkbox-group v-model="favorite" :max="3">
-        <nut-cell v-for="item in optionsController.favorite" :key="item.value">
+        <nut-cell
+          v-for="item in optionsController.favorite"
+          :key="item.value"
+          class="popup-cell"
+        >
           <nut-checkbox :label="item.value">{{ item.text }}</nut-checkbox>
         </nut-cell>
       </nut-checkbox-group>
@@ -731,6 +743,9 @@ export default {
   .nut-form-item__label {
     color: #dbf378;
   }
+  .nut-cell-group__wrap {
+    overflow: initial;
+  }
 }
 .profile-block {
   padding-top: 14px;
@@ -743,17 +758,16 @@ export default {
   padding: 2px 4px;
   font-weight: bold;
 }
-
 .profile-picker-mask {
   max-width: auto;
   background: rgb(0, 240, 244);
   background: linear-gradient(
     0deg,
     rgba(50, 50, 50, 1) 0%,
-    rgba(50, 50, 50, 0.5) 20%,
+    rgba(50, 50, 50, 0.8) 20%,
     rgba(98, 98, 98, 0.1) 45%,
     rgba(98, 98, 98, 0.1) 55%,
-    rgba(50, 50, 50, 0.5) 80%,
+    rgba(50, 50, 50, 0.8) 80%,
     rgba(50, 50, 50, 1) 100%
   );
   background-size: 750px 300px !important;
@@ -771,7 +785,12 @@ export default {
   align-items: center;
   color: #fff;
 }
+
 .nut-theme-dark .nut-popup {
   background-color: #323232;
+  border-radius: 9px 9px 0px 0px;
+  .popup-cell {
+    background-color: #323232;
+  }
 }
 </style>

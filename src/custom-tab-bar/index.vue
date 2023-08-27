@@ -79,30 +79,12 @@ function switchTab(index, url) {
 function setSelected(index) {
   global.setActiveTabIndex(index);
 }
-// async function initUserInfo() {
-// console.log(1);
-// const token = Taro.getStorageSync('TOKEN');
-// console.log('trigger!');
-// const currentPages = Taro.getCurrentPages();
-// const lastPage = currentPages[currentPages.length - 1];
-// if (token) {
-// if (!global.userProfile) {
-// global.getUserProfile();
-// 每5分钟调一次
-// fetchIfMsgRead();
-// 这里有bug
-// setInterval(() => {
-//   fetchIfMsgRead();
-// }, 1000 * 60 * 5);
-// }
-// } else if (
-// lastPage?.route !== 'pages/login/index' &&
-// !lastPage.options.noLogin
-// ) {
-// Taro.navigateTo({ url: '/pages/login/index' });
-// }
-// }
-// initUserInfo();
+async function initUserInfo() {
+  if (Taro.getStorageSync('TOKEN') && !global.userProfile) {
+    global.getUserProfile();
+  }
+}
+initUserInfo();
 onMounted(() => {
   if (Taro.getStorageSync('TOKEN') && !global.unreadMsgInterval) {
     global.fetchIfMsgRead();

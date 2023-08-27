@@ -16,6 +16,7 @@
           :border="false"
           v-model="answer"
           placeholder="回答问题，交换答案"
+          placeholder-class="question-card__placeholder"
         />
         <template v-else>
           <Uploader
@@ -186,11 +187,15 @@ watch(
     margin-bottom: 12px;
   }
   .question-card__desc {
-    color: #eee;
-    font-size: 12px;
+    color: #b4b3ff;
+    font-size: 14px;
     padding-bottom: 22px;
     border-bottom: 0.5px solid #eee;
     opacity: 0.5;
+  }
+  .question-card__placeholder {
+    color: #bbbbbb;
+    font-size: 16px;
   }
   .question-card__main-text {
     margin-top: 30px;
@@ -201,14 +206,14 @@ watch(
   .question-card__submit {
     color: #000;
     width: 100%;
-    height: 56px;
+    height: 50px;
     border-radius: 9px;
     font-size: 18px;
     font-weight: 500;
   }
   .question-card__main-answer-field {
     display: flex;
-    margin: 24px 0 42px;
+    margin: 24px 0 24px;
     border-radius: 9px;
   }
   .question-card__input {
@@ -223,10 +228,11 @@ watch(
     height: 200px;
     height: 100%;
     overflow: hidden;
+    border-radius: 9px;
   }
   .nut-uploader__upload {
-    width: 195px;
-    height: 195px;
+    width: 254px;
+    height: 254px;
     background-color: transparent;
     border-radius: 9px;
     .nutui-iconfont.nut-icon.nut-icon-photograph {
@@ -237,16 +243,10 @@ watch(
     }
   }
   .question-card__uploader {
-    width: 195px;
-    height: 195px;
+    width: 254px;
+    height: 254px;
     padding: 0;
-    // border: 1px dashed #eee;
     border-radius: 9px;
-  }
-  .nut-button--disabled {
-    background-color: #d9d9d9 !important;
-    color: #666565 !important;
-    opacity: 1;
   }
 }
 </style>

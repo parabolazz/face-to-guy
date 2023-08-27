@@ -93,9 +93,15 @@ const goChat = () => {
 };
 
 const goToViewUser = () => {
-  Taro.navigateTo({
-    url: `/pages/user/index?userId=${props.user_id}`,
-  });
+  if (Taro.getStorageSync('USER_ID')) {
+    Taro.navigateTo({
+      url: `/pages/user/index?userId=${props.user_id}`,
+    });
+  } else {
+    Taro.navigateTo({
+      url: `/pages/login/index`,
+    });
+  }
 };
 
 watch(
@@ -166,21 +172,25 @@ watch(
   .answer-card__main-ques {
     position: relative;
     margin-top: 25px;
+    height: 68px;
     padding: 12px;
     font-size: 14px;
     font-weight: bold;
     background-color: #000;
     border-radius: 9px 9px 0 0;
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
     &::before {
       display: block;
       content: '';
       position: absolute;
-      top: -14px;
+      top: -10px;
       left: 20px;
       width: 0;
       height: 0;
       border-style: solid;
-      border-width: 0 15px 15px 15px;
+      border-width: 0 8px 10px 8px;
       border-color: transparent transparent #000 transparent;
     }
   }
@@ -204,6 +214,8 @@ watch(
     margin-top: 16px;
     width: 100%;
     padding: 12px 0;
+    height: 50px;
+    font-size: 18px;
     color: #000;
     font-weight: bold;
     border-radius: 9px;

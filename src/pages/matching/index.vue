@@ -135,7 +135,7 @@ async function fetchData() {
     const res = await getActivityList({
       a_id: Number(activityId.value),
       groups: walkGroups.value.join(','),
-      user_id: Taro.getStorageSync('USER_ID'),
+      user_id: Number(Taro.getStorageSync('USER_ID')) || 0,
     });
     if (res) {
       const { data } = res;

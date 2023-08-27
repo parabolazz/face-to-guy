@@ -12,7 +12,12 @@
         class="switch-wechat__form"
       >
         <div>
-          <nut-form-item prop="wechatId" label="你的微信号" required>
+          <nut-form-item
+            prop="wechatId"
+            label="你的微信号"
+            required
+            style="margin-bottom: 8px"
+          >
             <nut-input
               cursor-spacing="50"
               v-model="infoForm.wechatId"
@@ -34,7 +39,7 @@
             />
           </nut-form-item>
         </div>
-        <nut-form-item>
+        <nut-form-item class="form-item-submit">
           <nut-button
             type="primary"
             class="submit-btn"
@@ -132,11 +137,11 @@ const onChat = async () => {
     padding-bottom: env(safe-area-inset-bottom);
   }
   .switch-wechat-popup__content {
-    padding-top: 20px;
+    padding-top: 30px;
   }
 
   .nut-cell-group__wrap {
-    height: 339px;
+    height: 340px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -160,6 +165,12 @@ const onChat = async () => {
       height: 82px;
     }
   }
+  .nut-cell::after {
+    display: none;
+  }
+  .form-item-submit {
+    padding-top: 5px;
+  }
 
   .submit-btn {
     color: #000;
@@ -168,8 +179,6 @@ const onChat = async () => {
     border-radius: 9px;
     font-size: 18px;
     font-weight: 500;
-  }
-  .switch-wechat__form {
   }
   .nut-cell-group__wrap {
     margin: 0;

@@ -87,11 +87,6 @@
         class="matched-user__footer__btn"
         @click="goChat"
       >
-        <img
-          class="matched-user__footer__btn__love-icon"
-          :src="IconFavoriteBlack"
-          alt="love him"
-        />
         打个招呼
       </nut-button>
     </div>
@@ -233,6 +228,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
         position: absolute;
         left: 0;
         z-index: 11;
+        opacity: 0.7;
         &.top {
           top: 0;
           background: linear-gradient(
@@ -281,7 +277,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     }
     .matched-user__profile-info-icon {
       width: 14px;
-      height: 11px;
+      height: 14px;
     }
     .matched-user__profile-info-row {
       font-size: 14px;
@@ -289,7 +285,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
       display: flex;
       align-items: center;
       .matched-user__profile-info-icon {
-        margin-right: 4px;
+        margin-right: 6px;
       }
     }
   }
