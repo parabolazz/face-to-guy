@@ -5,36 +5,40 @@
       indicator-dots
       :vertical="true"
       :circular="false"
+      previous-margin="20px"
+      next-margin="20px"
       :autoplay="false"
       :current="idx"
       :scrollWithAnimation="false"
       @change="onSwipe"
     >
       <swiper-item
-        class="matching-swiper__card"
         v-for="(item, index) in activityList"
         :key="item.id"
+        :class="['matching-swiper__card', idx === index ? 'swiper-active' : '']"
       >
-        <QuestionCard
-          v-if="item.cardType === 'question'"
-          :userId="userId"
-          :title="item.title"
-          :type="item.type"
-          :id="item.id"
-          @onAnswer="onAnswer"
-        />
-        <AnswerCard
-          v-else-if="item.cardType === 'answer'"
-          v-bind="item"
-          :isActive="idx === index"
-          @goChat="goChat"
-        ></AnswerCard>
-        <div v-else>
-          {{
-            prepareActivityList.length > 1
-              ? '马上加载更多内容！'
-              : '已经滑到底啦！'
-          }}
+        <div class="matching-swiper__card-content">
+          <QuestionCard
+            v-if="item.cardType === 'question'"
+            :userId="userId"
+            :title="item.title"
+            :type="item.type"
+            :id="item.id"
+            @onAnswer="onAnswer"
+          />
+          <AnswerCard
+            v-else-if="item.cardType === 'answer'"
+            v-bind="item"
+            :isActive="idx === index"
+            @goChat="goChat"
+          ></AnswerCard>
+          <div v-else>
+            {{
+              prepareActivityList.length > 1
+                ? '马上加载更多内容！'
+                : '已经滑到底啦！'
+            }}
+          </div>
         </div>
       </swiper-item>
     </swiper>
@@ -226,16 +230,33 @@ watch(idx, async (v, oldV) => {
   height: 100%;
   padding: 0 20px;
   .matching-swiper {
-    height: 613px;
-    overflow: hidden;
+    height: 653px;
+    overflow: visible;
     .matching-swiper__card {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #6967ff;
-      height: 100%;
-      color: #fff;
-      border-radius: 9px;
+      height: 613px !important;
+      overflow: visible;
+      .matching-swiper__card-content {
+        opacity: 0.5;
+        width: 90% !important;
+        height: 600px;
+        background-color: #6967ff;
+        border-radius: 9px;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s ease 0s;
+      }
+      &.swiper-active {
+        .matching-swiper__card-content {
+          top: 0;
+          opacity: 1;
+          width: 100% !important;
+        }
+      }
     }
   }
 

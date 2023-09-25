@@ -99,7 +99,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     background: #000;
   }
   .nut-noticebar .nut-noticebar__page {
-    background-color: #000;
+    background-color: #000 !important;
     padding: 0;
     .nut-noticebar__page-lefticon {
       margin-left: 0;
