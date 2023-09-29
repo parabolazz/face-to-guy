@@ -1,11 +1,14 @@
 <template>
   <div class="matching">
+    <div class="matching-my-answers">
+      <img :src="FileSvg" mode="aspectFill" alt="my answer card" />
+      我的答案卡
+    </div>
     <swiper
       class="matching-swiper"
       indicator-dots
       :vertical="true"
       :circular="false"
-      previous-margin="20px"
       next-margin="20px"
       :autoplay="false"
       :current="idx"
@@ -102,6 +105,7 @@ import AnswerCard from '../../components/answerCard/index.vue';
 import { computed } from 'vue';
 import { watch } from 'vue';
 import { nextTick } from '@tarojs/taro';
+import FileSvg from '../../assets/images/file.svg';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
 import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue';
 import { useGlobalStore } from '../../store';
@@ -110,9 +114,6 @@ import Taro from '@tarojs/taro';
 const instance = Taro.getCurrentInstance();
 const global = useGlobalStore();
 const idx = ref(-1);
-const preparedAnswers = computed(() =>
-  prepareActivityList.value.filter((item) => item.cardType === 'answer'),
-);
 const activeAnswers = computed(() =>
   activityList.value.filter((item) => item.cardType === 'answer'),
 );
@@ -228,9 +229,21 @@ watch(idx, async (v, oldV) => {
 <style lang="scss">
 .matching {
   height: 100%;
-  padding: 0 20px;
+  padding: 10px 20px 0px;
+  .matching-my-answers {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 4px;
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+  }
   .matching-swiper {
-    height: 653px;
+    height: 633px;
     overflow: visible;
     .matching-swiper__card {
       display: flex;
