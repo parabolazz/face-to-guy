@@ -1,44 +1,60 @@
 <template>
   <nut-config-provider theme="dark">
-    <view class="home">
-      <div class="home-head">
-        <h3 class="home-title">附近</h3>
-        <div class="home-head__shot" @click="showShot">
-          Shot: {{ shotCount }}杯
-          <img :src="AddShot" class="home-head__add-shot" alt="add shot" />
+    <scroll-view class="home" :scroll-y="true">
+      <div class="home-nearby">
+        <div class="home-head">
+          <h3 class="home-title">附近</h3>
+          <div class="home-head__shot" @click="showShot">
+            Shot: {{ shotCount }}杯
+            <img :src="AddShot" class="home-head__add-shot" alt="add shot" />
+          </div>
         </div>
-      </div>
-      <nut-grid :gutter="12" class="home-topic" :column-num="3">
-        <nut-grid-item
-          @click="() => goMatching(topic.activityId)"
-          :class="['home-topic__item', `home-topic__item-${topic.color}`]"
-          v-for="topic in topics.slice(0, topics.length - 1)"
-          :key="topic.title"
-        >
-          <div class="home-topic__item__city">{{ city }}</div>
-          <div v-for="t in topic.title?.split(' ')" :key="t">
-            {{ t }}
-          </div></nut-grid-item
-        >
-      </nut-grid>
-      <nut-grid :gutter="12" class="home-topic" :column-num="3">
-        <!-- <nut-grid-item class="home-topic__item home-topic__first-item">
+        <nut-grid :gutter="12" class="home-topic" :column-num="3">
+          <nut-grid-item
+            @click="() => goMatching(topic.activityId)"
+            :class="['home-topic__item', `home-topic__item-${topic.color}`]"
+            v-for="topic in topics.slice(0, topics.length - 1)"
+            :key="topic.title"
+          >
+            <div class="home-topic__item__city">{{ city }}</div>
+            <div v-for="t in topic.title?.split(' ')" :key="t">
+              {{ t }}
+            </div></nut-grid-item
+          >
+        </nut-grid>
+        <nut-grid :gutter="12" class="home-topic" :column-num="3">
+          <!-- <nut-grid-item class="home-topic__item home-topic__first-item">
           <div class="home-topic__item__city">{{ city }}</div>
           <div>还不知道，先摇人</div>
         </nut-grid-item> -->
-        <nut-grid-item
-          :class="['home-topic__item', `home-topic__item-${topics[3].color}`]"
-          @click="() => goMatching(topics[3].activityId)"
-          v-if="topics[3]"
-        >
-          <div class="home-topic__item__city">{{ city }}</div>
-          <div v-for="t in topics[3].title?.split(' ')" :key="t">
-            {{ t }}
-          </div>
-        </nut-grid-item>
-      </nut-grid>
+          <nut-grid-item
+            :class="['home-topic__item', `home-topic__item-${topics[3].color}`]"
+            @click="() => goMatching(topics[3].activityId)"
+            v-if="topics[3]"
+          >
+            <div class="home-topic__item__city">{{ city }}</div>
+            <div v-for="t in topics[3].title?.split(' ')" :key="t">
+              {{ t }}
+            </div>
+          </nut-grid-item>
+        </nut-grid>
+      </div>
+      <div class="home-same-city">
+        <div class="home-head">
+          <h3 class="home-title">同城活动</h3>
+        </div>
+        <div class="flex-column">
+          <ActivityListItem
+            v-for="item in sameCityActivities"
+            :key="item.activityId"
+            class="home-same-city__item"
+            :data="item"
+            @click="() => goActivityDetail(item.activityId)"
+          ></ActivityListItem>
+        </div>
+      </div>
       <SharePopup v-model:visible="isVisible" />
-    </view>
+    </scroll-view>
   </nut-config-provider>
 </template>
 
@@ -48,6 +64,9 @@ import Taro from '@tarojs/taro';
 import { useGlobalStore } from '../../store';
 import AddShot from '../../assets/images/shot_add.svg';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
+import ActivityListItem, {
+  type ActivityListItemProps,
+} from '../../components/activityListItem/index.vue';
 import { computed } from 'vue';
 
 console.log('SharePopup', SharePopup);
@@ -57,38 +76,8 @@ const isVisible = ref(false);
 
 const shotCount = computed(() => global.userProfile?.shot || 0);
 const city = ref('深圳');
+const sameCityActivities = ref<ActivityListItemProps[]>([]);
 
-// const onClick = () => {
-//   Taro.navigateTo({
-//     url: '/pages/profile/index',
-//   });
-// };
-// const goShare = () => {
-//   Taro.navigateTo({
-//     url: '/pages/share/index',
-//   });
-// };
-// const goMatchUserInfo = () => {
-//   Taro.navigateTo({
-//     url: '/pages/user/index',
-//   });
-// };
-// const goLoginPage = () => {
-//   Taro.navigateTo({
-//     url: '/pages/login/index',
-//   });
-// };
-// const goChatsPage = () => {
-//   global.setActiveTabIndex(1);
-//   Taro.switchTab({
-//     url: '/pages/chats/index',
-//   });
-// };
-// const goChatPage = () => {
-//   Taro.navigateTo({
-//     url: '/pages/chat/index',
-//   });
-// };
 const showShot = () => {
   if (global.userProfile) {
     isVisible.value = true;
@@ -125,20 +114,57 @@ const goMatching = (activityId: number) => {
     url: `/pages/matching/index?activityId=${activityId}`,
   });
 };
+const goActivityDetail = (activityId: number) => {
+  Taro.navigateTo({
+    url: `/pages/activityDetail/index?activityId=${activityId}`,
+  });
+};
+sameCityActivities.value = [
+  {
+    activityId: 1,
+    title: '吃喝玩乐 摇一摇',
+    time: '2021-08-08 12:00',
+    location: '深圳市南山区',
+    activityImg: 'https://picsum.photos/200/300?random=1',
+    limit: 40,
+    current: 20,
+    userAvatars: [
+      // avatar sample
+      'https://img2.baidu.com/it/u=2186663613,2577256303&fm=26&fmt=auto&gp=0.jpg',
+    ],
+  },
+  {
+    activityId: 2,
+    title: '看电影',
+    time: '2021-08-15 18:00',
+    location: '上海市徐汇区',
+    activityImg: 'https://picsum.photos/200/300?random=2',
+    limit: 30,
+    current: 10,
+    userAvatars: [
+      'https://picsum.photos/50/50?random=1',
+      'https://picsum.photos/50/50?random=2',
+      'https://picsum.photos/50/50?random=3',
+    ],
+  },
+];
 </script>
 
 <style lang="scss">
-.flex {
-  display: flex;
-  flex-direction: row;
-}
 .home {
   position: relative;
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   justify-content: flex-end;
-  margin-bottom: 80px;
-  padding: 14px;
+  padding-bottom: 120px;
+  padding: 14px 14px 120px 14px;
+  .home-nearby {
+    margin-bottom: 36px;
+  }
+  .home-same-city__item {
+    margin-bottom: 12px;
+  }
   .home-head {
     display: flex;
     justify-content: space-between;

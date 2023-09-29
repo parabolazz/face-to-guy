@@ -11,6 +11,7 @@ export default defineAppConfig({
     'pages/chat/index',
     'pages/terms/index',
     'pages/privacy/index',
+    'pages/activityDetail/index'
   ],
   window: {
     navigationBarBackgroundColor: '#000000',
