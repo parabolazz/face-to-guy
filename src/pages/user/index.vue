@@ -1,102 +1,123 @@
 <template>
   <div class="matched-user">
-    <scroll-view :scroll-y="true" class="matched-user__scrollview">
-      <div class="matched-user__profile">
-        <div class="matched-user__profile-photos">
-          <div class="matched-user__profile__photos-mask top"></div>
-          <div class="matched-user__profile__photos-name absolute">
-            {{ profile.nickname }}
-          </div>
-          <div class="matched-user__profile__photos-info">
-            <div class="flex">
-              <div class="matched-user__profile__photos-info-item">
-                {{ basicInfo }}
-              </div>
-            </div>
-            <div class="matched-user__profile__photos-info-ip">
-              IP 归属地: 暂未上线
-            </div>
-          </div>
-          <nut-swiper
-            :pagination-visible="true"
-            :auto-play="0"
-            height="510"
-            class="matched-user__profile__swiper"
-          >
-            <nut-swiper-item
-              v-for="url in profile.avatar_ids"
-              :key="url"
-              class="matched-user__profile__photos-item"
-            >
-              <img
-                class="matched-user__profile__img"
-                :src="url"
-                alt="profile"
-                mode="aspectFill"
-              />
-            </nut-swiper-item>
-          </nut-swiper>
-          <div class="matched-user__profile__photos-mask bottom"></div>
-        </div>
-        <div class="matched-user__profile-intro">
-          {{ profile.signature }}
-        </div>
-        <div class="matched-user__profile-info">
-          <div class="matched-user__profile-info-row" v-if="profile.career">
-            <img
-              class="matched-user__profile-info-icon"
-              :src="IconJob"
-              alt="job"
-            />
-            行业：{{ Career[profile.career] }}
-          </div>
-          <div class="matched-user__profile-info-row" v-if="profile.hobby">
-            <img
-              class="matched-user__profile-info-icon"
-              :src="IconHobby"
-              alt="hobby"
-            />
-            爱好：{{
-              profile.hobby
-                .split(',')
-                .map((h) => Hobbies[h])
-                .join(', ')
-            }}
-          </div>
-          <div class="matched-user__profile-info-row" v-if="profile.favorite">
-            <img
-              class="matched-user__profile-info-icon"
-              :src="IconFavorite"
-              alt="喜好"
-            />
-            喜好：{{
-              profile.favorite
-                .split(',')
-                .map((p) => Favorite[p])
-                .join(', ')
-            }}
-          </div>
-        </div>
-      </div>
-    </scroll-view>
-    <div class="matched-user__footer">
-      <nut-button
-        :disabled="!profile.avatar_ids.length"
-        v-if="!isMyself"
-        type="primary"
-        class="matched-user__footer__btn"
-        @click="goChat"
-      >
-        打个招呼
-      </nut-button>
-    </div>
-
     <nut-config-provider
       theme="dark"
+      style="height: 100%"
       :themeVars="{
-        darkBackground2: '#2c2c2c',
+        darkBackground: '#000000',
+        darkBackground2: '#000000',
+        darkBackground3: '#000',
       }"
     >
+      <nut-tabs v-model="activeTab" style="height: 100%">
+        <nut-tab-pane title="个人信息" pane-key="0">
+          <scroll-view :scroll-y="true" class="matched-user__scrollview">
+            <div class="matched-user__profile">
+              <div class="matched-user__profile-photos">
+                <div class="matched-user__profile__photos-mask top"></div>
+                <div class="matched-user__profile__photos-name absolute">
+                  {{ profile.nickname }}
+                </div>
+                <div class="matched-user__profile__photos-info">
+                  <div class="flex">
+                    <div class="matched-user__profile__photos-info-item">
+                      {{ basicInfo }}
+                    </div>
+                  </div>
+                  <div class="matched-user__profile__photos-info-ip">
+                    IP 归属地: 暂未上线
+                  </div>
+                </div>
+                <nut-swiper
+                  :pagination-visible="true"
+                  :auto-play="0"
+                  height="510"
+                  class="matched-user__profile__swiper"
+                >
+                  <nut-swiper-item
+                    v-for="url in profile.avatar_ids"
+                    :key="url"
+                    class="matched-user__profile__photos-item"
+                  >
+                    <img
+                      class="matched-user__profile__img"
+                      :src="url"
+                      alt="profile"
+                      mode="aspectFill"
+                    />
+                  </nut-swiper-item>
+                </nut-swiper>
+                <div class="matched-user__profile__photos-mask bottom"></div>
+              </div>
+              <div class="matched-user__profile-intro">
+                {{ profile.signature }}
+              </div>
+              <div class="matched-user__profile-info">
+                <div
+                  class="matched-user__profile-info-row"
+                  v-if="profile.career"
+                >
+                  <img
+                    class="matched-user__profile-info-icon"
+                    :src="IconJob"
+                    alt="job"
+                  />
+                  行业：{{ Career[profile.career] }}
+                </div>
+                <div
+                  class="matched-user__profile-info-row"
+                  v-if="profile.hobby"
+                >
+                  <img
+                    class="matched-user__profile-info-icon"
+                    :src="IconHobby"
+                    alt="hobby"
+                  />
+                  爱好：{{
+                    profile.hobby
+                      .split(',')
+                      .map((h) => Hobbies[h])
+                      .join(', ')
+                  }}
+                </div>
+                <div
+                  class="matched-user__profile-info-row"
+                  v-if="profile.favorite"
+                >
+                  <img
+                    class="matched-user__profile-info-icon"
+                    :src="IconFavorite"
+                    alt="喜好"
+                  />
+                  喜好：{{
+                    profile.favorite
+                      .split(',')
+                      .map((p) => Favorite[p])
+                      .join(', ')
+                  }}
+                </div>
+              </div>
+            </div>
+          </scroll-view>
+          <div class="matched-user__footer">
+            <nut-button
+              :disabled="!profile.avatar_ids.length"
+              v-if="!isMyself"
+              type="primary"
+              class="matched-user__footer__btn"
+              @click="goChat"
+            >
+              打个招呼
+            </nut-button>
+          </div>
+        </nut-tab-pane>
+        <nut-tab-pane title="答案卡" pane-key="1">
+          <ActivityCardList
+            class="matched-user__ans-list"
+            :get-activity-list="getActivityList"
+          />
+        </nut-tab-pane>
+      </nut-tabs>
       <SwitchWechatPopup
         :targetUserId="userId"
         v-model:visible="switchWechatVisible"
@@ -112,10 +133,11 @@
 import { ref } from 'vue';
 import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
+import ActivityCardList from '../../biz-components/activityCardList/index.vue';
+import { getActivityList } from '../../api/matching';
 import IconJob from '../../assets/images/job.svg';
 import IconHobby from '../../assets/images/hobby.svg';
 import IconFavorite from '../../assets/images/favorite.svg';
-import IconFavoriteBlack from '../../assets/images/favorite_black.svg';
 import { getCurrentPageParam } from '../../utils/route';
 import { type ProfileData, getUserProfile } from '../../api/user';
 import { computed } from 'vue';
@@ -127,10 +149,6 @@ import {
   Favorite,
 } from '../../utils/profileEnum';
 import Taro from '@tarojs/taro';
-// import { useGlobalStore } from '../../store';
-
-// const globalStore = useGlobalStore();
-// globalStore.toggleTabbar(false);
 
 const userId = Number(getCurrentPageParam().userId);
 
@@ -147,6 +165,7 @@ const profile = ref<ProfileData>({
   weight: 0,
   shot: 0,
 });
+const activeTab = ref(0);
 const switchWechatVisible = ref(false);
 const sharePopupVisible = ref(false);
 const basicInfo = computed(() => {
@@ -199,13 +218,19 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   height: 100vh;
   justify-content: space-between;
   overflow: hidden;
+  position: relative;
+  .nut-tabs__content {
+    max-height: calc(100% - 46px);
+  }
+  .nut-tab-pane {
+    padding: 0;
+  }
   .matched-user__scrollview {
     flex: 1;
     overflow: scroll;
-    height: 1px;
-
+    // height: calc(100% - 46px);
     .matched-user__profile {
-      padding: 0 14px 23px;
+      padding: 14px 14px 130px;
       overflow-x: hidden;
       .matched-user__profile-photos {
         position: relative;
@@ -290,6 +315,8 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     }
   }
   .matched-user__footer {
+    position: absolute;
+    bottom: 0px;
     display: flex;
     flex-shrink: 0;
     width: 100%;
@@ -316,6 +343,9 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   }
   .matched-user__footer__btn {
     color: #000;
+  }
+  .matched-user__ans-list {
+    padding: 0 12px;
   }
 }
 </style>

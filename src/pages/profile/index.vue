@@ -785,7 +785,6 @@ export default {
   align-items: center;
   color: #fff;
 }
-
 .nut-theme-dark .nut-popup {
   background-color: #323232;
   border-radius: 9px 9px 0px 0px;
