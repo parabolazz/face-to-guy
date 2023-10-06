@@ -2,38 +2,37 @@
   <nut-config-provider theme="dark">
     <view class="home">
       <div class="home-head">
-        <h3 class="home-title">附近</h3>
+        <h3 class="home-title">深圳圈</h3>
         <div class="home-head__shot" @click="showShot">
           Shot: {{ shotCount }}杯
           <img :src="AddShot" class="home-head__add-shot" alt="add shot" />
         </div>
       </div>
-      <nut-grid :gutter="12" class="home-topic" :column-num="3">
+      <nut-grid :gutter="12" class="home-topic" :column-num="2">
         <nut-grid-item
           @click="() => goMatching(topic.activityId)"
           :class="['home-topic__item', `home-topic__item-${topic.color}`]"
-          v-for="topic in topics.slice(0, topics.length - 1)"
+          v-for="topic in topics"
           :key="topic.title"
         >
-          <div class="home-topic__item__city">{{ city }}</div>
-          <div v-for="t in topic.title?.split(' ')" :key="t">
-            {{ t }}
-          </div></nut-grid-item
-        >
-      </nut-grid>
-      <nut-grid :gutter="12" class="home-topic" :column-num="3">
-        <!-- <nut-grid-item class="home-topic__item home-topic__first-item">
-          <div class="home-topic__item__city">{{ city }}</div>
-          <div>还不知道，先摇人</div>
-        </nut-grid-item> -->
-        <nut-grid-item
-          :class="['home-topic__item', `home-topic__item-${topics[3].color}`]"
-          @click="() => goMatching(topics[3].activityId)"
-          v-if="topics[3]"
-        >
-          <div class="home-topic__item__city">{{ city }}</div>
-          <div v-for="t in topics[3].title?.split(' ')" :key="t">
-            {{ t }}
+          <!-- <div class="home-topic__item__city">{{ city }}</div> -->
+          <div>
+            <div>{{ topic.title }}</div>
+            <div>{{ topic.desc }}</div>
+          </div>
+          <div class="flex justify-between items-center w100">
+            <img
+              :src="topic.icon"
+              class="home-topic__item-icon"
+              mode="aspectFill"
+              :alt="topic.title"
+            />
+            <img
+              :src="ArrowRight"
+              class="home-topic__item-arrow"
+              mode="aspectFill"
+              :alt="topic.title"
+            />
           </div>
         </nut-grid-item>
       </nut-grid>
@@ -48,6 +47,11 @@ import Taro from '@tarojs/taro';
 import { useGlobalStore } from '../../store';
 import AddShot from '../../assets/images/shot_add.svg';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
+import Play from '../../assets/images/play.svg';
+import Sports from '../../assets/images/sports.svg';
+import World from '../../assets/images/world.svg';
+import Study from '../../assets/images/study.svg';
+import ArrowRight from '../../assets/images/arrow_right.svg';
 import { computed } from 'vue';
 
 console.log('SharePopup', SharePopup);
@@ -56,39 +60,7 @@ const global = useGlobalStore();
 const isVisible = ref(false);
 
 const shotCount = computed(() => global.userProfile?.shot || 0);
-const city = ref('深圳');
 
-// const onClick = () => {
-//   Taro.navigateTo({
-//     url: '/pages/profile/index',
-//   });
-// };
-// const goShare = () => {
-//   Taro.navigateTo({
-//     url: '/pages/share/index',
-//   });
-// };
-// const goMatchUserInfo = () => {
-//   Taro.navigateTo({
-//     url: '/pages/user/index',
-//   });
-// };
-// const goLoginPage = () => {
-//   Taro.navigateTo({
-//     url: '/pages/login/index',
-//   });
-// };
-// const goChatsPage = () => {
-//   global.setActiveTabIndex(1);
-//   Taro.switchTab({
-//     url: '/pages/chats/index',
-//   });
-// };
-// const goChatPage = () => {
-//   Taro.navigateTo({
-//     url: '/pages/chat/index',
-//   });
-// };
 const showShot = () => {
   if (global.userProfile) {
     isVisible.value = true;
@@ -101,23 +73,31 @@ const showShot = () => {
 const topics = [
   {
     activityId: 1,
-    title: '吃喝玩乐 摇一摇',
+    title: '吃喝玩乐',
+    desc: '摇一摇',
     color: 'DBF378',
+    icon: Play,
   },
   {
     activityId: 2,
-    title: '运动户外 摇一摇',
+    title: '运动户外',
+    desc: '摇一摇',
     color: 'CF83ED',
+    icon: Sports,
   },
   {
     activityId: 3,
     title: '旅游看世界',
+    desc: '摇一摇',
     color: '74D172',
+    icon: World,
   },
   {
     activityId: 4,
-    title: '一起上岸！',
+    title: '一起上岸',
+    desc: '摇一摇',
     color: '65BAE8',
+    icon: Study,
   },
 ];
 const goMatching = (activityId: number) => {
@@ -169,7 +149,7 @@ const goMatching = (activityId: number) => {
     margin-right: -12px;
     margin-bottom: 12px;
     .home-topic__item {
-      height: 146px;
+      height: 120px;
 
       &.home-topic__item-DBF378 {
         .nut-grid-item__content {
@@ -194,8 +174,8 @@ const goMatching = (activityId: number) => {
 
       .nut-grid-item__content {
         border-radius: 10px;
-        font-size: 20px;
-        font-weight: bold;
+        font-size: 18px;
+        font-weight: 700;
         color: #000;
         border: none;
         position: relative;
@@ -211,19 +191,33 @@ const goMatching = (activityId: number) => {
           color: #fff;
         }
       }
-    }
-
-    .home-topic__first-item {
-      flex-basis: 66.66% !important;
-      .nut-grid-item__content {
-        background-image: url(../../assets/images/pair_btn_bg.webp);
-        color: #fff;
+      .nut-grid-item__text {
+        display: none;
+      }
+      .home-topic__item-icon {
+        width: 36px;
+        height: 36px;
+      }
+      .home-topic__item-arrow {
+        width: 12px;
+        height: 12px;
       }
     }
-    .home-topic__item:not(.home-topic__first-item) {
+
+    // .home-topic__first-item {
+    //   flex-basis: 66.66% !important;
+    //   .nut-grid-item__content {
+    //     background-image: url(../../assets/images/pair_btn_bg.webp);
+    //     color: #fff;
+    //   }
+    // }
+    .home-topic__item {
       .nut-grid-item__content {
-        padding-left: 14px;
+        padding: 12px 16px 12px 10px;
         align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
     }
   }

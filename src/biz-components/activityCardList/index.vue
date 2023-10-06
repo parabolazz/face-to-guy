@@ -96,7 +96,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { IMatchItem } from '../../api/matching';
-import QuestionCard from '../../components/questionCard/index.vue';
+import QuestionCard from '../../components/customQuesCard/index.vue';
 import AnswerCard from '../../components/answerCard/index.vue';
 import { computed } from 'vue';
 import { watch } from 'vue';
