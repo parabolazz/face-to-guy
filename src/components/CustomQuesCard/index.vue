@@ -1,47 +1,24 @@
 <template>
-  <div class="question-card">
-    <div class="question-card__header">
-      <span class="question-card__tag">提问卡</span>
-      <div class="question-card__desc">
+  <div class="custom-question-card">
+    <div class="custom-question-card__header">
+      <span class="custom-question-card__tag">提问卡</span>
+      <div class="custom-question-card__desc">
         回答问题后开始在圈子里有曝光，积极完成问题，就会有更多人看到你！
       </div>
     </div>
-    <div class="question-card__main">
-      <div class="question-card__main-text">你有什么想要问圈友的吗？</div>
-      <div class="question-card__main-answer-field">
+    <div class="custom-question-card__main">
+      <div class="custom-question-card__main-text">
+        你有什么想要问圈友的吗？
+      </div>
+      <div class="custom-question-card__main-answer-field">
         <nut-textarea
-          class="question-card__input"
-          v-if="quesType === 1"
+          class="custom-question-card__input"
           input-align="left"
           :border="false"
           v-model="answer"
           placeholder="问题通过审核之后将会给所有圈友看到"
-          placeholder-class="question-card__placeholder"
+          placeholder-class="custom-question-card__placeholder"
         />
-        <template v-else>
-          <Uploader
-            v-if="!successImages.length"
-            class="question-card__uploader"
-            :sizeType="['compressed']"
-            :mediaType="['image']"
-            url="https://pairs.cc/pairs/uploadImg"
-            :headers="{
-              Authorization: authToken,
-            }"
-            v-model:file-list="images"
-            :is-preview="false"
-            mode="aspectFill"
-            @failure="onUploadFailure"
-            @delete="onDelete"
-          />
-          <img
-            class="question-card__uploader"
-            v-else
-            :src="images[0].url"
-            alt="answer image"
-            mode="aspectFill"
-          />
-        </template>
         <div class="flex items-center">
           请选择卡片类型：
           <nut-radio-group v-model="quesType" direction="horizontal">
@@ -51,7 +28,7 @@
         </div>
       </div>
       <nut-button
-        class="question-card__submit"
+        class="custom-question-card__submit"
         type="primary"
         :disabled="!answer"
         @click="onAnswer"
@@ -62,43 +39,25 @@
 </template>
 <script lang="ts" setup>
 import Taro from '@tarojs/taro';
-import { ref, watch } from 'vue';
-import { answerQuestionActivity } from '../../api/matching';
-import Uploader from '../../components/uploader/index.vue';
-import { computed } from 'vue';
-
+import { ref } from 'vue';
+import { uploadMyIssue } from '../../api/matching';
 const props = defineProps<{
-  title: string;
   userId: number;
-  id: number;
 }>();
 const instance = Taro.getCurrentInstance();
 const quesType = ref(1);
 const emit = defineEmits(['onAnswer']);
-const authToken = ref(Taro.getStorageSync('TOKEN'));
-const images = ref<
-  {
-    url: string;
-    status: string;
-  }[]
->([]);
 const answer = ref('');
-const successImages = computed(() =>
-  images.value.filter((item) => item.status === 'success'),
-);
-const onDelete = () => {
-  images.value = [];
-};
 const onAnswer = async () => {
   try {
-    await answerQuestionActivity({
+    await uploadMyIssue({
       a_id: Number(instance.router?.params.activityId!),
-      answer: answer.value,
+      title: answer.value,
       user_id: props.userId,
-      activity_id: props.id,
+      type: quesType.value,
     });
     Taro.showToast({
-      title: '回答成功！',
+      title: '提交成功！',
       icon: 'success',
     });
     setTimeout(() => {
@@ -106,37 +65,9 @@ const onAnswer = async () => {
     }, 500);
   } catch (error) {}
 };
-const onUploadFailure = (data) => {
-  const dataText = data?.data?.data || '';
-  if (dataText.includes('451')) {
-    Taro.showToast({
-      title: '请上传合法图片！',
-      icon: 'error',
-      duration: 4000,
-    });
-  } else {
-    Taro.showToast({
-      title: '上传失败',
-      icon: 'error',
-    });
-  }
-};
-watch(
-  () => images.value,
-  (v) => {
-    if (v.length && v[0].status === 'success') {
-      Taro.showToast({
-        title: '上传成功',
-        icon: 'success',
-      });
-      answer.value = v[0].url;
-    }
-  },
-  { deep: true },
-);
 </script>
 <style lang="scss">
-.question-card {
+.custom-question-card {
   height: 100%;
   flex: 1;
   display: flex;
@@ -146,44 +77,16 @@ watch(
   border-radius: 9px;
   padding: 12px 12px 36px;
 
-  .nut-uploader {
-    padding: 13px 0 5px;
-    &__upload {
-      position: relative;
-      background: transparent;
-      border: 1px dashed #d9d9d9;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &.list {
-      }
-    }
-    .nut-uploader__preview__progress {
-      width: 100%;
-      height: 100%;
-      z-index: 11;
-    }
-    .nut-uploader__preview-img {
-      width: 195px;
-      height: 195px;
-      border-radius: 9px;
-    }
-    .picture.nut-uploader__upload {
-      position: absolute;
-    }
-  }
-  .question-card__header {
+  .custom-question-card__header {
     flex-shrink: 0;
   }
-  .question-card__main {
+  .custom-question-card__main {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
-  .question-card__tag {
+  .custom-question-card__tag {
     display: inline-block;
     padding: 7px 12px;
     border-radius: 30px;
@@ -192,24 +95,24 @@ watch(
     font-size: 14px;
     margin-bottom: 12px;
   }
-  .question-card__desc {
+  .custom-question-card__desc {
     color: #fff;
     font-size: 14px;
     padding-bottom: 22px;
     border-bottom: 0.5px solid #eee;
     opacity: 0.5;
   }
-  .question-card__placeholder {
+  .custom-question-card__placeholder {
     color: #bbbbbb;
     font-size: 16px;
   }
-  .question-card__main-text {
+  .custom-question-card__main-text {
     margin-top: 30px;
     font-size: 24px;
     color: #fff;
     font-weight: 500;
   }
-  .question-card__submit {
+  .custom-question-card__submit {
     color: #000;
     width: 100%;
     height: 50px;
@@ -217,46 +120,28 @@ watch(
     font-size: 18px;
     font-weight: 500;
   }
-  .question-card__main-answer-field {
+  .custom-question-card__main-answer-field {
     display: flex;
     flex-direction: column;
     margin: 12px 0 12px;
     border-radius: 9px;
   }
-  .question-card__item {
+  .custom-question-card__item {
     margin-bottom: 24px;
   }
-  .question-card__input {
+  .custom-question-card__input {
     max-height: 100%;
     height: 200px;
-    padding: 10px;
+    padding: 13px;
     color: #000;
     overflow: hidden;
+    font-size: 24px;
   }
   .nut-textarea {
     padding: 0;
     height: 200px;
     height: 100%;
     overflow: hidden;
-    border-radius: 9px;
-    margin-bottom: 24px;
-  }
-  .nut-uploader__upload {
-    width: 254px;
-    height: 254px;
-    background-color: transparent;
-    border-radius: 9px;
-    .nutui-iconfont.nut-icon.nut-icon-photograph {
-      color: #dad9d9 !important;
-      width: 40px;
-      height: 40px;
-      font-size: 30px;
-    }
-  }
-  .question-card__uploader {
-    width: 254px;
-    height: 254px;
-    padding: 0;
     border-radius: 9px;
     margin-bottom: 24px;
   }

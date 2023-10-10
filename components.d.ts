@@ -9,7 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AnswerCard: typeof import('./src/components/answerCard/index.vue')['default']
     Countdown: typeof import('./src/components/countdown/index.vue')['default']
-    CustomQuesCard: typeof import('./src/components/CustomQuesCard/index.vue')['default']
+    CustomQuesCard: typeof import('./src/components/customQuesCard/index.vue')['default']
     LottieView: typeof import('./src/components/lottieView/index.vue')['default']
     NutActionSheet: typeof import('@nutui/nutui-taro')['ActionSheet']
     NutBadge: typeof import('@nutui/nutui-taro')['Badge']

@@ -1,11 +1,12 @@
 <template>
   <div class="matching">
-    <div class="matching-my-answers">
+    <div class="matching-my-answers" @click="gotoUserPage" v-if="userId">
       <img :src="FileSvg" mode="aspectFill" alt="my answer card" />
       我的答案卡
     </div>
     <ActivityCardList
       class="matching-list"
+      showCustomCard
       :get-activity-list="getActivityList"
     />
   </div>
@@ -14,6 +15,15 @@
 import { getActivityList } from '../../api/matching';
 import ActivityCardList from '../../biz-components/activityCardList/index.vue';
 import FileSvg from '../../assets/images/file.svg';
+import Taro from '@tarojs/taro';
+
+const userId = Taro.getStorageSync('USER_ID');
+
+const gotoUserPage = () => {
+  Taro.navigateTo({
+    url: `/pages/user/index?tab=2&userId=${userId}`,
+  });
+};
 </script>
 <style lang="scss">
 .matching {

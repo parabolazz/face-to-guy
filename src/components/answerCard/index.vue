@@ -27,7 +27,7 @@
           >
         </div>
         <div class="answer-card__main-ques">Q: {{ title }}</div>
-        <div class="answer-card__main-answer" :style="{ height: width + 'px' }">
+        <div class="answer-card__main-answer" :style="{ height: 277 + 'px' }">
           <img
             v-if="type === 2"
             :src="answer"
@@ -104,22 +104,23 @@ const goToViewUser = () => {
   }
 };
 
-watch(
-  () => props.isActive,
-  (isActive) => {
-    if (isActive) {
-      const query = Taro.createSelectorQuery();
+// 检测高度会有各种各样的问题（因为过渡动画之前比较短）
+// watch(
+//   () => props.isActive,
+//   (isActive) => {
+//     if (isActive) {
+//       const query = Taro.createSelectorQuery();
 
-      query.select('.answer-card__main-ques').boundingClientRect();
-      query.exec((res) => {
-        const firstDom = res[0];
-        if (firstDom) {
-          width.value = firstDom.width;
-        }
-      });
-    }
-  },
-);
+//       query.select('.answer-card__main-ques').boundingClientRect();
+//       query.exec((res) => {
+//         const firstDom = res[0];
+//         if (firstDom) {
+//           width.value = firstDom.width;
+//         }
+//       });
+//     }
+//   },
+// );
 </script>
 <style lang="scss">
 .answer-card {

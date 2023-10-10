@@ -54,31 +54,6 @@
         </view>
         <view class="tips">{{ item.name }}</view>
       </view>
-      <view class="nut-uploader__preview-list" v-else-if="listType == 'list'">
-        <view
-          class="nut-uploader__preview-img__file__name"
-          @click="fileItemClick(item)"
-          :class="[item.status]"
-        >
-          <Link class="nut-uploader__preview-img__file__link" />
-          <view class="file__name_tips">{{ item.name }}</view>
-          <Del
-            v-if="isDeletable"
-            color="#808080"
-            class="nut-uploader__preview-img__file__del"
-            @click="onDelete(item, index)"
-          ></Del>
-        </view>
-
-        <nut-progress
-          size="small"
-          :percentage="item.percentage"
-          v-if="item.status == 'uploading'"
-          stroke-color="linear-gradient(270deg, rgba(18,126,255,1) 0%,rgba(32,147,255,1) 32.815625%,rgba(13,242,204,1) 100%)"
-          :show-text="false"
-        >
-        </nut-progress>
-      </view>
     </view>
     <view
       class="nut-uploader__upload"
@@ -534,11 +509,10 @@ export default {
   }
 
   &__preview {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 10px;
-    margin-bottom: 10px;
     box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
     // 第二个撑满
 

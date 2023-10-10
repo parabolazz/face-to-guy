@@ -2,7 +2,7 @@
   <div class="my-like-card">
     <div v-if="!isRead" class="red-point"></div>
     <div class="my-like-card__info">
-      <div class="flex">
+      <div class="flex" @click="gotoUserPage">
         <img
           :src="data.avatar_id"
           alt="avatar"
@@ -69,6 +69,11 @@ const copyWechatId = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+const gotoUserPage = () => {
+  Taro.navigateTo({
+    url: `/pages/user/index?userId=${props.data.user_id}`,
+  });
 };
 </script>
 <style lang="scss">

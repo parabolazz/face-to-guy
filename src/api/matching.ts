@@ -94,3 +94,26 @@ export const getMyChatUpList = (data: {
     data
   });
 }
+
+export const getUserAnswerCardList = (data: {
+  user_id: number,      // int类型，如果用户没有登陆，则传0
+  page_length: number, // int类型，每页返回的个数
+  page: number   // int类型，页码
+}) => {
+  return api.post<{data: IMatchItem[]}>('/pairs/answerListByUserID', {
+    data
+  });
+}
+
+export const uploadMyIssue = (data: {
+  a_id: number,        // int类型，一级分类ID
+  title: string, // string类型，问题/广告标题
+  user_id: number,     // int类型，投稿用户ID
+  type: number,        // int类型，问题类型，1文字，2图片，3广告
+  desc?: string,  // string类型，广告卡描述
+  price?: number     // float类型，广告卡单价
+}) => {
+  return api.post('/pairs/uploadIssue', {
+    data
+  });
+}

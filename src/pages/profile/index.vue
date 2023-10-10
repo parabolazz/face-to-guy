@@ -659,6 +659,13 @@ export default {
 <style lang="scss">
 .profile {
   padding-bottom: 100px;
+
+  .nut-uploader__preview {
+    width: auto;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
   .nut-cell-group__wrap {
     padding: 0px;
     margin: 0px;

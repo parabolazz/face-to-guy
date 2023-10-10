@@ -31,6 +31,11 @@
             :isActive="idx === index"
             @goChat="goChat"
           ></AnswerCard>
+          <CustomQuesCard
+            v-else-if="item.cardType === 'customQuestion'"
+            :userId="userId"
+            @onAnswer="onAnswer"
+          ></CustomQuesCard>
           <div v-else>
             {{
               prepareActivityList.length > 1
@@ -96,8 +101,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { IMatchItem } from '../../api/matching';
-import QuestionCard from '../../components/customQuesCard/index.vue';
+import QuestionCard from '../../components/questionCard/index.vue';
 import AnswerCard from '../../components/answerCard/index.vue';
+import CustomQuesCard from '../../components/CustomQuesCard/index.vue';
 import { computed } from 'vue';
 import { watch } from 'vue';
 import { nextTick } from '@tarojs/taro';
@@ -107,6 +113,7 @@ import { useGlobalStore } from '../../store';
 import Taro from '@tarojs/taro';
 
 const props = defineProps<{
+  showCustomCard: boolean;
   getActivityList: (data: {
     a_id: number;
     user_id: number;
@@ -116,10 +123,25 @@ const props = defineProps<{
       ad: IMatchItem[] | null;
       answer: IMatchItem[] | null;
       question: IMatchItem[] | null;
+      issue: IMatchItem;
       group: number;
     };
   }>;
 }>();
+
+// 一天展示一次 custom card
+const getShouldShowCustomCard = () => {
+  if (!props.showCustomCard) return false;
+  const lastShowTime = Taro.getStorageSync('CUSTOM_CARD_LAST_SHOW_TIME');
+  const now = new Date().getTime();
+  if (!lastShowTime) {
+    return true;
+  }
+  if (now - lastShowTime > 20 * 1000) {
+    return true;
+  }
+  return false;
+};
 
 const instance = Taro.getCurrentInstance();
 const global = useGlobalStore();
@@ -136,6 +158,8 @@ const switchWechatVisible = ref(false);
 const walkGroups = ref<number[]>([]);
 const targetUserId = ref<number>(-1);
 const userId = Taro.getStorageSync('USER_ID');
+
+const shouldShowCustomCard = ref(getShouldShowCustomCard());
 
 const onOpenSharePopup = () => {
   noShotDialog.value = false;
@@ -166,6 +190,17 @@ async function fetchData() {
         ...item,
         cardType: 'ad',
       }));
+      const customQuesList = shouldShowCustomCard.value
+        ? [
+            {
+              cardType: 'customQuestion',
+            } as IMatchItem & { cardType: string },
+          ]
+        : [];
+      if (shouldShowCustomCard.value) {
+        shouldShowCustomCard.value = false;
+        Taro.setStorageSync('CUSTOM_CARD_LAST_SHOW_TIME', Date.now());
+      }
       const nextPage = {
         cardType: 'next',
         id: -1,
@@ -173,7 +208,9 @@ async function fetchData() {
         type: 1,
       };
       data.group && walkGroups.value.push(data.group);
-      return questionList.concat(answerList, adList, [nextPage]);
+      return questionList.concat(answerList, adList, customQuesList, [
+        nextPage,
+      ]);
     }
     return [];
   } catch (error) {
@@ -218,10 +255,10 @@ watch(idx, async (v, oldV) => {
     if (activeAnswerLength) {
       prepareActivityList.value = await fetchData();
     }
-    // 刷到最后一条有内容的数据的时候，准备替换内容
+    // 刷到最后一条有内容的数据的时候，并且有可替换的内容，准备替换内容
   } else if (
     v === activityList.value.length - 1 &&
-    prepareActivityList.value.length
+    prepareActivityList.value.length > 1
   ) {
     // 跳转到下一页
     setTimeout(() => {

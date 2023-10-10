@@ -18,9 +18,10 @@
           placeholder="回答问题，交换答案"
           placeholder-class="question-card__placeholder"
         />
-        <template v-else>
+        <div v-else>
           <Uploader
-            v-if="!successImages.length"
+            ref="uploaderRef"
+            v-show="!successImages.length"
             class="question-card__uploader"
             :sizeType="['compressed']"
             :mediaType="['image']"
@@ -35,13 +36,14 @@
             @delete="onDelete"
           />
           <img
+            v-if="successImages.length"
             class="question-card__uploader"
-            v-else
-            :src="images[0].url"
+            :src="images[0] ? images[0].url : ''"
             alt="answer image"
             mode="aspectFill"
+            @click="replaceImage"
           />
-        </template>
+        </div>
       </div>
       <nut-button
         class="question-card__submit"
@@ -67,7 +69,7 @@ const props = defineProps<{
   id: number;
 }>();
 const instance = Taro.getCurrentInstance();
-
+const uploaderRef = ref();
 const emit = defineEmits(['onAnswer']);
 const authToken = ref(Taro.getStorageSync('TOKEN'));
 const images = ref<
@@ -115,6 +117,9 @@ const onUploadFailure = (data) => {
     });
   }
 };
+const replaceImage = () => {
+  uploaderRef.value.chooseImage();
+};
 watch(
   () => images.value,
   (v) => {
@@ -160,8 +165,8 @@ watch(
       z-index: 11;
     }
     .nut-uploader__preview-img {
-      width: 195px;
-      height: 195px;
+      width: 100%;
+      height: 100%;
       border-radius: 9px;
     }
     .picture.nut-uploader__upload {
@@ -219,7 +224,7 @@ watch(
   .question-card__input {
     max-height: 100%;
     height: 200px;
-    padding: 10px;
+    padding: 13px;
     color: #000;
     overflow: hidden;
   }

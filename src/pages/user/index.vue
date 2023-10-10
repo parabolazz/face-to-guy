@@ -10,7 +10,7 @@
       }"
     >
       <nut-tabs v-model="activeTab" style="height: 100%">
-        <nut-tab-pane title="个人信息" pane-key="0">
+        <nut-tab-pane title="个人信息" :pane-key="1">
           <scroll-view :scroll-y="true" class="matched-user__scrollview">
             <div class="matched-user__profile">
               <div class="matched-user__profile-photos">
@@ -111,10 +111,10 @@
             </nut-button>
           </div>
         </nut-tab-pane>
-        <nut-tab-pane title="答案卡" pane-key="1">
+        <nut-tab-pane title="答案卡" :pane-key="2">
           <ActivityCardList
             class="matched-user__ans-list"
-            :get-activity-list="getActivityList"
+            :get-activity-list="getUserAnswerCardListData"
           />
         </nut-tab-pane>
       </nut-tabs>
@@ -134,7 +134,7 @@ import { ref } from 'vue';
 import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
 import ActivityCardList from '../../biz-components/activityCardList/index.vue';
-import { getActivityList } from '../../api/matching';
+import { getUserAnswerCardList } from '../../api/matching';
 import IconJob from '../../assets/images/job.svg';
 import IconHobby from '../../assets/images/hobby.svg';
 import IconFavorite from '../../assets/images/favorite.svg';
@@ -151,7 +151,7 @@ import {
 import Taro from '@tarojs/taro';
 
 const userId = Number(getCurrentPageParam().userId);
-
+const instance = Taro.getCurrentInstance();
 const profile = ref<ProfileData>({
   avatar_ids: [],
   shape: 0,
@@ -165,7 +165,7 @@ const profile = ref<ProfileData>({
   weight: 0,
   shot: 0,
 });
-const activeTab = ref(0);
+const activeTab = ref(parseInt(instance?.router?.params.tab || '') || 1);
 const switchWechatVisible = ref(false);
 const sharePopupVisible = ref(false);
 const basicInfo = computed(() => {
@@ -198,6 +198,35 @@ const getData = async () => {
   }
 };
 getData();
+
+const getUserAnswerCardListData = async (data: {
+  a_id: number;
+  user_id: number;
+  groups: string;
+}) => {
+  try {
+    const res = await getUserAnswerCardList({
+      user_id: userId,
+      page_length: 10,
+      page: data.groups ? data.groups.split(',').length : 0,
+    });
+    if (res) {
+      const { data } = res;
+      return {
+        ...res,
+        data: {
+          ...res,
+          question: null,
+          ad: null,
+          answer: data,
+          group: 1,
+        },
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const onOpenSharePopup = () => {
   sharePopupVisible.value = true;
@@ -298,7 +327,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
     .matched-user__profile-intro {
       font-size: 14px;
       color: #fff;
-      margin: 0 0 12px;
+      margin: 12px 0 12px;
     }
     .matched-user__profile-info-icon {
       width: 14px;
