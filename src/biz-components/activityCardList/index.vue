@@ -262,9 +262,10 @@ watch(idx, async (v, oldV) => {
     prepareActivityList.value.length > 1
   ) {
     // 跳转到下一页
+
     setTimeout(() => {
-      activityList.value = [];
-      idx.value = -1;
+      activityList.value.splice(0, 6);
+      idx.value = 0;
       nextTick(() => {
         activityList.value = prepareActivityList.value;
         prepareActivityList.value = [];

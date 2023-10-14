@@ -1,8 +1,8 @@
 export enum Attribute {
-  Tp = 1,
-  Bottom = 0,
-  Vers = 2,
-  Others = 3, 
+  Bottom = 1,
+  Tp = 2,
+  Vers = 3,
+  Others = 4, 
 }
 export enum Shape {
   猴 = 1,

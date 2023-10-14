@@ -61,8 +61,8 @@ const copyWechatId = async () => {
       },
     });
     await updateMessageRead({
-      user_id: Taro.getStorageSync('USER_ID'),
-      follow_user_id: props.data.user_id,
+      user_id: props.data.user_id,
+      follow_user_id: Taro.getStorageSync('USER_ID'),
     });
     isRead.value = 1;
     global.unreadCount = Number(global.unreadCount) - 1 || 0;
