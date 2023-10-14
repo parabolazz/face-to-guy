@@ -29,7 +29,6 @@ declare module '@vue/runtime-core' {
     NutInput: typeof import('@nutui/nutui-taro')['Input']
     NutNoticebar: typeof import('@nutui/nutui-taro')['Noticebar']
     NutPopup: typeof import('@nutui/nutui-taro')['Popup']
-    NutProgress: typeof import('@nutui/nutui-taro')['Progress']
     NutRadio: typeof import('@nutui/nutui-taro')['Radio']
     NutRadioGroup: typeof import('@nutui/nutui-taro')['RadioGroup']
     NutStep: typeof import('@nutui/nutui-taro')['Step']

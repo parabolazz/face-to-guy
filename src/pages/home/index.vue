@@ -123,6 +123,7 @@ const goMatching = (activityId: number) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 8px;
     .home-head__shot {
       display: flex;
       align-items: center;
@@ -135,8 +136,7 @@ const goMatching = (activityId: number) => {
     }
   }
   .home-title {
-    margin-bottom: 14px;
-    font-size: 22px;
+    font-size: 12px;
     font-weight: bold;
   }
   .home-operation {

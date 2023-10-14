@@ -135,7 +135,7 @@ const onAnswer = async () => {
     padding: 13px;
     color: #000;
     overflow: hidden;
-    font-size: 24px;
+    font-size: 24px !important;
   }
   .nut-textarea {
     padding: 0;

@@ -137,7 +137,7 @@ const getShouldShowCustomCard = () => {
   if (!lastShowTime) {
     return true;
   }
-  if (now - lastShowTime > 20 * 1000) {
+  if (now - lastShowTime > 24 * 60 * 60 * 1000) {
     return true;
   }
   return false;
@@ -208,9 +208,10 @@ async function fetchData() {
         type: 1,
       };
       data.group && walkGroups.value.push(data.group);
-      return questionList.concat(answerList, adList, customQuesList, [
-        nextPage,
-      ]);
+      const originList = questionList.concat(answerList, adList);
+      // 打乱一下主卡片的顺序
+      originList.sort(() => Math.random() - 0.5);
+      return originList.concat(customQuesList, [nextPage]);
     }
     return [];
   } catch (error) {

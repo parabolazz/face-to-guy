@@ -125,8 +125,8 @@ const onLogout = () => {
     content: '确定退出登录吗？',
     success: function (res) {
       if (res.confirm) {
-        Taro.removeStorage({ key: 'TOKEN' });
-        Taro.removeStorage({ key: 'USER_ID' });
+        Taro.removeStorageSync('TOKEN');
+        Taro.removeStorageSync('USER_ID');
         global.setUserProfile(null);
         global.setActiveTabIndex(0);
         global.setUnReadCount(0);

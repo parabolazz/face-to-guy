@@ -54,7 +54,14 @@
               input-align="right"
               :border="false"
               v-model="currAttributeName"
-              @click="() => (drawerController.attributeVisible = true)"
+              @click="
+                () => {
+                  drawerController.attributeVisible = true;
+                  if (!isEditMode) {
+                    state.attribute = optionsController.attribute[0].value;
+                  }
+                }
+              "
               readonly
               placeholder="请选择属性"
               type="text"
@@ -99,7 +106,14 @@
               v-model="currShapeName"
               placeholder="请选择体型"
               readonly
-              @click="() => (drawerController.bodyVisible = true)"
+              @click="
+                () => {
+                  drawerController.bodyVisible = true;
+                  if (!isEditMode) {
+                    state.shape = optionsController.shape[0].value;
+                  }
+                }
+              "
             />
           </nut-form-item>
         </view>
@@ -112,7 +126,14 @@
               v-model="currCarrierName"
               placeholder="请选择职业"
               readonly
-              @click="() => (drawerController.carrierVisible = true)"
+              @click="
+                () => {
+                  drawerController.carrierVisible = true;
+                  if (!isEditMode) {
+                    state.career = optionsController.career[0].value;
+                  }
+                }
+              "
             />
           </nut-form-item>
           <nut-form-item label="兴趣爱好" prop="hobbies">
@@ -121,7 +142,11 @@
                 'profile-form-item__value',
                 currHobbiesName && 'profile-form-item__value-text',
               ]"
-              @click="() => (drawerController.hobbyVisible = true)"
+              @click="
+                () => {
+                  drawerController.hobbyVisible = true;
+                }
+              "
             >
               {{ currHobbiesName || '请选择兴趣爱好' }}
             </div>
@@ -136,7 +161,11 @@
                 'profile-form-item__value',
                 currFavoritesName && 'profile-form-item__value-text',
               ]"
-              @click="() => (drawerController.likeTypeVisible = true)"
+              @click="
+                () => {
+                  drawerController.likeTypeVisible = true;
+                }
+              "
             >
               {{ currFavoritesName || '请选择喜欢的类型' }}
             </div>
@@ -312,6 +341,7 @@ import {
 } from '../../utils/profileEnum';
 import { onMounted } from 'vue';
 import { watch } from 'vue';
+import { isNumber } from '@tarojs/shared';
 
 interface FormData {
   nickname: string;
@@ -337,8 +367,8 @@ function formatApiDataToFormData(data?: ProfileData): FormData {
         nickname: data.nickname,
         signature: data.signature || '',
         attribute: data.attribute,
-        height: data.height,
-        weight: data.weight,
+        height: data.height || undefined,
+        weight: data.weight || undefined,
         shape: data.shape,
         career: data.career,
         hobbies: data.hobby?.split(',').map((str) => Number(str)) || [],
@@ -422,10 +452,6 @@ export default {
       );
       return index === -1 ? 0 : index;
     });
-    const valueForPicker = reactive({
-      attribute: [state.attribute],
-      height: [state.height],
-    });
     const formRef = ref();
 
     const rules = computed(() => ({
@@ -468,25 +494,21 @@ export default {
       state.shape = val.value;
     };
     const chooseType = (item) => {
-      console.log('item', item);
       state.attribute = item.value;
       drawerController.attributeVisible = false;
     };
 
     const chooseBodyType = (item) => {
-      console.log('item', item);
       state.shape = item.value;
       drawerController.bodyVisible = false;
     };
 
     const chooseHobbies = (item) => {
-      console.log('item', item);
       state.hobbies = item.value;
       drawerController.hobbyVisible = false;
     };
 
     const chooseLikeType = (item) => {
-      console.log('item', item);
       state.favorite = item.value;
       drawerController.likeTypeVisible = false;
     };
@@ -544,7 +566,7 @@ export default {
     };
 
     const currAttributeName = computed(() => {
-      return state.attribute
+      return isNumber(state.attribute)
         ? optionsController.attribute.find(
             (item) => item.value === state.attribute,
           )?.name || ''
@@ -627,7 +649,6 @@ export default {
       ...toRefs(state),
       drawerController,
       optionsController,
-      valueForPicker,
       themeVars,
       chooseCarrier,
       rules,
