@@ -192,11 +192,10 @@ watch(
     margin-bottom: 12px;
   }
   .question-card__desc {
-    color: #b4b3ff;
+    color: #c0bffd;
     font-size: 14px;
     padding-bottom: 22px;
     border-bottom: 0.5px solid #eee;
-    opacity: 0.5;
   }
   .question-card__placeholder {
     color: #bbbbbb;

@@ -37,11 +37,14 @@
             @onAnswer="onAnswer"
           ></CustomQuesCard>
           <div v-else>
-            {{
-              prepareActivityList.length > 1
-                ? '马上加载更多内容！'
-                : '已经滑到底啦！'
-            }}
+            <div
+              class="matching-swiper __card-loading"
+              v-if="prepareActivityList.length > 1"
+            >
+              <Loading size="46" />
+              <div class="matching-swiper__card-loading-text">Loading...</div>
+            </div>
+            <div v-else>已经滑到底啦！</div>
           </div>
         </div>
       </swiper-item>
@@ -111,6 +114,7 @@ import SharePopup from '../../biz-components/sharePopup/index.vue';
 import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue';
 import { useGlobalStore } from '../../store';
 import Taro from '@tarojs/taro';
+import { Loading } from '@nutui/icons-vue-taro';
 
 const props = defineProps<{
   showCustomCard: boolean;
@@ -172,7 +176,7 @@ const activityId = computed(() => instance?.router?.params.activityId);
 async function fetchData() {
   try {
     const res = await props.getActivityList({
-      a_id: Number(activityId.value) || 2,
+      a_id: Number(activityId.value) || 0,
       groups: walkGroups.value.join(','),
       user_id: Number(Taro.getStorageSync('USER_ID')) || 0,
     });
@@ -264,14 +268,14 @@ watch(idx, async (v, oldV) => {
     // 跳转到下一页
 
     setTimeout(() => {
-      activityList.value.splice(0, 6);
+      activityList.value.splice(0, activityList.value.length - 1);
       idx.value = 0;
       nextTick(() => {
         activityList.value = prepareActivityList.value;
         prepareActivityList.value = [];
         idx.value = 0;
       });
-    }, 300);
+    }, 500);
   }
 });
 </script>
@@ -304,6 +308,17 @@ watch(idx, async (v, oldV) => {
         width: 100% !important;
       }
     }
+  }
+  .matching-swiper__card-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .matching-swiper__card-loading-text {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
   }
 }
 

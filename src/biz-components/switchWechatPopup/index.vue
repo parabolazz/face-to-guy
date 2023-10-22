@@ -18,17 +18,24 @@
             required
             style="margin-bottom: 8px"
           >
-            <nut-input
+            <input
+              class="switch-wechat-popup__msg-item-input"
               cursor-spacing="50"
               v-model="infoForm.wechatId"
               placeholder="请输入你的微信号"
               max-length="50"
               type="text"
               :border="false"
-            ></nut-input>
+            />
           </nut-form-item>
-          <nut-form-item prop="message" label="给对方的留言" required>
-            <nut-textarea
+          <nut-form-item
+            prop="message"
+            label="给对方的留言"
+            required
+            class="switch-wechat-popup__msg-item"
+          >
+            <textarea
+              class="switch-wechat-popup__msg-item-textarea"
               cursor-spacing="50"
               rows="3"
               limit-show
@@ -154,12 +161,6 @@ const onChat = async () => {
       width: 100%;
       margin-bottom: 10px;
     }
-    .nut-input,
-    .nut-textarea {
-      padding: 10px 12px;
-      border-radius: 9px;
-      background: #474747;
-    }
     .h5-textarea {
       padding: 10px 12px;
       height: 82px;
@@ -182,6 +183,20 @@ const onChat = async () => {
   }
   .nut-cell-group__wrap {
     margin: 0;
+  }
+  .switch-wechat-popup__msg-item .nut-form-item__body__slots {
+    display: flex;
+  }
+  .switch-wechat-popup__msg-item-input {
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: #474747;
+  }
+  .switch-wechat-popup__msg-item-textarea {
+    flex: 1;
+    border-radius: 9px;
+    background: #474747;
+    flex: 1;
   }
 }
 </style>

@@ -277,7 +277,11 @@
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
-      <div class="flex justify-end">
+      <div
+        class="flex justify-between items-center choose-confirm-overlay__header"
+      >
+        <div class="choose-confirm-overlay__tips">最多只能选三个哟</div>
+
         <div
           class="choose-confirm-btn"
           @click="() => (drawerController.hobbyVisible = false)"
@@ -304,7 +308,11 @@
       style="width: 100%"
       :safe-area-inset-bottom="true"
     >
-      <div class="flex justify-end">
+      <div
+        class="flex justify-between items-center choose-confirm-overlay__header"
+      >
+        <div class="choose-confirm-overlay__tips">最多只能选三个哟</div>
+
         <div
           class="choose-confirm-btn"
           @click="() => (drawerController.likeTypeVisible = false)"
@@ -371,8 +379,12 @@ function formatApiDataToFormData(data?: ProfileData): FormData {
         weight: data.weight || undefined,
         shape: data.shape,
         career: data.career,
-        hobbies: data.hobby?.split(',').map((str) => Number(str)) || [],
-        favorite: data.favorite?.split(',').map((str) => Number(str)) || [],
+        hobbies: data.hobby
+          ? data.hobby.split(',').map((str) => Number(str))
+          : [],
+        favorite: data.favorite
+          ? data.favorite.split(',').map((str) => Number(str))
+          : [],
         images: data.avatar_ids.map((url) => ({
           url,
           status: 'success',
@@ -619,6 +631,8 @@ export default {
           icon: 'error',
         });
       }
+      // 手动删除那些上传失败的图片
+      state.images = state.images.filter((item) => item.status === 'success');
     };
     onMounted(() => {
       Taro.getLocation({
@@ -781,9 +795,7 @@ export default {
 }
 .choose-confirm-btn {
   display: inline-block;
-  margin: 12px 12px 0 0;
   color: #dbf378;
-  padding: 2px 4px;
   font-weight: bold;
 }
 .profile-picker-mask {
@@ -819,5 +831,8 @@ export default {
   .popup-cell {
     background-color: #323232;
   }
+}
+.choose-confirm-overlay__header {
+  padding: 12px 12px 0 12px;
 }
 </style>

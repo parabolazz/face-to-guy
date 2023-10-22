@@ -92,14 +92,16 @@ useShareTimeline(() => {
   return {
     title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
     query: 'share=1',
-    imageUrl: 'http://tmp/Wp6HBLmMTlQB93b219ce2731cae16082af5b0fe33c0a.jpg',
+    imageUrl:
+      'https://pairs-source.obs.cn-south-1.myhuaweicloud.com:443/PNiN69Q0CW331969743ab1bbc1c842e51875a19102a1.png?AWSAccessKeyId=9BIMOLHBAMQG3CIU0EO3&Expires=2012744615&Signature=h%2FnbiSHKse7zaPD1xWG64dOabLw%3D',
   };
 });
 useShareAppMessage(() => {
   return {
     title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
     path: '/pages/home/index',
-    imageUrl: 'http://tmp/Wp6HBLmMTlQB93b219ce2731cae16082af5b0fe33c0a.jpg',
+    imageUrl:
+      'https://pairs-source.obs.cn-south-1.myhuaweicloud.com:443/PNiN69Q0CW331969743ab1bbc1c842e51875a19102a1.png?AWSAccessKeyId=9BIMOLHBAMQG3CIU0EO3&Expires=2012744615&Signature=h%2FnbiSHKse7zaPD1xWG64dOabLw%3D',
   };
 });
 useDidShow(() => {

@@ -16,6 +16,9 @@ image {
 .flex {
   display: flex;
 }
+.flex-column {
+  flex-direction: column;
+}
 .justify-between {
   justify-content: space-between;
 }

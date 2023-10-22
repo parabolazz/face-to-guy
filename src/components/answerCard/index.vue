@@ -38,7 +38,6 @@
           <scroll-view
             v-else
             :scroll-y="true"
-            :enable-flex="true"
             style="
               height: 100%;
               width: 100%;
@@ -61,14 +60,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { Attributes, Shape } from './user';
 import Taro from '@tarojs/taro';
-import { watch } from 'vue';
 import { IAnswer } from 'src/api/matching';
 
 const props = defineProps<IAnswer & { isActive: boolean }>();
-const width = ref(0);
 const desc = computed(() => {
   const { attribute, height, weight, shape } = props;
   // @ts-ignore
@@ -81,7 +78,7 @@ const desc = computed(() => {
     weight ? weight + 'kg' : undefined,
     shapeText,
   ];
-  return descArr.filter((item) => item).join(' / ');
+  return descArr.filter((item) => item).join('/');
 });
 
 const emit = defineEmits<{
