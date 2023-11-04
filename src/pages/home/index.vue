@@ -1,11 +1,24 @@
 <template>
   <nut-config-provider theme="dark">
     <view class="home">
-      <div class="home-head">
+      <div class="home-invite-btn" @click="goToCreateQuestion">
+        <div class="home-invite-btn__text">
+          <div class="home-invite-btn__title">发起坦白局</div>
+          <div class="home-invite-btn__desc">
+            将问题抛到群里，和群友们交换答案吧～
+          </div>
+        </div>
+        <img
+          class="home-invite-btn__icon"
+          :src="InvitePlay"
+          alt="invite your friend"
+        />
+      </div>
+      <div class="home-info">
         <h3 class="home-title">深圳圈</h3>
-        <div class="home-head__shot" @click="showShot">
+        <div class="home-info__shot" @click="showShot">
           Shot: {{ shotCount }}杯
-          <img :src="AddShot" class="home-head__add-shot" alt="add shot" />
+          <img :src="AddShot" class="home-info__add-shot" alt="add shot" />
         </div>
       </div>
       <nut-grid :gutter="12" class="home-topic" :column-num="2">
@@ -52,9 +65,8 @@ import Sports from '../../assets/images/sports.svg';
 import World from '../../assets/images/world.svg';
 import Study from '../../assets/images/study.svg';
 import ArrowRight from '../../assets/images/arrow_right.svg';
+import InvitePlay from '../../assets/images/invite_play.svg';
 import { computed } from 'vue';
-
-console.log('SharePopup', SharePopup);
 
 const global = useGlobalStore();
 const isVisible = ref(false);
@@ -105,6 +117,12 @@ const goMatching = (activityId: number) => {
     url: `/pages/matching/index?activityId=${activityId}`,
   });
 };
+
+const goToCreateQuestion = () => {
+  Taro.navigateTo({
+    url: '/pages/create-question/index',
+  });
+};
 </script>
 
 <style lang="scss">
@@ -119,17 +137,17 @@ const goMatching = (activityId: number) => {
   justify-content: flex-end;
   margin-bottom: 80px;
   padding: 14px;
-  .home-head {
+  .home-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
-    .home-head__shot {
+    .home-info__shot {
       display: flex;
       align-items: center;
       font-size: 12px;
     }
-    .home-head__add-shot {
+    .home-info__add-shot {
       margin-left: 4px;
       width: 14px;
       height: 14px;
@@ -235,6 +253,38 @@ const goMatching = (activityId: number) => {
     font-weight: 500;
     color: #000;
     border-radius: 10px;
+  }
+  .home-invite-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 10px;
+    height: 90px;
+    padding: 10px 13px 10px 20px;
+    margin-bottom: 24px;
+    background-image: url(../../assets/images/pair_btn_bg.webp);
+    background-size: cover;
+    .home-invite-btn__text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .home-invite-btn__title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .home-invite-btn__desc {
+      font-size: 12px;
+      color: #fff;
+      opacity: 0.6;
+    }
+    .home-invite-btn__icon {
+      width: 80px;
+      height: 80px;
+    }
   }
 }
 </style>
