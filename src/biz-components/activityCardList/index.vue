@@ -38,7 +38,7 @@
           ></CustomQuesCard>
           <div v-else>
             <div
-              class="matching-swiper __card-loading"
+              class="matching-swiper__card-loading"
               v-if="prepareActivityList.length > 1"
             >
               <Loading size="46" />
