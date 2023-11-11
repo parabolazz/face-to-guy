@@ -4,7 +4,6 @@ export default {
   extract: {
     // 忽略部分文件夹
     exclude: ['node_modules', '.git', 'dist'],
-    include: ['src'],
   },
   corePlugins: {
     // 禁用掉在小程序环境中不可能用到的 plugins

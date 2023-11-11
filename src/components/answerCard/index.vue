@@ -1,6 +1,6 @@
 <template>
-  <div class="answer-card">
-    <nut-config-provider theme="light">
+  <nut-config-provider theme="light" style="width: 100%; height: 100%; flex: 1">
+    <div class="answer-card">
       <span class="answer-card__head">答案卡</span>
       <div class="answer-card__main">
         <div class="answer-card__user-info">
@@ -56,8 +56,8 @@
           >打招呼</nut-button
         >
       </div>
-    </nut-config-provider>
-  </div>
+    </div>
+  </nut-config-provider>
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
@@ -196,6 +196,7 @@ const goToViewUser = () => {
     background-color: #fff;
     border-radius: 0 0 9px 9px;
     overflow: hidden;
+    margin-bottom: 16px;
   }
   .answer-card__main-answer-text {
     box-sizing: border-box;

@@ -3,7 +3,7 @@
     <div class="create-question-card__header">
       <span class="create-question-card__tag">问题卡</span>
       <div class="create-question-card__desc">
-        <div class="create-question-card__desc-text">题目类型：</div>
+        <div class="create-question-card__desc-text">题目类型</div>
         <nut-radio-group v-model="type" direction="horizontal">
           <nut-radio :label="1">文字题</nut-radio>
           <nut-radio :label="2">图片题</nut-radio>
@@ -16,18 +16,39 @@
       />
     </div>
     <div class="create-question-card__main">
-      <div class="create-question-card__main-text">你的问题</div>
+      <div
+        class="create-question-card__main-text create-question-card__desc-text"
+      >
+        你的问题
+      </div>
       <div class="create-question-card__main-answer-field">
-        <nut-textarea
+        <textarea
           class="create-question-card__input"
-          v-if="type === 1"
-          input-align="left"
-          :border="false"
-          v-model="answer"
+          v-model="question"
+          placeholderClass="create-question-card__placeholder"
           placeholder="回答问题，交换答案"
-          placeholder-class="create-question-card__placeholder"
         />
-        <!-- <Uploader
+      </div>
+      <nut-divider
+        hairline
+        :style="{ opacity: 0.3, color: '#fff', borderColor: '#fff' }"
+      />
+      <div class="flex flex-column">
+        <div
+          class="create-question-card__main-text create-question-card__desc-text"
+        >
+          你的答案
+        </div>
+        <div class="create-question-card__main-answer-field" v-if="type === 1">
+          <textarea
+            class="create-question-card__input"
+            v-model="answer"
+            placeholder="回答问题，交换答案"
+            placeholderClass="create-question-card__placeholder"
+          />
+        </div>
+        <div v-else>
+          <Uploader
             ref="uploaderRef"
             v-show="!successImages.length"
             class="create-question-card__uploader"
@@ -50,46 +71,56 @@
             alt="answer image"
             mode="aspectFill"
             @click="replaceImage"
-          /> -->
+          />
+        </div>
       </div>
-      <nut-divider
-        hairline
-        :style="{ opacity: 0.3, color: '#fff', borderColor: '#fff' }"
-      />
-
+      <div
+        class="my-6 create-question-card__desc-text flex justify-between items-center"
+      >
+        审核后将该问答分享至公共频道
+        <nut-switch v-model="shareToPublic" />
+      </div>
       <nut-button
         class="create-question-card__submit"
         type="primary"
-        :disabled="!answer"
+        :disabled="!answer || !question"
+        open-type="share"
         @click="onAnswer"
-        >提交</nut-button
-      >
+        >提交并分享到群聊
+      </nut-button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import Taro from '@tarojs/taro';
+import Taro, { useShareAppMessage } from '@tarojs/taro';
 import { ref, watch } from 'vue';
-import { answerQuestionActivity } from '../../api/matching';
+import { createTextForMyGroupChat } from '../../api/matching';
 import Uploader from '../../components/uploader/index.vue';
 import { computed } from 'vue';
 
+useShareAppMessage(() => {
+  return {
+    title: question.value,
+    path: '/pages/home/index',
+  };
+});
 const props = defineProps<{
   title: string;
   userId: number;
   id: number;
 }>();
-const instance = Taro.getCurrentInstance();
 const type = ref(1);
 const uploaderRef = ref();
 const emit = defineEmits(['onAnswer']);
 const authToken = ref(Taro.getStorageSync('TOKEN'));
+const shareToPublic = ref(false);
 const images = ref<
   {
     url: string;
     status: string;
   }[]
 >([]);
+const question = ref('');
 const answer = ref('');
 const successImages = computed(() =>
   images.value.filter((item) => item.status === 'success'),
@@ -99,11 +130,10 @@ const onDelete = () => {
 };
 const onAnswer = async () => {
   try {
-    await answerQuestionActivity({
-      a_id: Number(instance.router?.params.activityId!),
+    await createTextForMyGroupChat({
       answer: answer.value,
+      question: question.value,
       user_id: props.userId,
-      activity_id: props.id,
     });
     Taro.showToast({
       title: '回答成功！',
@@ -148,14 +178,13 @@ watch(
 </script>
 <style lang="scss">
 .create-question-card {
-  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
   background: #67a4ff;
   border-radius: 9px;
-  padding: 12px 12px 36px;
+  padding: 12px 12px 26px;
 
   .nut-uploader {
     padding: 13px 0 5px;
@@ -200,7 +229,6 @@ watch(
     background-color: #4d94ff;
     color: #fff;
     font-size: 14px;
-    margin-bottom: 12px;
   }
   .create-question-card__desc {
     margin-top: 24px;
@@ -222,31 +250,28 @@ watch(
     width: 100%;
     height: 50px;
     border-radius: 9px;
+    border: none;
     font-size: 18px;
     font-weight: 500;
   }
   .create-question-card__main-answer-field {
     display: flex;
     margin: 10px 0 4px;
-    border-radius: 9px;
   }
   .create-question-card__input {
-    max-height: 100%;
-    height: 200px;
-    padding: 13px;
+    box-sizing: border-box;
+    width: 100%;
+    // max-height: 100%;
+    height: 120px;
+    padding: 6px;
     color: #000;
-    overflow: hidden;
-  }
-  .nut-textarea {
-    padding: 0;
-    height: 200px;
-    height: 100%;
+    background-color: #fff;
     overflow: hidden;
     border-radius: 9px;
   }
   .nut-uploader__upload {
-    width: 254px;
-    height: 254px;
+    width: 125px;
+    height: 125px;
     background-color: transparent;
     border-radius: 9px;
     .nutui-iconfont.nut-icon.nut-icon-photograph {
@@ -257,13 +282,17 @@ watch(
     }
   }
   .create-question-card__uploader {
-    width: 254px;
-    height: 254px;
+    width: 125px;
+    height: 125px;
     padding: 0;
+    margin-top: 9px;
     border-radius: 9px;
   }
   .create-question-card__desc-text {
     opacity: 0.7;
+    font-size: 16px;
+    line-height: 18px;
+    color: #fff;
   }
 }
 </style>

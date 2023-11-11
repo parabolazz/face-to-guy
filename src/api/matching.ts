@@ -48,6 +48,16 @@ export const answerQuestionActivity = (data: {
   });
 }
 
+export const createTextForMyGroupChat = (data: {
+  answer: string
+  question: string
+  user_id: number
+}) => {
+  return api.post('/pairs/question/group', {
+    data
+  });
+}
+
 export const leaveMessage = (data: {
   user_id: number,
   follow_user_id: number,

@@ -74,10 +74,10 @@
     >
       <template v-if="hasFinished"> </template>
       <div v-else class="py-4 px-5">
-        <h2 class="share-popup__title text-center font-medium mb-3.5">
+        <h2 class="share-popup__title text-center font-medium">
           {{ isInviter ? '派对邀请' : '已加入结伴' }}
         </h2>
-        <div class="share-popup__tip mb-7.5">
+        <div class="share-popup__tip">
           <span class="inline share-popup__tip-text">还差 </span>
           <span
             class="inline share-popup__tip-num text-xl font-medium share-popup__tip-text"

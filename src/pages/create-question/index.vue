@@ -4,7 +4,7 @@
       <nut-tab-pane title="系统问题库"> </nut-tab-pane>
       <nut-tab-pane title="自定义问题">
         <div class="create-question__custom">
-          <CreateQuestionCard />
+          <CreateQuestionCard :userId="userId" />
         </div>
       </nut-tab-pane>
     </nut-tabs>
@@ -14,8 +14,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import CreateQuestionCard from '../../components/createQuestionCard/index.vue';
+import Taro from '@tarojs/taro';
 
-const currentTab = ref('0');
+const currentTab = ref('1');
+const userId = Taro.getStorageSync('USER_ID');
 </script>
 <style lang="scss">
 .create-question {
