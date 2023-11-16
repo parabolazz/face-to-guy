@@ -3,7 +3,7 @@
     <div class="create-question-card__header">
       <span class="create-question-card__tag">问题卡</span>
       <div class="create-question-card__desc">
-        <div class="create-question-card__desc-text">题目类型</div>
+        <div class="transparent-desc-text">题目类型</div>
         <nut-radio-group v-model="type" direction="horizontal">
           <nut-radio :label="1">文字题</nut-radio>
           <nut-radio :label="2">图片题</nut-radio>
@@ -16,9 +16,7 @@
       />
     </div>
     <div class="create-question-card__main">
-      <div
-        class="create-question-card__main-text create-question-card__desc-text"
-      >
+      <div class="create-question-card__main-text transparent-desc-text">
         你的问题
       </div>
       <div class="create-question-card__main-answer-field">
@@ -34,9 +32,7 @@
         :style="{ opacity: 0.3, color: '#fff', borderColor: '#fff' }"
       />
       <div class="flex flex-column">
-        <div
-          class="create-question-card__main-text create-question-card__desc-text"
-        >
+        <div class="create-question-card__main-text transparent-desc-text">
           你的答案
         </div>
         <div class="create-question-card__main-answer-field" v-if="type === 1">
@@ -74,9 +70,7 @@
           />
         </div>
       </div>
-      <div
-        class="my-6 create-question-card__desc-text flex justify-between items-center"
-      >
+      <div class="my-6 transparent-desc-text flex justify-between items-center">
         审核后将该问答分享至公共频道
         <nut-switch v-model="shareToPublic" />
       </div>
@@ -287,12 +281,6 @@ watch(
     padding: 0;
     margin-top: 9px;
     border-radius: 9px;
-  }
-  .create-question-card__desc-text {
-    opacity: 0.7;
-    font-size: 16px;
-    line-height: 18px;
-    color: #fff;
   }
 }
 </style>

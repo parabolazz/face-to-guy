@@ -2,56 +2,55 @@
   <div class="question-card">
     <div class="question-card__header">
       <span class="question-card__tag">问题卡</span>
-      <div class="question-card__desc">
-        回答问题后开始在圈子里有曝光，积极完成问题，就会有更多人看到你！
+      <div class="transparent-desc-text question-card__desc">
+        回答后能增加曝光，完成越多问题，越多人看到你
       </div>
     </div>
     <div class="question-card__main">
       <div class="question-card__main-text">{{ title }}</div>
-      <div class="question-card__main-answer-field">
-        <nut-textarea
-          class="question-card__input"
-          v-if="type === 1"
-          input-align="left"
-          :border="false"
-          v-model="answer"
-          placeholder="回答问题，交换答案"
-          placeholder-class="question-card__placeholder"
+      <textarea
+        class="question-card__input question-card__main-answer-field"
+        v-if="type === 1"
+        v-model="answer"
+        placeholder="回答问题，交换答案"
+        placeholderClass="question-card__placeholder"
+      />
+      <div v-else>
+        <Uploader
+          ref="uploaderRef"
+          v-show="!successImages.length"
+          class="question-card__uploader question-card__main-answer-field"
+          :sizeType="['compressed']"
+          :mediaType="['image']"
+          url="https://pairs.cc/pairs/uploadImg"
+          :headers="{
+            Authorization: authToken,
+          }"
+          v-model:file-list="images"
+          :is-preview="false"
+          mode="aspectFill"
+          @failure="onUploadFailure"
+          @delete="onDelete"
         />
-        <div v-else>
-          <Uploader
-            ref="uploaderRef"
-            v-show="!successImages.length"
-            class="question-card__uploader"
-            :sizeType="['compressed']"
-            :mediaType="['image']"
-            url="https://pairs.cc/pairs/uploadImg"
-            :headers="{
-              Authorization: authToken,
-            }"
-            v-model:file-list="images"
-            :is-preview="false"
-            mode="aspectFill"
-            @failure="onUploadFailure"
-            @delete="onDelete"
-          />
-          <img
-            v-if="successImages.length"
-            class="question-card__uploader"
-            :src="images[0] ? images[0].url : ''"
-            alt="answer image"
-            mode="aspectFill"
-            @click="replaceImage"
-          />
-        </div>
+        <img
+          v-if="successImages.length"
+          class="question-card__uploader"
+          :src="images[0] ? images[0].url : ''"
+          alt="answer image"
+          mode="aspectFill"
+          @click="replaceImage"
+        />
       </div>
-      <nut-button
-        class="question-card__submit"
-        type="primary"
-        :disabled="!answer"
-        @click="onAnswer"
-        >提交</nut-button
-      >
+      <slot name="extra"></slot>
+      <slot name="btn" :info="props" :answer="answer">
+        <nut-button
+          class="question-card__submit"
+          type="primary"
+          :disabled="!answer"
+          @click="onAnswer"
+          >提交</nut-button
+        >
+      </slot>
     </div>
   </div>
 </template>
@@ -62,12 +61,14 @@ import { answerQuestionActivity } from '../../api/matching';
 import Uploader from '../../components/uploader/index.vue';
 import { computed } from 'vue';
 
-const props = defineProps<{
+export interface QuestionCardProps {
   type: 1 | 2;
   title: string;
   userId: number;
   id: number;
-}>();
+}
+
+const props = defineProps<QuestionCardProps>();
 const instance = Taro.getCurrentInstance();
 const uploaderRef = ref();
 const emit = defineEmits(['onAnswer']);
@@ -192,9 +193,8 @@ watch(
     margin-bottom: 12px;
   }
   .question-card__desc {
-    color: #c0bffd;
     font-size: 14px;
-    padding-bottom: 22px;
+    padding-bottom: 12px;
     border-bottom: 0.5px solid #eee;
   }
   .question-card__placeholder {
@@ -216,16 +216,15 @@ watch(
     font-weight: 500;
   }
   .question-card__main-answer-field {
-    display: flex;
-    margin: 24px 0 24px;
-    border-radius: 9px;
+    margin: 48rpx 0 48rpx;
+    border-radius: 18rpx;
   }
   .question-card__input {
-    max-height: 100%;
     height: 200px;
-    padding: 13px;
-    color: #000;
+    padding: 26rpx;
+    background-color: #fff;
     overflow: hidden;
+    flex: 1;
   }
   .nut-textarea {
     padding: 0;

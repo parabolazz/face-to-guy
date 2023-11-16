@@ -127,3 +127,13 @@ export const uploadMyIssue = (data: {
     data
   });
 }
+
+export const getSystemQuestons = (data: {
+  user_id: number,
+  page_num: number,
+  page_size: number
+}) => {
+  return api.post<{data: IQuestion}>('/pairs/confession/sysQuestList', {
+    data
+  });
+}
