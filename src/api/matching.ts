@@ -48,12 +48,14 @@ export const answerQuestionActivity = (data: {
   });
 }
 
-export const createTextForMyGroupChat = (data: {
+export const createQuesForMyGroupChat = (data: {
   answer: string
-  question: string
   user_id: number
+  share_id: string
+  title: string,
+  type: 1 | 2
 }) => {
-  return api.post('/pairs/question/group', {
+  return api.post('/pairs/confession/uploadAnswer', {
     data
   });
 }
@@ -133,7 +135,7 @@ export const getSystemQuestons = (data: {
   page_num: number,
   page_size: number
 }) => {
-  return api.post<{data: IQuestion}>('/pairs/confession/sysQuestList', {
+  return api.post<{data: {list: IQuestion[]}}>('/pairs/confession/sysQuestList', {
     data
   });
 }

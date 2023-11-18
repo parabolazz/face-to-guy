@@ -24,7 +24,7 @@
           class="create-question-card__input"
           v-model="question"
           placeholderClass="create-question-card__placeholder"
-          placeholder="回答问题，交换答案"
+          placeholder="请输入你的问题"
         />
       </div>
       <nut-divider
@@ -39,7 +39,7 @@
           <textarea
             class="create-question-card__input"
             v-model="answer"
-            placeholder="回答问题，交换答案"
+            placeholder="请输入你的答案"
             placeholderClass="create-question-card__placeholder"
           />
         </div>
@@ -88,7 +88,6 @@
 <script lang="ts" setup>
 import Taro, { useShareAppMessage } from '@tarojs/taro';
 import { ref, watch } from 'vue';
-import { createTextForMyGroupChat } from '../../api/matching';
 import Uploader from '../../components/uploader/index.vue';
 import { computed } from 'vue';
 
@@ -103,9 +102,19 @@ const props = defineProps<{
   userId: number;
   id: number;
 }>();
-const type = ref(1);
+const type = ref<1 | 2>(1);
 const uploaderRef = ref();
-const emit = defineEmits(['onAnswer']);
+const emit = defineEmits<{
+  (
+    e: 'onAnswer',
+    data: {
+      answer: string;
+      title: string;
+      user_id: number;
+      type: number;
+    },
+  ): void;
+}>();
 const authToken = ref(Taro.getStorageSync('TOKEN'));
 const shareToPublic = ref(false);
 const images = ref<
@@ -123,20 +132,12 @@ const onDelete = () => {
   images.value = [];
 };
 const onAnswer = async () => {
-  try {
-    await createTextForMyGroupChat({
-      answer: answer.value,
-      question: question.value,
-      user_id: props.userId,
-    });
-    Taro.showToast({
-      title: '回答成功！',
-      icon: 'success',
-    });
-    setTimeout(() => {
-      emit('onAnswer');
-    }, 500);
-  } catch (error) {}
+  emit('onAnswer', {
+    answer: answer.value,
+    title: question.value,
+    user_id: props.userId,
+    type: type.value,
+  });
 };
 const onUploadFailure = (data) => {
   const dataText = data?.data?.data || '';
@@ -190,9 +191,6 @@ watch(
       display: flex;
       align-items: center;
       justify-content: center;
-
-      &.list {
-      }
     }
     .nut-uploader__preview__progress {
       width: 100%;

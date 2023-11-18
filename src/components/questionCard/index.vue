@@ -225,6 +225,7 @@ watch(
     background-color: #fff;
     overflow: hidden;
     flex: 1;
+    color: #000;
   }
   .nut-textarea {
     padding: 0;
