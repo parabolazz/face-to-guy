@@ -48,24 +48,31 @@ import { nextTick } from '@tarojs/taro';
 import Taro from '@tarojs/taro';
 import { Loading } from '@nutui/icons-vue-taro';
 
-const props = defineProps<{
-  showCustomCard: boolean;
-  getValidCardLength: (list: IMatchItem[]) => boolean;
-  getActivityList: (data: {
-    a_id: number;
-    user_id: number;
-    groups: string;
-    page_num?: number;
-  }) => Promise<{
-    data: {
-      ad: IMatchItem[] | null;
-      answer: IMatchItem[] | null;
-      question: IMatchItem[] | null;
-      issue: IMatchItem;
-      group: number;
-    };
-  }>;
-}>();
+const props = withDefaults(
+  defineProps<{
+    randomCards: boolean;
+    showCustomCard: boolean;
+    getValidCardLength: (list: IMatchItem[]) => boolean;
+    getActivityList: (data: {
+      a_id: number;
+      user_id: number;
+      groups: string;
+      page_num?: number;
+    }) => Promise<{
+      data: {
+        ad: IMatchItem[] | null;
+        answer: IMatchItem[] | null;
+        question: IMatchItem[] | null;
+        issue: IMatchItem;
+        group: number;
+      };
+    }>;
+  }>(),
+  {
+    randomCards: true,
+    showCustomCard: false,
+  },
+);
 
 // 一天展示一次 custom card
 const getShouldShowCustomCard = () => {
@@ -89,6 +96,9 @@ const prepareActivityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const walkGroups = ref<number[]>([]);
 const shouldShowCustomCard = ref(getShouldShowCustomCard());
 const activityId = computed(() => instance?.router?.params.activityId);
+const emits = defineEmits<{
+  (e: 'changeCurrent', data: IMatchItem);
+}>();
 
 async function fetchData() {
   try {
@@ -132,7 +142,9 @@ async function fetchData() {
       data.group && walkGroups.value.push(data.group);
       const originList = questionList.concat(answerList, adList);
       // 打乱一下主卡片的顺序
-      originList.sort(() => Math.random() - 0.5);
+      if (props.randomCards) {
+        originList.sort(() => Math.random() - 0.5);
+      }
       return originList.concat(customQuesList, [nextPage]);
     }
     return [];
@@ -156,6 +168,7 @@ init();
 watch(idx, async (v, oldV) => {
   // 当前数据量为满额时，划到倒数第三页的时候请求下一页数据
   const validCardList = props.getValidCardLength(activityList.value);
+  emits('changeCurrent', activityList.value[v]);
   // 从下往上滑
   if (oldV - v === 1) {
     return;
@@ -186,6 +199,7 @@ watch(idx, async (v, oldV) => {
 defineExpose({
   changeIndex,
   fetchData,
+  init,
   idx,
 });
 </script>

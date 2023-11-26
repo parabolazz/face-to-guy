@@ -28,6 +28,18 @@ image {
 .justify-end {
   justify-content: flex-end;
 }
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.mr-3 {
+  margin-right: 9px;
+}
+.inline-block {
+  display: inline-block;
+}
+.relative {
+  position: relative;
+}
 
 .nut-picker {
   background-color: #000;
@@ -83,6 +95,7 @@ image {
 page .nut-button--disabled {
   background-color: #bfc1b9 !important;
   color: #999999 !important;
+  border-color: #999999 !important;
   opacity: 1;
 }
 
@@ -91,4 +104,24 @@ page .nut-button--disabled {
   font-size: 16px;
   line-height: 18px;
   color: #fff;
+}
+
+.mb-6 {
+  margin-bottom: 18px;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.mb-2 {
+  margin-bottom: 6px;
+}
+
+.text-xs {
+  font-size: 12px;
 }

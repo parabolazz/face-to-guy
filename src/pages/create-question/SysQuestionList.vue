@@ -5,6 +5,7 @@
     :showCustomCard="false"
     :getValidCardLength="getValidCardLength"
     :getActivityList="getActivityList"
+    @changeCurrent="changeCurrent"
   >
     <template #item="{ data }">
       <QuestionCard v-bind="data" :userId="userId">
@@ -19,10 +20,9 @@
             class="question-card__submit"
             type="primary"
             :disabled="!slotProps.answer"
-            open-type="share"
             @click="onAnswer(data, slotProps.answer)"
-            >提交并分享到群聊</nut-button
-          >
+            >提交并分享到群聊
+          </nut-button>
         </template>
       </QuestionCard>
     </template>
@@ -30,7 +30,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { getSystemQuestons } from '../../api/matching';
+import { IQuestion, getSystemQuestons } from '../../api/matching';
 import CardList from '../../components/cardList/index.vue';
 import QuestionCard, {
   type QuestionCardProps,
@@ -47,11 +47,14 @@ const emit = defineEmits<{
       title: string;
       type: 1 | 2;
       user_id: number;
+      activity_id: number;
     },
   ): void;
+  (e: 'changeTitle', data: string);
 }>();
+const cardListRef = ref();
 const getValidCardLength = () => true;
-const isShare = ref(false);
+const isShare = ref(true);
 const getActivityList = ({ page_num, user_id }) =>
   getSystemQuestons({
     user_id,
@@ -64,6 +67,9 @@ const getActivityList = ({ page_num, user_id }) =>
       },
     };
   });
+const changeCurrent = (current: IQuestion) => {
+  emit('changeTitle', current.title);
+};
 
 const onAnswer = (info: QuestionCardProps, answer: string) => {
   emit('onAnswer', {
@@ -71,6 +77,7 @@ const onAnswer = (info: QuestionCardProps, answer: string) => {
     title: info.title,
     type: info.type,
     user_id: info.userId,
+    activity_id: info.id,
   });
 };
 </script>

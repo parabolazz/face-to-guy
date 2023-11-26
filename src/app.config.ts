@@ -11,7 +11,8 @@ export default defineAppConfig({
     'pages/chat/index',
     'pages/terms/index',
     'pages/privacy/index',
-    'pages/create-question/index'
+    'pages/create-question/index',
+    'pages/share-ques-detail/index',
   ],
   window: {
     navigationBarBackgroundColor: '#000000',

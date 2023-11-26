@@ -150,7 +150,7 @@ export default {
     onChange: { type: Function },
     mode: {
       type: String,
-      default: 'aspectFit',
+      default: 'aspectFill',
     },
   },
   emits: [

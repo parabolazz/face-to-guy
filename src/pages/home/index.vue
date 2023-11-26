@@ -1,6 +1,7 @@
 <template>
   <nut-config-provider theme="dark">
     <view class="home">
+      <nut-button @click="onTest">你好啊</nut-button>
       <div class="home-invite-btn" @click="goToCreateQuestion">
         <div class="home-invite-btn__text">
           <div class="home-invite-btn__title">发起坦白局</div>
@@ -121,6 +122,12 @@ const goMatching = (activityId: number) => {
 const goToCreateQuestion = () => {
   Taro.navigateTo({
     url: '/pages/create-question/index',
+  });
+};
+
+const onTest = () => {
+  Taro.navigateTo({
+    url: '/pages/share-ques-detail/index?shareId=d6eda969cf1dfb3ab9e8cc472c38a92f8719930b38b7831222c352fddc612852',
   });
 };
 </script>

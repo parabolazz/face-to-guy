@@ -54,6 +54,7 @@ export const createQuesForMyGroupChat = (data: {
   share_id: string
   title: string,
   type: 1 | 2
+  activity_id?: number
 }) => {
   return api.post('/pairs/confession/uploadAnswer', {
     data
@@ -136,6 +137,30 @@ export const getSystemQuestons = (data: {
   page_size: number
 }) => {
   return api.post<{data: {list: IQuestion[]}}>('/pairs/confession/sysQuestList', {
+    data
+  });
+}
+
+export const getShareQuesDetail = (data: {
+  user_id: number,   // 查看当前用户
+  share_id: string,
+  page_num: number,
+  page_size: number  // 对应响应中list字段每页个数
+}) => {
+  return api.post<{
+    data: {
+      list: Array<IAnswer & {
+          avatar: string,
+      }>,
+      total: number,
+      quest: IQuestion & {
+        activity_id: number,
+        nickname: string,           // 发起这次坦白局的用户昵称
+        user_id: number,                 // 发起这次坦白局的用户ID
+        avatar: string // 发起这次坦白局的用户头像
+      }
+    }
+  }>('/pairs/confession/listByShareID', {
     data
   });
 }

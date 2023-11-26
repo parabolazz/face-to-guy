@@ -125,8 +125,8 @@ const onOpenSharePopup = () => {
   sharePopupVisible.value = true;
 };
 
-// FIXME yihuang
-const getValidCardLength = () => true;
+const getValidCardLength = (list: { cardType: string }[]) =>
+  list.filter((item) => item.cardType === 'answer');
 const userShot = computed(() => global.userProfile?.shot || 0);
 
 const onAnswer = () => {

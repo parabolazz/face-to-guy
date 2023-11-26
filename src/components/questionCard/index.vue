@@ -3,7 +3,7 @@
     <div class="question-card__header">
       <span class="question-card__tag">问题卡</span>
       <div class="transparent-desc-text question-card__desc">
-        回答后能增加曝光，完成越多问题，越多人看到你
+        {{ tips || '回答后能增加曝光，完成越多问题，越多人看到你' }}
       </div>
     </div>
     <div class="question-card__main">
@@ -66,6 +66,8 @@ export interface QuestionCardProps {
   title: string;
   userId: number;
   id: number;
+  activity_id: number;
+  tips?: string;
 }
 
 const props = defineProps<QuestionCardProps>();
@@ -220,12 +222,14 @@ watch(
     border-radius: 18rpx;
   }
   .question-card__input {
+    width: auto;
     height: 200px;
     padding: 26rpx;
     background-color: #fff;
     overflow: hidden;
     flex: 1;
     color: #000;
+    font-size: 22px;
   }
   .nut-textarea {
     padding: 0;

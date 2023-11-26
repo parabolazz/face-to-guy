@@ -19,20 +19,25 @@
             <div class="answer-card__user-info-desc">{{ desc }}</div>
           </div>
           <nut-button
-            class="answer-card__user-info-btn"
+            class="answer-card__user-info-btn opacity-50"
+            :class="{
+              'opacity-50': isBlur,
+            }"
             type="primary"
+            :disabled="isBlur"
             plain
             @click="goToViewUser"
             >看主页</nut-button
           >
         </div>
         <div class="answer-card__main-ques">Q: {{ title }}</div>
-        <div class="answer-card__main-answer" :style="{ height: 277 + 'px' }">
+        <div class="answer-card__main-answer">
           <img
             v-if="type === 2"
             :src="answer"
             alt="answer"
             style="width: 100%; height: 100%"
+            :style="isBlur && { filter: 'blur(10px)' }"
             mode="aspectFill"
           />
           <scroll-view
@@ -45,6 +50,7 @@
               align-items: center;
               justify-content: center;
             "
+            :style="isBlur && { filter: 'blur(5px)' }"
             class="answer-card__main-answer-text"
           >
             {{ answer }}
@@ -52,9 +58,15 @@
         </div>
       </div>
       <div class="answer-card__footer">
-        <nut-button type="primary" class="answer-card__btn" @click="goChat"
-          >打招呼</nut-button
-        >
+        <slot name="btn" :info="props">
+          <nut-button
+            type="primary"
+            class="answer-card__btn"
+            @click="goChat"
+            :disabled="isBlur"
+            >打招呼</nut-button
+          >
+        </slot>
       </div>
     </div>
   </nut-config-provider>
@@ -65,7 +77,7 @@ import { Attributes, Shape } from './user';
 import Taro from '@tarojs/taro';
 import { IAnswer } from 'src/api/matching';
 
-const props = defineProps<IAnswer & { isActive: boolean }>();
+const props = defineProps<IAnswer & { isActive: boolean; isBlur: boolean }>();
 const desc = computed(() => {
   const { attribute, height, weight, shape } = props;
   // @ts-ignore
@@ -107,7 +119,6 @@ const goToViewUser = () => {
 //   (isActive) => {
 //     if (isActive) {
 //       const query = Taro.createSelectorQuery();
-
 //       query.select('.answer-card__main-ques').boundingClientRect();
 //       query.exec((res) => {
 //         const firstDom = res[0];
@@ -124,6 +135,8 @@ const goToViewUser = () => {
   width: 100%;
   height: 100%;
   flex: 1;
+  display: flex;
+  flex-direction: column;
   background: #6967ff;
   border-radius: 9px;
   padding: 12px 12px 36px;
@@ -136,6 +149,12 @@ const goToViewUser = () => {
     color: #fff;
     font-size: 14px;
     margin-bottom: 12px;
+    align-self: flex-start;
+  }
+  .answer-card__main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
   .answer-card__user-info {
     display: flex;
@@ -193,10 +212,12 @@ const goToViewUser = () => {
     }
   }
   .answer-card__main-answer {
+    max-height: 277px;
     background-color: #fff;
     border-radius: 0 0 9px 9px;
     overflow: hidden;
     margin-bottom: 16px;
+    flex: 1;
   }
   .answer-card__main-answer-text {
     box-sizing: border-box;

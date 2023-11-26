@@ -22,6 +22,7 @@
       <div class="create-question-card__main-answer-field">
         <textarea
           class="create-question-card__input"
+          :maxlength="30"
           v-model="question"
           placeholderClass="create-question-card__placeholder"
           placeholder="请输入你的问题"
@@ -78,7 +79,6 @@
         class="create-question-card__submit"
         type="primary"
         :disabled="!answer || !question"
-        open-type="share"
         @click="onAnswer"
         >提交并分享到群聊
       </nut-button>
@@ -86,19 +86,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import Taro, { useShareAppMessage } from '@tarojs/taro';
+import Taro from '@tarojs/taro';
 import { ref, watch } from 'vue';
 import Uploader from '../../components/uploader/index.vue';
 import { computed } from 'vue';
 
-useShareAppMessage(() => {
-  return {
-    title: question.value,
-    path: '/pages/home/index',
-  };
-});
 const props = defineProps<{
-  title: string;
   userId: number;
   id: number;
 }>();
@@ -114,6 +107,7 @@ const emit = defineEmits<{
       type: number;
     },
   ): void;
+  (e: 'changeTitle', data: string);
 }>();
 const authToken = ref(Taro.getStorageSync('TOKEN'));
 const shareToPublic = ref(false);
@@ -169,6 +163,21 @@ watch(
     }
   },
   { deep: true },
+);
+
+watch(
+  () => question.value,
+  (v) => {
+    emit('changeTitle', v);
+  },
+);
+
+watch(
+  () => type.value,
+  () => {
+    images.value = [];
+    answer.value = '';
+  },
 );
 </script>
 <style lang="scss">

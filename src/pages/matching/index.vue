@@ -7,7 +7,7 @@
     <ActivityCardList
       class="matching-list"
       showCustomCard
-      :get-activity-list="getActivityList"
+      :getActivityList="getActivityList"
     />
   </div>
 </template>
