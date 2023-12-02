@@ -46,7 +46,7 @@
               <nut-switch v-model="shareToPublic" />
             </div>
           </template>
-          <template v-slot:btn="slotProps">
+          <template v-slot:btn="slotProps" v-if="!iAmOwner">
             <nut-button
               class="question-card__submit"
               type="primary"
@@ -64,6 +64,7 @@
         >
           <template v-slot:btn>
             <nut-button
+              v-show="!iAmOwner"
               class="answer-card__btn"
               type="primary"
               @click="cardListRef.changeIndex(0)"

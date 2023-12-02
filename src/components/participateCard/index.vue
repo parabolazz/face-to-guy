@@ -58,6 +58,7 @@ const jumpToDetail = () => {
     overflow: hidden;
     overflow: hidden;
     color: #dbf378;
+    line-height: 1.5;
   }
   .participate-card__avatar {
     margin-right: -6px;

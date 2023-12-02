@@ -19,7 +19,7 @@
             <div class="answer-card__user-info-desc">{{ desc }}</div>
           </div>
           <nut-button
-            class="answer-card__user-info-btn opacity-50"
+            class="answer-card__user-info-btn"
             :class="{
               'opacity-50': isBlur,
             }"
