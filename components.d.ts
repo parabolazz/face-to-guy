@@ -41,6 +41,7 @@ declare module '@vue/runtime-core' {
     NutTabPane: typeof import('@nutui/nutui-taro')['TabPane']
     NutTabs: typeof import('@nutui/nutui-taro')['Tabs']
     NutTextarea: typeof import('@nutui/nutui-taro')['Textarea']
+    ParticipateCard: typeof import('./src/components/participateCard/index.vue')['default']
     QuestionCard: typeof import('./src/components/questionCard/index.vue')['default']
     Uploader: typeof import('./src/components/uploader/index.vue')['default']
   }

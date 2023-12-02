@@ -15,8 +15,37 @@
           alt="invite your friend"
         />
       </div>
+      <div class="home-my-related mb-6">
+        <div class="home-title mb-3">我参与的坦白局</div>
+        <ParticipateCard
+          title="晒出一张你觉得自己最帅的大鸡鸡照片吧！"
+          :total="23"
+          :users="[
+            {
+              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+              nickname: '小明',
+            },
+            {
+              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+              nickname: '小明',
+            },
+            {
+              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+              nickname: '小明',
+            },
+            {
+              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+              nickname: '小明',
+            },
+            {
+              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+              nickname: '小明',
+            },
+          ]"
+        />
+      </div>
       <div class="home-info">
-        <h3 class="home-title">深圳圈</h3>
+        <h3 class="home-title">公共频道</h3>
         <div class="home-info__shot" @click="showShot">
           Shot: {{ shotCount }}杯
           <img :src="AddShot" class="home-info__add-shot" alt="add shot" />
@@ -68,10 +97,12 @@ import Study from '../../assets/images/study.svg';
 import ArrowRight from '../../assets/images/arrow_right.svg';
 import InvitePlay from '../../assets/images/invite_play.svg';
 import { computed } from 'vue';
+import { getMyRelatedQues } from '../../api/matching';
+import ParticipateCard from '../../components/participateCard/index.vue';
 
 const global = useGlobalStore();
 const isVisible = ref(false);
-
+const userId = Taro.getStorageSync('USER_ID');
 const shotCount = computed(() => global.userProfile?.shot || 0);
 
 const showShot = () => {
@@ -130,6 +161,9 @@ const onTest = () => {
     url: '/pages/share-ques-detail/index?shareId=d6eda969cf1dfb3ab9e8cc472c38a92f8719930b38b7831222c352fddc612852',
   });
 };
+getMyRelatedQues({
+  user_id: userId,
+});
 </script>
 
 <style lang="scss">
@@ -144,6 +178,8 @@ const onTest = () => {
   justify-content: flex-end;
   margin-bottom: 80px;
   padding: 14px;
+  .home-my-related {
+  }
   .home-info {
     display: flex;
     justify-content: space-between;
@@ -161,7 +197,7 @@ const onTest = () => {
     }
   }
   .home-title {
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
   }
   .home-operation {

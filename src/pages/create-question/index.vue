@@ -97,15 +97,14 @@ const onAnswer = async ({
 }) => {
   question.value = title;
   try {
-    // const shareId = await onCreateQuestion({
-    //   answer,
-    //   question: title,
-    //   type,
-    //   userId,
-    //   activity_id,
-    // });
-    // debugger;
-    // shareIdString.value = shareId;
+    const shareId = await onCreateQuestion({
+      answer,
+      question: title,
+      type,
+      userId,
+      activity_id,
+    });
+    shareIdString.value = shareId;
     dialogVisible.value = true;
   } catch (error) {
     //

@@ -164,3 +164,19 @@ export const getShareQuesDetail = (data: {
     data
   });
 }
+
+export const getMyRelatedQues = (data: {
+  user_id: number,
+}) => {
+  return api.post<{
+    data: {
+      "title": string,
+      "count": number,
+      "activity_id": number,
+      "share_id": string,
+      "avatar_list": string[]
+    }[]
+  }>('/pairs/confession/participated', {
+    data
+  });
+}
