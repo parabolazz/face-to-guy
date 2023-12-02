@@ -1,7 +1,6 @@
 <template>
   <nut-config-provider theme="dark">
     <view class="home">
-      <nut-button @click="onTest">你好啊</nut-button>
       <div class="home-invite-btn" @click="goToCreateQuestion">
         <div class="home-invite-btn__text">
           <div class="home-invite-btn__title">发起坦白局</div>
@@ -15,34 +14,25 @@
           alt="invite your friend"
         />
       </div>
-      <div class="home-my-related mb-6">
+      <div class="home-my-participate mb-6">
         <div class="home-title mb-3">我参与的坦白局</div>
-        <ParticipateCard
-          title="晒出一张你觉得自己最帅的大鸡鸡照片吧！"
-          :total="23"
-          :users="[
-            {
-              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-              nickname: '小明',
-            },
-            {
-              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-              nickname: '小明',
-            },
-            {
-              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-              nickname: '小明',
-            },
-            {
-              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-              nickname: '小明',
-            },
-            {
-              avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-              nickname: '小明',
-            },
-          ]"
-        />
+        <scroll-view class="home-my-participate__list" :scroll-x="true">
+          <ParticipateCard
+            class="home-my-participate__list-item"
+            v-for="participate in myParticipates"
+            :shareId="participate.share_id"
+            :key="participate.share_id"
+            :title="participate.title"
+            :total="participate.count"
+            :avatars="participate.avatar_list"
+          />
+          <div
+            v-if="myParticipates.length > 20"
+            class="home-my-participate__more"
+          >
+            仅保存最近的 20 个坦白局
+          </div>
+        </scroll-view>
       </div>
       <div class="home-info">
         <h3 class="home-title">公共频道</h3>
@@ -97,13 +87,14 @@ import Study from '../../assets/images/study.svg';
 import ArrowRight from '../../assets/images/arrow_right.svg';
 import InvitePlay from '../../assets/images/invite_play.svg';
 import { computed } from 'vue';
-import { getMyRelatedQues } from '../../api/matching';
+import { ParticapateDetail, getMyRelatedQues } from '../../api/matching';
 import ParticipateCard from '../../components/participateCard/index.vue';
 
 const global = useGlobalStore();
 const isVisible = ref(false);
 const userId = Taro.getStorageSync('USER_ID');
 const shotCount = computed(() => global.userProfile?.shot || 0);
+const myParticipates = ref<ParticapateDetail[]>([]);
 
 const showShot = () => {
   if (global.userProfile) {
@@ -161,9 +152,13 @@ const onTest = () => {
     url: '/pages/share-ques-detail/index?shareId=d6eda969cf1dfb3ab9e8cc472c38a92f8719930b38b7831222c352fddc612852',
   });
 };
-getMyRelatedQues({
-  user_id: userId,
-});
+const getMyParticipateQues = async () => {
+  try {
+    const res = await getMyRelatedQues({ user_id: userId });
+    myParticipates.value = res.data;
+  } catch (error) {}
+};
+getMyParticipateQues();
 </script>
 
 <style lang="scss">
@@ -178,7 +173,39 @@ getMyRelatedQues({
   justify-content: flex-end;
   margin-bottom: 80px;
   padding: 14px;
-  .home-my-related {
+  .home-my-participate {
+    .home-my-participate__list {
+      width: 100%;
+      white-space: nowrap;
+      margin-bottom: 12px;
+    }
+    .home-my-participate__list-item {
+      display: inline-flex;
+      margin-right: 12px;
+      vertical-align: top;
+      // 每隔两个
+      &:nth-child(2n + 2) {
+        .participate-card__title {
+          color: #cf83ed;
+        }
+      }
+      // 每隔三个
+      &:nth-child(2n + 3) {
+        .participate-card__title {
+          color: #74d172;
+        }
+      }
+    }
+    .home-my-participate__more {
+      display: inline-flex;
+      width: 92px;
+      height: 90px;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      background-color: #232323;
+      white-space: initial;
+    }
   }
   .home-info {
     display: flex;
