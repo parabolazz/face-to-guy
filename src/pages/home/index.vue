@@ -1,6 +1,7 @@
 <template>
   <nut-config-provider theme="dark">
     <view class="home">
+      <!-- <nut-button @click="onTest">你好啊</nut-button> -->
       <div class="home-invite-btn" @click="goToCreateQuestion">
         <div class="home-invite-btn__text">
           <div class="home-invite-btn__title">发起坦白局</div>
@@ -14,7 +15,7 @@
           alt="invite your friend"
         />
       </div>
-      <div class="home-my-participate mb-6">
+      <div class="home-my-participate mb-6" v-if="myParticipates.length">
         <div class="home-title mb-3">我参与的坦白局</div>
         <scroll-view class="home-my-participate__list" :scroll-x="true">
           <ParticipateCard
@@ -92,7 +93,6 @@ import ParticipateCard from '../../components/participateCard/index.vue';
 
 const global = useGlobalStore();
 const isVisible = ref(false);
-const userId = Taro.getStorageSync('USER_ID');
 const shotCount = computed(() => global.userProfile?.shot || 0);
 const myParticipates = ref<ParticapateDetail[]>([]);
 
@@ -149,16 +149,22 @@ const goToCreateQuestion = () => {
 
 const onTest = () => {
   Taro.navigateTo({
-    url: '/pages/share-ques-detail/index?shareId=d6eda969cf1dfb3ab9e8cc472c38a92f8719930b38b7831222c352fddc612852',
+    url: '/pages/share-ques-detail/index?shareId=5_5oOz55yL5LiA5LiL5L2g5pyA6L+R5LiA5qyh5peF5ri455qE54Wn54mH_1702179551965',
   });
 };
 const getMyParticipateQues = async () => {
-  try {
-    const res = await getMyRelatedQues({ user_id: userId });
-    myParticipates.value = res.data;
-  } catch (error) {}
+  const userId = Taro.getStorageSync('USER_ID');
+  if (userId) {
+    try {
+      const res = await getMyRelatedQues({ user_id: userId });
+      myParticipates.value = res.data || [];
+    } catch (error) {}
+  }
 };
-getMyParticipateQues();
+
+Taro.useDidShow(() => {
+  getMyParticipateQues();
+});
 </script>
 
 <style lang="scss">
@@ -320,7 +326,7 @@ getMyParticipateQues();
     background-color: #dbf378;
     font-size: 20px;
     text-align: center;
-    font-weight: 500;
+    font-weight: bold;
     color: #000;
     border-radius: 10px;
   }

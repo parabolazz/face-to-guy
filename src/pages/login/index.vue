@@ -123,7 +123,7 @@ const onViewPrivacy = (e) => {
     // background: #dbf378;
     color: #000;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: bold;
   }
   .login-main {
     display: flex;

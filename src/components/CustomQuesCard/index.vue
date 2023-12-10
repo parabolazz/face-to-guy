@@ -110,7 +110,7 @@ const onAnswer = async () => {
     margin-top: 30px;
     font-size: 24px;
     color: #fff;
-    font-weight: 500;
+    font-weight: bold;
   }
   .custom-question-card__submit {
     color: #000;
@@ -118,7 +118,7 @@ const onAnswer = async () => {
     height: 50px;
     border-radius: 9px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: bold;
   }
   .custom-question-card__main-answer-field {
     display: flex;

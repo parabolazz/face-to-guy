@@ -22,7 +22,7 @@
 import Taro from '@tarojs/taro';
 
 const props = defineProps<{
-  shareId: number;
+  shareId: string;
   title: string;
   avatars: string[];
   total: number;
@@ -58,7 +58,7 @@ const jumpToDetail = () => {
     overflow: hidden;
     overflow: hidden;
     color: #dbf378;
-    line-height: 1.5;
+    line-height: 1.3;
   }
   .participate-card__avatar {
     margin-right: -6px;

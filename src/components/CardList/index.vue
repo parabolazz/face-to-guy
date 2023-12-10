@@ -1,6 +1,7 @@
 <template>
   <div>
     <swiper
+      v-if="!isFetchingFirst"
       class="matching-swiper"
       indicator-dots
       :vertical="true"
@@ -37,6 +38,9 @@
         </div>
       </swiper-item>
     </swiper>
+    <div class="matching-loading-container" v-else>
+      <Loading size="46" />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -94,6 +98,7 @@ const pageNum = ref(1);
 const activityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const prepareActivityList = ref<(IMatchItem & { cardType: string })[]>([]);
 const walkGroups = ref<number[]>([]);
+const isFetchingFirst = ref(false);
 const shouldShowCustomCard = ref(getShouldShowCustomCard());
 const activityId = computed(() => instance?.router?.params.activityId);
 const emits = defineEmits<{
@@ -101,6 +106,9 @@ const emits = defineEmits<{
 }>();
 
 async function fetchData() {
+  if (pageNum.value === 1) {
+    isFetchingFirst.value = true;
+  }
   try {
     const res = await props.getActivityList({
       a_id: Number(activityId.value) || 0,
@@ -145,6 +153,7 @@ async function fetchData() {
       if (props.randomCards) {
         originList.sort(() => Math.random() - 0.5);
       }
+      isFetchingFirst.value = false;
       return originList.concat(customQuesList, [nextPage]);
     }
     return [];
@@ -245,6 +254,14 @@ defineExpose({
     margin-top: 10px;
   }
 }
+.matching-loading-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  margin-top: 200px;
+  background-color: transparent;
+}
 
 .swiper-img {
   width: 100%;
@@ -278,7 +295,7 @@ defineExpose({
   display: flex;
   justify-content: center;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: bold;
   color: #000;
 }
 .shot-desc {

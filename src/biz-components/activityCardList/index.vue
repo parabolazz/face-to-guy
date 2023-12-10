@@ -172,7 +172,7 @@ const onCancel = () => {
   display: flex;
   justify-content: center;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: bold;
   color: #000;
 }
 .shot-desc {

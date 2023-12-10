@@ -41,7 +41,7 @@
           v-if="data.cardType === 'question'"
         >
           <template v-slot:extra>
-            <div class="flex justify-between mb-6 transparent-desc-text">
+            <div class="flex justify-between transparent-desc-text">
               是否将该答案分享至公共频道:
               <nut-switch v-model="shareToPublic" />
             </div>
@@ -50,19 +50,27 @@
             <nut-button
               class="question-card__submit"
               type="primary"
+              :disabled="hasAnswerThisQues"
+              :open-type="userId ? undefined : 'getPhoneNumber'"
+              @getphonenumber="afterGetPhoneNumber"
               @click="onAnswer(slotProps.answer, data)"
-              >回答问题，参与坦白局</nut-button
-            >
+              >{{
+                hasAnswerThisQues
+                  ? '可以查看别人的答案了'
+                  : '回答问题，参与坦白局'
+              }}
+            </nut-button>
           </template>
         </QuestionCard>
         <AnswerCard
-          :isBlur="!hasAnswerThisQues && !iAmOwner"
+          :isBlur="!hasAnswerThisQues && !iAmOwner && !hasAnswerThisQues"
           v-else-if="data.cardType === 'answer'"
           v-bind="data"
+          :currentUser="userId"
           :isActive="currentIdx === index"
           @goChat="goChat"
         >
-          <template v-slot:btn>
+          <template v-slot:btn v-if="!hasAnswerThisQues">
             <nut-button
               v-show="!iAmOwner"
               class="answer-card__btn"
@@ -74,7 +82,6 @@
         </AnswerCard>
       </template>
     </CardList>
-
     <nut-dialog
       v-model:visible="takeEnoughShotDialog"
       cancel-text="我再想想"
@@ -123,10 +130,15 @@
         @update:visible="() => (targetUserId = -1)"
       />
       <SharePopup v-model:visible="sharePopupVisible" />
+      <NewProfilePopup
+        v-model:visible="newProfilePopupVisible"
+        @finishEditProfile="onFinishEditProfile"
+      />
     </nut-config-provider>
   </div>
 </template>
 <script lang="ts" setup>
+import { IconFont } from '@nutui/icons-vue-taro';
 import Taro, { useDidShow } from '@tarojs/taro';
 import CardList from '../../components/cardList/index.vue';
 import { ref } from 'vue';
@@ -135,9 +147,11 @@ import AnswerCard from '../../components/answerCard/index.vue';
 import { computed } from 'vue';
 import SharePopup from '../../biz-components/sharePopup/index.vue';
 import SwitchWechatPopup from '../../biz-components/switchWechatPopup/index.vue';
+import NewProfilePopup from '../../biz-components/newProfilePopup/index.vue';
 import { useGlobalStore } from '../../store';
 import { getShareQuesDetail } from '../../api/matching';
 import useAnswer from '../create-question/utils/useAnswer';
+import getPhoneNumber from '../../utils/getPhoneNum';
 
 defineProps<{
   showCustomCard: boolean;
@@ -148,10 +162,13 @@ const nums = ref(1);
 const questionText = ref('');
 const cardListRef = ref();
 const global = useGlobalStore();
-const shareId = instance.router?.params?.shareId;
+const routeParams = instance.router?.params;
+const shareId = routeParams?.shareId;
+console.log('shareId', shareId);
 const takeEnoughShotDialog = ref(false);
 const noShotDialog = ref(false);
 const sharePopupVisible = ref(false);
+const newProfilePopupVisible = ref(false);
 const switchWechatVisible = ref(false);
 const targetUserId = ref<number>(-1);
 const userId = ref(Taro.getStorageSync('USER_ID'));
@@ -170,10 +187,24 @@ const onOpenSharePopup = () => {
   noShotDialog.value = false;
   sharePopupVisible.value = true;
 };
+
+const afterGetPhoneNumber = async (e) => {
+  try {
+    const data = await getPhoneNumber(e, false);
+    if (!data?.is_new) {
+      newProfilePopupVisible.value = true;
+    }
+  } catch (error) {}
+};
+
+const onFinishEditProfile = () => {
+  newProfilePopupVisible.value = false;
+  userId.value = Taro.getStorageSync('USER_ID');
+};
 const getActivityList = async (params) => {
   const res = await getShareQuesDetail({
     page_num: params.page_num,
-    user_id: params.user_id,
+    user_id: params.user_id || undefined,
     share_id: shareId || '',
     page_size: 20,
   });
@@ -182,6 +213,7 @@ const getActivityList = async (params) => {
     const { list, total, quest } = data;
     const hasRes = list && list.length > 0;
     questionText.value = quest.title;
+    hasAnswerThisQues.value = quest.is_answered;
     nums.value = total;
     // 拿第一页的数据当做用户数据展示
     if (params.page_num === 1) {
@@ -202,7 +234,8 @@ const getActivityList = async (params) => {
     }));
     return {
       data: {
-        question: hasRes && !iAmOwner.value ? [quest] : [],
+        question:
+          hasRes && !iAmOwner.value && !quest.is_answered ? [quest] : [],
         answer: answerList || [],
       },
     };
@@ -215,9 +248,7 @@ const userShot = computed(() => global.userProfile?.shot || 0);
 
 const onAnswer = async (answer: string, info: any) => {
   if (!userId.value) {
-    Taro.navigateTo({
-      url: '/pages/login/index',
-    });
+    return;
   }
   if (!answer) {
     Taro.showToast({
@@ -236,6 +267,11 @@ const onAnswer = async (answer: string, info: any) => {
       originalShareId: info.share_id,
     });
     hasAnswerThisQues.value = true;
+    Taro.showToast({
+      title: '回答成功！可以查看别人的回答了～',
+      icon: 'none',
+    });
+    cardListRef.value.changeIndex(1);
   } catch (error) {}
 };
 const goChat = (userId) => {
@@ -331,7 +367,7 @@ useDidShow(() => {
   display: flex;
   justify-content: center;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: bold;
   color: #000;
 }
 .shot-desc {

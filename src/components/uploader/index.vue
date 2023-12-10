@@ -3,7 +3,7 @@
     <view class="nut-uploader__slot" v-if="$slots.default">
       <slot></slot>
       <template v-if="Number(maximum) - fileList.length">
-        <nut-button class="nut-uploader__input" @click="chooseImage" />
+        <button open-type="chooseAvatar" class="nut-uploader__input" />
       </template>
     </view>
 
@@ -49,7 +49,6 @@
             class="nut-uploader__preview-img__file__name"
             @click="fileItemClick(item)"
           >
-            <view class="file__name_tips">{{ item.name }}</view>
           </view>
         </view>
         <view class="tips">{{ item.name }}</view>

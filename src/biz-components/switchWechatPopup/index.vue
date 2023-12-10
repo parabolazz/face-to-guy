@@ -179,7 +179,7 @@ const onChat = async () => {
     height: 50px;
     border-radius: 9px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: bold;
   }
   .nut-cell-group__wrap {
     margin: 0;

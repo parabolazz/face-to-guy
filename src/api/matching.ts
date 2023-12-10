@@ -154,7 +154,9 @@ export const getShareQuesDetail = (data: {
       }>,
       total: number,
       quest: IQuestion & {
+        is_answered: boolean,
         activity_id: number,
+        share_id: string,
         nickname: string,           // 发起这次坦白局的用户昵称
         user_id: number,                 // 发起这次坦白局的用户ID
         avatar: string // 发起这次坦白局的用户头像

@@ -60,6 +60,7 @@
       <div class="answer-card__footer">
         <slot name="btn" :info="props">
           <nut-button
+            v-if="currentUser !== user_id"
             type="primary"
             class="answer-card__btn"
             @click="goChat"
@@ -77,7 +78,14 @@ import { Attributes, Shape } from './user';
 import Taro from '@tarojs/taro';
 import { IAnswer } from 'src/api/matching';
 
-const props = defineProps<IAnswer & { isActive: boolean; isBlur: boolean }>();
+const props = defineProps<
+  IAnswer & {
+    isActive: boolean;
+    isBlur: boolean;
+    currentUser: number;
+    user_id: number;
+  }
+>();
 const desc = computed(() => {
   const { attribute, height, weight, shape } = props;
   // @ts-ignore

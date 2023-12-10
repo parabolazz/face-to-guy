@@ -173,7 +173,7 @@ const peopleList = [
     border-radius: 10px;
     text-align: center;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: bold;
   }
   .share-introduction {
     margin-top: 60px;

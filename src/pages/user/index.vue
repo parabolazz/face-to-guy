@@ -359,7 +359,7 @@ $footer-height-lagecy: calc(92px + constant(safe-area-inset-bottom));
   .matched-user__footer__btn {
     flex: 1;
     border-radius: 10px;
-    font-weight: 500;
+    font-weight: bold;
     height: 62px;
     font-size: 20px;
     border-width: 0px;

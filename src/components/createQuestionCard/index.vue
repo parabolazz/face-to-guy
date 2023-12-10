@@ -104,13 +104,13 @@ const emit = defineEmits<{
       answer: string;
       title: string;
       user_id: number;
-      type: number;
+      type: 1 | 2;
     },
   ): void;
   (e: 'changeTitle', data: string);
 }>();
 const authToken = ref(Taro.getStorageSync('TOKEN'));
-const shareToPublic = ref(false);
+const shareToPublic = ref(true);
 const images = ref<
   {
     url: string;
@@ -253,7 +253,7 @@ watch(
     border-radius: 9px;
     border: none;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: bold;
   }
   .create-question-card__main-answer-field {
     display: flex;

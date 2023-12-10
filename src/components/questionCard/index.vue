@@ -7,7 +7,9 @@
       </div>
     </div>
     <div class="question-card__main">
-      <div class="question-card__main-text">{{ title }}</div>
+      <div class="question-card__main-text">
+        {{ title }}
+      </div>
       <textarea
         class="question-card__input question-card__main-answer-field"
         v-if="type === 1"
@@ -146,7 +148,7 @@ watch(
   width: 100%;
   background: #6967ff;
   border-radius: 9px;
-  padding: 12px 12px 36px;
+  padding: 12px 12px 24px;
 
   .nut-uploader {
     padding: 13px 0 5px;
@@ -180,10 +182,11 @@ watch(
     flex-shrink: 0;
   }
   .question-card__main {
-    flex: 1;
+    margin-top: 15px;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   .question-card__tag {
     display: inline-block;
@@ -204,10 +207,9 @@ watch(
     font-size: 16px;
   }
   .question-card__main-text {
-    margin-top: 30px;
     font-size: 24px;
     color: #fff;
-    font-weight: 500;
+    font-weight: bold;
   }
   .question-card__submit {
     color: #000;
@@ -215,10 +217,9 @@ watch(
     height: 50px;
     border-radius: 9px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: bold;
   }
   .question-card__main-answer-field {
-    margin: 48rpx 0 48rpx;
     border-radius: 18rpx;
   }
   .question-card__input {
@@ -227,7 +228,6 @@ watch(
     padding: 26rpx;
     background-color: #fff;
     overflow: hidden;
-    flex: 1;
     color: #000;
     font-size: 22px;
   }

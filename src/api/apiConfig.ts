@@ -7,6 +7,7 @@ switch (env) {
     baseUrlPrefix = 'https://pairs.cc'
     break
   case 'production':
+    // baseUrlPrefix = 'http://110.41.20.1:3388'
     baseUrlPrefix = 'https://pairs.cc'
     // baseUrlPrefix = 'https://pairs.cc'
     break

@@ -10,7 +10,7 @@
     <template #item="{ data }">
       <QuestionCard v-bind="data" :userId="userId">
         <template v-slot:extra>
-          <div class="flex justify-between mb-6 transparent-desc-text">
+          <div class="flex justify-between transparent-desc-text">
             是否将该答案分享至公共频道:
             <nut-switch v-model="isShare" />
           </div>
@@ -80,6 +80,12 @@ const onAnswer = (info: QuestionCardProps, answer: string) => {
     activity_id: info.id,
   });
 };
+
+const refreshList = () => {
+  cardListRef.value.init();
+};
+
+defineExpose({ refreshList });
 </script>
 <style lang="scss">
 .sys-question-cards {

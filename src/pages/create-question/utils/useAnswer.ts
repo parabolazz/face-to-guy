@@ -1,10 +1,15 @@
 import { computed } from "vue";
 import { createQuesForMyGroupChat } from "../../../api/matching";
-import sha256 from 'crypto-js/sha256';
 import Taro, { useShareAppMessage } from "@tarojs/taro";
+import Base64 from "../../../utils/base64";
 
 export default function useAnswer(question, userId) {
-  const shareId = computed(() => sha256(question.value + userId + 'confession_share').toString())
+  //sharedId = user_id + "_" + base64(问题tilte) + "_" + 秒级时间戳。
+  const shareId = computed(() => {
+    const timestamp = new Date().getTime();
+    const base64Question = Base64.encode(question.value);
+    return `${userId.value || ''}_${base64Question}_${timestamp}`;
+  })
 
   useShareAppMessage(() => {
     return {
