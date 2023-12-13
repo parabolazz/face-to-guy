@@ -19,6 +19,7 @@
             style="margin-bottom: 8px"
           >
             <Uploader
+              is-avatar
               ref="uploaderRef"
               v-show="!infoForm.avatar"
               class="create-question-card__uploader"
@@ -107,10 +108,6 @@ const rules = computed(() => ({
 }));
 const loading = ref(false);
 
-const onToggleVisible = (visible: boolean) => {
-  emit('update:visible', visible);
-};
-
 const replaceImage = () => {
   uploaderRef.value.chooseImage();
 };
@@ -148,7 +145,7 @@ const onChat = async () => {
   await editProfile(data);
   Taro.showToast({
     title: '注册成功！可以继续操作啦～',
-    icon: 'success',
+    icon: 'none',
   });
   emit('finishEditProfile');
 };

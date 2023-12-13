@@ -138,7 +138,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { IconFont } from '@nutui/icons-vue-taro';
 import Taro, { useDidShow } from '@tarojs/taro';
 import CardList from '../../components/cardList/index.vue';
 import { ref } from 'vue';
@@ -191,7 +190,7 @@ const onOpenSharePopup = () => {
 const afterGetPhoneNumber = async (e) => {
   try {
     const data = await getPhoneNumber(e, false);
-    if (!data?.is_new) {
+    if (data?.is_new) {
       newProfilePopupVisible.value = true;
     }
   } catch (error) {}

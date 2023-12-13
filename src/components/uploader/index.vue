@@ -3,7 +3,7 @@
     <view class="nut-uploader__slot" v-if="$slots.default">
       <slot></slot>
       <template v-if="Number(maximum) - fileList.length">
-        <button open-type="chooseAvatar" class="nut-uploader__input" />
+        <button class="nut-uploader__input" />
       </template>
     </view>
 
@@ -67,9 +67,11 @@
         <Photograph color="#808080" />
       </slot>
       <nut-button
+        :open-type="isAvatar ? 'chooseAvatar' : undefined"
+        @chooseavatar="chooseAvatar"
+        @click="chooseImage"
         class="nut-uploader__input"
         :class="{ disabled }"
-        @click="chooseImage"
       />
     </view>
   </view>
@@ -77,19 +79,12 @@
 
 <script lang="ts">
 import { PropType, reactive, ref, watch } from 'vue';
-// import { createComponent } from '@/packages/utils/create';
 import { UploaderTaro, UploadOptions } from './uploader';
 import { FileItem, MediaType, SizeType, SourceType } from './type';
-// import { funInterceptor, Interceptor } from '@/packages/utils/util';
-// import Progress from '../progress/index.taro.vue';
-// import Button from '';
-// const { create, translate } = createComponent('uploader');
 import Taro from '@tarojs/taro';
 import { Photograph, Failure, Loading, Del, Link } from '@nutui/icons-vue-taro';
 export default {
   components: {
-    // [Progress.name]: Progress,
-    // [Button.name]: Button,
     Photograph,
     Failure,
     Loading,
@@ -99,6 +94,7 @@ export default {
   props: {
     name: { type: String, default: 'file' },
     url: { type: String, default: '' },
+    isAvatar: { type: Boolean, default: false },
     sizeType: {
       type: Array as PropType<SizeType[]>,
       default: () => ['original', 'compressed'],
@@ -174,8 +170,46 @@ export default {
       },
     );
 
+    const chooseAvatar = (e: any) => {
+      const detail = e.detail;
+
+      if (detail?.avatarUrl) {
+        Taro.uploadFile({
+          url: props.url,
+          filePath: detail.avatarUrl,
+          name: props.name,
+          header: props.headers,
+          success: (res) => {
+            const { data: dataText } = res;
+            const dataObj = JSON.parse(dataText);
+            if (dataObj.data) {
+              const fileItem = reactive(new FileItem());
+              fileItem.url = dataObj.data;
+              fileItem.status = 'success';
+              fileItem.message = 'success';
+              fileList.value.push(fileItem);
+              emit('update:fileList', fileList.value);
+              emit('success', {
+                data: {
+                  data: dataObj.data,
+                },
+              });
+              emit('change', {
+                fileList: fileList.value,
+              });
+            } else {
+              emit('failure', res);
+            }
+          },
+          fail: (res) => {
+            emit('failure', res);
+          },
+        });
+      }
+    };
+
     const chooseImage = () => {
-      if (props.disabled) {
+      if (props.disabled || props.isAvatar) {
         return;
       }
 
@@ -449,6 +483,7 @@ export default {
       onDelete,
       fileList,
       chooseImage,
+      chooseAvatar,
       fileItemClick,
       clearUploadQueue,
       submit,

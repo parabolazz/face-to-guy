@@ -1,7 +1,10 @@
 import Taro from "@tarojs/taro";
 import { login } from "../api/user";
+import { useGlobalStore } from "../store";
 
 const getPhoneNumber = async (e: any, needRedirect) => {
+  const global = useGlobalStore();
+
   if (e.detail.code) {
     console.log('phone number code', e.detail.code);
     try {

@@ -1,8 +1,6 @@
 {
   "miniprogramRoot": "dist/",
-  "projectname": "face-to-guy",
   "description": "",
-  "appid": "wx6add1e4602cc00d8",
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -15,18 +13,22 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "condition": false
+    "condition": false,
+    "coverView": false,
+    "showShadowRootInWxmlPanel": false,
+    "packNpmRelationList": [],
+    "ignoreUploadUnusedFiles": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.25.3",
   "srcMiniprogramRoot": "dist/",
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
+  },
+  "appid": "wx6add1e4602cc00d8",
+  "packOptions": {
+    "ignore": [],
+    "include": []
   }
 }
