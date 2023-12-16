@@ -26,7 +26,9 @@
               <Loading size="46" />
               <div class="matching-swiper__card-loading-text">Loading...</div>
             </div>
-            <div v-else>已经滑到底啦！</div>
+            <div v-else>
+              <slot name="last"> 已经滑到底啦！ </slot>
+            </div>
           </div>
           <slot
             v-else

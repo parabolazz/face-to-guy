@@ -81,6 +81,18 @@
           </template>
         </AnswerCard>
       </template>
+      <template #last>
+        <div>
+          已经滑到底啦！要不试试
+          <nut-button
+            type="primary"
+            class="share-detail-link"
+            @click="jumpToCreateQuestion"
+          >
+            发起新的坦白局
+          </nut-button>
+        </div>
+      </template>
     </CardList>
     <nut-dialog
       v-model:visible="takeEnoughShotDialog"
@@ -129,7 +141,7 @@
         @onOpenSharePopup="onOpenSharePopup"
         @update:visible="() => (targetUserId = -1)"
       />
-      <SharePopup v-model:visible="sharePopupVisible" />
+      <SharePopup :needShare="false" v-model:visible="sharePopupVisible" />
       <NewProfilePopup
         v-model:visible="newProfilePopupVisible"
         @finishEditProfile="onFinishEditProfile"
@@ -138,7 +150,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import Taro, { useDidShow } from '@tarojs/taro';
+import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro';
 import CardList from '../../components/cardList/index.vue';
 import { ref } from 'vue';
 import QuestionCard from '../../components/questionCard/index.vue';
@@ -182,9 +194,22 @@ const users = ref<
 
 const { onCreateQuestion } = useAnswer(questionText, userId);
 
+useShareAppMessage(() => {
+  return {
+    title: questionText.value,
+    path: `/pages/share-ques-detail/index?shareId=${shareId}`,
+  };
+});
+
 const onOpenSharePopup = () => {
   noShotDialog.value = false;
   sharePopupVisible.value = true;
+};
+
+const jumpToCreateQuestion = () => {
+  Taro.navigateTo({
+    url: '/pages/create-question/index',
+  });
 };
 
 const afterGetPhoneNumber = async (e) => {
@@ -297,6 +322,14 @@ useDidShow(() => {
 .share-detail {
   height: 100%;
   padding: 12px 12px 0 12px;
+  .share-detail-link {
+    text-align: center;
+    color: #dbf378;
+    font-weight: bold;
+    display: block;
+    color: #000;
+    margin-top: 10px;
+  }
   .share-detail__switch {
     margin: 20px 0 14px 0;
   }

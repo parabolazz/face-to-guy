@@ -69,9 +69,16 @@ import { computed } from 'vue';
 import { Action, updateShot } from '../../api/user';
 import { useGlobalStore } from '../../store';
 
-defineProps({
-  visible: Boolean,
-});
+const props = withDefaults(
+  defineProps<{
+    visible: boolean;
+    needShare?: boolean;
+  }>(),
+  {
+    visible: false,
+    needShare: true,
+  },
+);
 
 const global = useGlobalStore();
 const lastCheckInDay = Taro.getStorageSync('LAST_CHECK_IN_DAY');
@@ -88,22 +95,25 @@ const hasShareToday = ref(
 const onToggleVisible = (visible: boolean) => {
   emit('update:visible', visible);
 };
-useShareTimeline(() => {
-  return {
-    title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
-    query: 'share=1',
-    imageUrl:
-      'https://pairs-source.obs.cn-south-1.myhuaweicloud.com:443/PNiN69Q0CW331969743ab1bbc1c842e51875a19102a1.png?AWSAccessKeyId=9BIMOLHBAMQG3CIU0EO3&Expires=2012744615&Signature=h%2FnbiSHKse7zaPD1xWG64dOabLw%3D',
-  };
-});
-useShareAppMessage(() => {
-  return {
-    title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
-    path: '/pages/home/index',
-    imageUrl:
-      'https://pairs-source.obs.cn-south-1.myhuaweicloud.com:443/PNiN69Q0CW331969743ab1bbc1c842e51875a19102a1.png?AWSAccessKeyId=9BIMOLHBAMQG3CIU0EO3&Expires=2012744615&Signature=h%2FnbiSHKse7zaPD1xWG64dOabLw%3D',
-  };
-});
+
+if (props.needShare) {
+  useShareTimeline(() => {
+    return {
+      title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
+      query: 'share=1',
+      imageUrl:
+        'https://pairs-source.obs.cn-south-1.myhuaweicloud.com:443/PNiN69Q0CW331969743ab1bbc1c842e51875a19102a1.png?AWSAccessKeyId=9BIMOLHBAMQG3CIU0EO3&Expires=2012744615&Signature=h%2FnbiSHKse7zaPD1xWG64dOabLw%3D',
+    };
+  });
+  useShareAppMessage(() => {
+    return {
+      title: '年轻人超爱的小程序，快来找你的神仙搭子吧',
+      path: '/pages/home/index',
+      imageUrl:
+        'https://pairs-source.obs.cn-south-1.myhuaweicloud.com:443/PNiN69Q0CW331969743ab1bbc1c842e51875a19102a1.png?AWSAccessKeyId=9BIMOLHBAMQG3CIU0EO3&Expires=2012744615&Signature=h%2FnbiSHKse7zaPD1xWG64dOabLw%3D',
+    };
+  });
+}
 useDidShow(() => {
   if (isSharing.value) {
     setTimeout(async () => {
