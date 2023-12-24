@@ -4,10 +4,10 @@
       Q：{{ title }}
     </div>
     <!-- show all users avatar -->
-    <div class="flex mt-4 justify-between items-center">
+    <div class="flex mt-3 justify-between items-center">
       <div class="flex">
         <div
-          v-for="avatar in avatars.slice(0, 20)"
+          v-for="avatar in avatars.slice(0, 3)"
           :key="avatar"
           class="w-6 h-6 rounded-full participate-card__avatar"
         >
@@ -41,10 +41,8 @@ const jumpToDetail = () => {
   padding: 10px;
   background-color: #232323;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   .participate-card__title {
+    /*! autoprefixer: ignore next */
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -56,9 +54,9 @@ const jumpToDetail = () => {
     word-break: break-all;
     white-space: normal;
     overflow: hidden;
-    overflow: hidden;
     color: #dbf378;
-    line-height: 1.3;
+    line-height: 18px;
+    height: 36px;
   }
   .participate-card__avatar {
     margin-right: -6px;
@@ -76,8 +74,8 @@ const jumpToDetail = () => {
 .items-center {
   align-items: center;
 }
-.mt-4 {
-  margin-top: 1rem;
+.mt-3 {
+  margin-top: 0.75rem;
 }
 .text-sm {
   font-size: 0.875rem;

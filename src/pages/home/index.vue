@@ -1,7 +1,7 @@
 <template>
   <nut-config-provider theme="dark">
     <view class="home">
-      <!-- <nut-button @click="onTest">你好啊</nut-button> -->
+      <nut-button @click="onTest">你好啊</nut-button>
       <div class="home-invite-btn" @click="goToCreateQuestion">
         <div class="home-invite-btn__text">
           <div class="home-invite-btn__title">发起坦白局</div>
@@ -186,7 +186,7 @@ Taro.useDidShow(() => {
       margin-bottom: 12px;
     }
     .home-my-participate__list-item {
-      display: inline-flex;
+      display: inline-block;
       margin-right: 12px;
       vertical-align: top;
       // 每隔两个

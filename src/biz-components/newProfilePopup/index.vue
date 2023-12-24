@@ -137,6 +137,13 @@ const onUploadFailure = (data) => {
 };
 
 const onChat = async () => {
+  if (!infoForm.value.avatar || !infoForm.value.nickname) {
+    Taro.showToast({
+      title: '请填写完整信息',
+      icon: 'error',
+    });
+    return;
+  }
   const data = {
     avatar_ids: [infoForm.value.avatar],
     nickname: infoForm.value.nickname,

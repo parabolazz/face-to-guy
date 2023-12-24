@@ -11,7 +11,7 @@ declare module '@vue/runtime-core' {
     CardList: typeof import('./src/components/CardList/index.vue')['default']
     Countdown: typeof import('./src/components/countdown/index.vue')['default']
     CreateQuestionCard: typeof import('./src/components/createQuestionCard/index.vue')['default']
-    CustomQuesCard: typeof import('./src/components/customQuesCard/index.vue')['default']
+    CustomQuesCard: typeof import('./src/components/CustomQuesCard/index.vue')['default']
     LottieView: typeof import('./src/components/lottieView/index.vue')['default']
     NutActionSheet: typeof import('@nutui/nutui-taro')['ActionSheet']
     NutBadge: typeof import('@nutui/nutui-taro')['Badge']
