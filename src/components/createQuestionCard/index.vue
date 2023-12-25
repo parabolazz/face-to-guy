@@ -38,6 +38,7 @@
         </div>
         <div class="create-question-card__main-answer-field" v-if="type === 1">
           <textarea
+            :cursor-spacing="20"
             class="create-question-card__input"
             v-model="answer"
             placeholder="请输入你的答案"
@@ -288,6 +289,10 @@ watch(
     padding: 0;
     margin-top: 9px;
     border-radius: 9px;
+  }
+  .my-6 {
+    margin-top: 18px;
+    margin-bottom: 18px;
   }
 }
 </style>
