@@ -1,20 +1,20 @@
-import { computed } from "vue";
+import { Ref, computed } from "vue";
 import { createQuesForMyGroupChat } from "../../../api/matching";
-import Taro, { useShareAppMessage } from "@tarojs/taro";
+import { useShareAppMessage } from "@tarojs/taro";
 import Base64 from "../../../utils/base64";
 
-export default function useAnswer(question, userId) {
+export default function useAnswer(question: Ref<string>, userId: Ref<string>, urlShareId?: string) {
   //sharedId = user_id + "_" + base64(问题tilte) + "_" + 秒级时间戳。
   const shareId = computed(() => {
     const timestamp = new Date().getTime();
-    const base64Question = Base64.encode(question.value);
+    const base64Question = encodeURIComponent(Base64.encode(question.value));
     return `${userId.value || ''}_${base64Question}_${timestamp}`;
   })
 
   useShareAppMessage(() => {
     return {
       title: question.value,
-      path: `/pages/share-ques-detail/index?shareId=${shareId.value}`,
+      path: `/pages/share-ques-detail/index?shareId=${urlShareId ? encodeURIComponent(urlShareId) : shareId.value}`,
     };
   });
 

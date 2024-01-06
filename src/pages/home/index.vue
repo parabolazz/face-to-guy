@@ -149,7 +149,7 @@ const goToCreateQuestion = () => {
 
 const onTest = () => {
   Taro.navigateTo({
-    url: '/pages/share-ques-detail/index?shareId=5_5oOz55yL5LiA5LiL5L2g5pyA6L+R5LiA5qyh5peF5ri455qE54Wn54mH_1702179551965',
+    url: '/pages/share-ques-detail/index?shareId=5_5p2l5LiA5qyhT09UROeahFBL_1703317961895',
   });
 };
 const getMyParticipateQues = async () => {

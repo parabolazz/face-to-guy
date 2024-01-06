@@ -150,7 +150,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro';
+import Taro, { useDidShow } from '@tarojs/taro';
 import CardList from '../../components/cardList/index.vue';
 import { ref } from 'vue';
 import QuestionCard from '../../components/questionCard/index.vue';
@@ -174,8 +174,8 @@ const questionText = ref('');
 const cardListRef = ref();
 const global = useGlobalStore();
 const routeParams = instance.router?.params;
-const shareId = routeParams?.shareId;
-console.log('shareId', shareId);
+const shareId = routeParams?.shareId || '';
+console.log('urlShareId', shareId);
 const takeEnoughShotDialog = ref(false);
 const noShotDialog = ref(false);
 const sharePopupVisible = ref(false);
@@ -192,14 +192,7 @@ const users = ref<
   }[]
 >([]);
 
-const { onCreateQuestion } = useAnswer(questionText, userId);
-
-useShareAppMessage(() => {
-  return {
-    title: questionText.value,
-    path: `/pages/share-ques-detail/index?shareId=${shareId}`,
-  };
-});
+const { onCreateQuestion } = useAnswer(questionText, userId, shareId);
 
 const onOpenSharePopup = () => {
   noShotDialog.value = false;
